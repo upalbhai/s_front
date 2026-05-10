@@ -4,16 +4,16 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
 import api from '@/services/api';
-import CategoryForm from '../CategoryForm';
+import CategoryForm from '../../components/CategoryForm';
 import { useAdminSession } from '../../useAdminSession';
 
 export default function AdminNewCategoryPage() {
   const router = useRouter();
   const { ready } = useAdminSession();
 
-  const handleSubmit = async (formData: FormData) => {
+  const handleSubmit = async (data: any) => {
     try {
-      await api.post('/categories', Object.fromEntries(formData.entries()));
+      await api.post('/categories', data);
       router.push('/admin/categories');
     } catch {
       window.alert('Could not create the category');

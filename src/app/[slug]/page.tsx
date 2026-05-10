@@ -2,16 +2,17 @@ import api from '@/services/api';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { Metadata } from 'next';
-import CategoryClient from './CategoryClient';
+import Script from 'next/script';
+import CategoryClient from '@/app/[slug]/CategoryClient';
 import { buildNotFoundMetadata, buildSeoMetadata, DEFAULT_IMAGE, SITE_URL } from '@/lib/seo';
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string, id: string }> }): Promise<Metadata> {
-  const { slug, id } = await params;
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
   try {
-    const res = await api.get(`/categories/${id}`);
+    const res = await api.get(`/categories/${slug}`);
     const category = res.data;
     
-    const canonicalPath = category.canonicalUrl || `/${slug}/${id}`;
+    const canonicalPath = category.canonicalUrl || `/${slug}`;
     const title = category.seoTitle || `${category.name} - Free Sound Buttons & Clips | Sound Buttons Max`;
     const description =
       category.seoDescription ||
@@ -30,19 +31,19 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 }
 
-export default async function CategoryPage({ params }: { params: Promise<{ slug: string, id: string }> }) {
-  const { slug, id } = await params;
+export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   
-  let category = null;
-  let soundsData = { sounds: [], total: 0 };
+  let category: any = null;
+  let soundsData: any = { sounds: [], total: 0 };
 
   try {
-    const [catRes, soundsRes] = await Promise.all([
-      api.get(`/categories/${id}`),
-      api.get(`/sounds?category=${id}&page=1&limit=40`)
-    ]);
+    const catRes = await api.get(`/categories/${slug}`);
     category = catRes.data;
-    soundsData = soundsRes.data;
+    if (category) {
+      const soundsRes = await api.get(`/sounds?category=${category._id}&page=1&limit=40`);
+      soundsData = soundsRes.data;
+    }
   } catch (error) {
     console.error('Error fetching category data:', error);
   }
@@ -55,13 +56,13 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
     "@type": "CollectionPage",
     "name": category.name,
     "description": category.seoDescription || category.description,
-    "url": `${SITE_URL}/${slug}/${id}`,
+    "url": `${SITE_URL}/${slug}`,
     "mainEntity": {
       "@type": "ItemList",
       "itemListElement": soundsData.sounds.slice(0, 10).map((sound: any, index: number) => ({
         "@type": "ListItem",
         "position": index + 1,
-        "url": `${SITE_URL}/sound/${sound.slug}/${sound._id}`,
+        "url": `${SITE_URL}/${slug}/${sound.slug}`,
         "name": sound.title
       }))
     }
@@ -69,7 +70,8 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
 
   return (
     <div className="container category-page" style={{ padding: '4rem 0' }}>
-      <script
+      <Script
+        id={`jsonld-category-${category._id}`}
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
@@ -89,7 +91,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
       <CategoryClient 
         initialSounds={soundsData.sounds} 
         totalSounds={soundsData.total} 
-        categoryId={id} 
+        categoryId={category._id} 
         categoryName={category.name}
       />
 

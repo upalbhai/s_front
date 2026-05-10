@@ -27,7 +27,7 @@ export default function AdminCategoriesPage() {
   const [query, setQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [saving, setSaving] = useState(false);
-  
+
   // Cooldown logic
   const [cooldown, setCooldown] = useState(0);
   const cooldownTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -53,7 +53,7 @@ export default function AdminCategoriesPage() {
   const startCooldown = useCallback(() => {
     setCooldown(COOLDOWN_SECONDS);
     if (cooldownTimerRef.current) clearInterval(cooldownTimerRef.current);
-    
+
     cooldownTimerRef.current = setInterval(() => {
       setCooldown(prev => {
         if (prev <= 1) {
@@ -166,11 +166,10 @@ export default function AdminCategoriesPage() {
               <button
                 onClick={handleManualRefresh}
                 disabled={cooldown > 0 || isRefetching}
-                className={`relative w-11 h-11 flex flex-col items-center justify-center rounded-full border transition-all group ${
-                  cooldown > 0 
-                    ? 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-400 cursor-not-allowed' 
-                    : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-500 hover:text-sky-500 hover:border-sky-500/50'
-                }`}
+                className={`relative w-11 h-11 flex flex-col items-center justify-center rounded-full border transition-all group ${cooldown > 0
+                  ? 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-400 cursor-not-allowed'
+                  : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-500 hover:text-sky-500 hover:border-sky-500/50'
+                  }`}
                 title={cooldown > 0 ? `Wait ${cooldown}s` : 'Refresh data'}
               >
                 <RefreshCw size={15} className={isRefetching ? 'animate-spin' : ''} />
@@ -222,8 +221,8 @@ export default function AdminCategoriesPage() {
                     <tr key={cat._id} className="group hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3 min-w-0">
-                          <div className="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-500 shrink-0">
-                            <FolderOpen size={14} />
+                          <div className="w-8 h-8 rounded-lg bg-sky-500/10 flex items-center justify-center text-sky-500 shrink-0">
+                            <span className="material-icons text-sm">{cat.icon || 'music_note'}</span>
                           </div>
                           <div className="min-w-0">
                             <p className="text-sm font-black text-foreground group-hover:text-sky-500 transition-colors truncate">{cat.name}</p>
@@ -235,11 +234,10 @@ export default function AdminCategoriesPage() {
                         {cat.slug || '—'}
                       </td>
                       <td className="px-6 py-4">
-                        <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${
-                          cat.isIndexable !== false
-                            ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20'
-                            : 'bg-slate-200/80 dark:bg-slate-700/50 text-slate-500 border-slate-300 dark:border-slate-700'
-                        }`}>
+                        <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${cat.isIndexable !== false
+                          ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20'
+                          : 'bg-slate-200/80 dark:bg-slate-700/50 text-slate-500 border-slate-300 dark:border-slate-700'
+                          }`}>
                           {cat.isIndexable !== false ? 'Indexed' : 'Hidden'}
                         </span>
                       </td>
@@ -247,7 +245,7 @@ export default function AdminCategoriesPage() {
                         <div className="flex justify-end gap-2">
                           <button
                             onClick={() => openEdit(cat)}
-                            className="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-400 hover:text-sky-500 hover:border-sky-500/50 transition-all"
+                            className="w-8 h-8 flex items-center justify-center rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100 hover:border-zinc-300 dark:hover:border-zinc-700 transition-all duration-200"
                             title="Edit"
                           >
                             <Edit3 size={14} />
@@ -255,7 +253,7 @@ export default function AdminCategoriesPage() {
                           <button
                             onClick={() => handleDelete(cat._id)}
                             disabled={deleteMutation.isPending && deleteMutation.variables === cat._id}
-                            className="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-400 hover:text-red-500 hover:border-red-500/50 transition-all disabled:opacity-50"
+                            className="w-8 h-8 flex items-center justify-center rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-red-500 hover:border-red-500/30 transition-all duration-200 disabled:opacity-50"
                             title="Delete"
                           >
                             <Trash2 size={14} />

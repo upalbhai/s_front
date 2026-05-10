@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { FolderOpen, LayoutDashboard, LogOut, Music, Shield, Sparkles } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { useTheme } from 'next-themes';
+import { useState, useEffect } from 'react';
 
 export default function AdminLayout({
   children,
@@ -12,6 +14,14 @@ export default function AdminLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === 'dark';
   const userName = 'Admin';
 
   const isLoginPage = pathname === '/admin/login';
@@ -33,25 +43,37 @@ export default function AdminLayout({
 
   if (isLoginPage) {
     return (
-      <div className="min-h-screen bg-slate-950 text-slate-50 grid place-items-center relative overflow-hidden p-8">
-        <div className="absolute left-[-8rem] top-[-6rem] w-[28rem] h-[28rem] rounded-full blur-[80px] opacity-20 pointer-events-none bg-sky-500/30" />
-        <div className="absolute right-[-8rem] bottom-[-8rem] w-[28rem] h-[28rem] rounded-full blur-[80px] opacity-20 pointer-events-none bg-indigo-500/20" />
+      <div className={`min-h-screen grid place-items-center relative overflow-hidden p-8 transition-colors duration-300 ${
+        isDark ? 'bg-zinc-950 text-zinc-100' : 'bg-zinc-50 text-zinc-900'
+      }`}>
+        <div className="absolute left-[-8rem] top-[-6rem] w-[28rem] h-[28rem] rounded-full blur-[80px] opacity-20 pointer-events-none bg-zinc-500/30 dark:bg-zinc-400/10" />
+        <div className="absolute right-[-8rem] bottom-[-8rem] w-[28rem] h-[28rem] rounded-full blur-[80px] opacity-20 pointer-events-none bg-zinc-500/20 dark:bg-zinc-400/5" />
         <div className="relative z-10 w-full max-w-md">{children}</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-[280px_1fr] bg-background text-foreground transition-colors duration-300">
+    <div className={`min-h-screen grid grid-cols-1 lg:grid-cols-[280px_1fr] transition-colors duration-300 ${
+      isDark ? 'bg-zinc-950 text-zinc-100' : 'bg-zinc-50 text-zinc-900'
+    }`}>
       {/* Sidebar */}
-      <aside className="sticky top-0 h-screen p-6 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 flex flex-col gap-8 shadow-sm">
+      <aside className={`sticky top-0 h-screen p-6 border-r flex flex-col gap-8 shadow-sm transition-colors duration-300 ${
+        isDark 
+          ? 'border-zinc-800 bg-zinc-950 text-white' 
+          : 'border-zinc-200 bg-white text-zinc-900'
+      }`}>
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 grid place-items-center rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-500">
-            <Sparkles size={20} />
+          <div className={`w-10 h-10 grid place-items-center rounded-xl border transition-colors duration-300 ${
+            isDark ? 'bg-zinc-900 border-zinc-800 text-white' : 'bg-zinc-100 border-zinc-200 text-black'
+          }`}>
+            <Sparkles size={18} />
           </div>
           <div className="min-w-0">
             <div className="text-sm font-black tracking-tight truncate uppercase">Sound Buttons</div>
-            <div className="mt-0.5 text-[10px] text-slate-400 uppercase tracking-widest font-black">Control center</div>
+            <div className={`mt-0.5 text-[10px] uppercase tracking-widest font-black ${
+              isDark ? 'text-zinc-500' : 'text-zinc-400'
+            }`}>Control center</div>
           </div>
         </div>
 
@@ -61,36 +83,50 @@ export default function AdminLayout({
             { href: '/admin/sounds', icon: Music, label: 'Sounds', active: pathname.startsWith('/admin/sounds') },
             { href: '/admin/categories', icon: FolderOpen, label: 'Categories', active: pathname.startsWith('/admin/categories') },
             { href: '/', icon: Shield, label: 'Open site' },
-          ].map((item) => (
-            <Link
-              key={item.label}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 border ${
-                item.active
-                  ? 'bg-sky-500 text-white border-sky-600 shadow-md shadow-sky-500/20'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-foreground hover:bg-slate-50 dark:hover:bg-slate-800/50 border-transparent hover:border-slate-200 dark:hover:border-slate-800 font-bold'
-              }`}
-              href={item.href}
-            >
-              <item.icon size={18} />
-              <span className="text-sm">{item.label}</span>
-            </Link>
-          ))}
+          ].map((item) => {
+            const activeStyle = isDark
+              ? 'bg-white text-zinc-950 border-white shadow-md shadow-white/5 font-black'
+              : 'bg-black text-white border-zinc-900 shadow-md shadow-black/10 font-black';
+
+            const inactiveStyle = isDark
+              ? 'text-zinc-400 hover:text-white hover:bg-zinc-900 border-transparent font-bold'
+              : 'text-zinc-600 hover:text-black hover:bg-zinc-100 border-transparent font-bold';
+
+            return (
+              <Link
+                key={item.label}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 border ${
+                  item.active ? activeStyle : inactiveStyle
+                }`}
+                href={item.href}
+              >
+                <item.icon size={18} />
+                <span className="text-sm">{item.label}</span>
+              </Link>
+            );
+          })}
         </nav>
 
-        <div className="mt-auto flex items-center justify-between gap-3 pt-6 border-t border-slate-100 dark:border-slate-800">
+        <div className={`mt-auto flex items-center justify-between gap-3 pt-6 border-t ${
+          isDark ? 'border-zinc-800' : 'border-zinc-100'
+        }`}>
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 rounded-full grid place-items-center bg-slate-50 dark:bg-slate-800 text-foreground font-black border border-slate-200 dark:border-slate-700">
+            <div className={`w-10 h-10 rounded-full grid place-items-center font-black border transition-colors duration-300 ${
+              isDark ? 'bg-zinc-900 border-zinc-800 text-white' : 'bg-zinc-100 border-zinc-200 text-zinc-900'
+            }`}>
               {userName.slice(0, 1).toUpperCase()}
             </div>
             <div className="min-w-0">
               <div className="text-sm font-black truncate">{userName}</div>
-              <div className="text-[11px] text-slate-400 font-black">{activeSection}</div>
+              <div className={`text-[11px] font-black ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>{activeSection}</div>
             </div>
           </div>
           <div className="flex gap-2">
             <ThemeToggle />
             <button
-              className="w-10 h-10 rounded-xl border border-red-500/20 text-red-500 grid place-items-center transition-all hover:bg-red-500/10 active:scale-95"
+              className={`w-10 h-10 rounded-xl border grid place-items-center transition-all hover:bg-red-500/10 active:scale-95 ${
+                isDark ? 'border-red-500/30 text-red-400' : 'border-red-500/20 text-red-500'
+              }`}
               onClick={handleLogout}
               title="Logout"
               type="button"
@@ -103,12 +139,20 @@ export default function AdminLayout({
 
       {/* Main Content */}
       <div className="min-w-0 flex flex-col">
-        <header className="flex items-center justify-between gap-4 px-8 py-6 bg-white/70 dark:bg-black/50 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 sticky top-0 z-20">
+        <header className={`flex items-center justify-between gap-4 px-8 py-6 border-b sticky top-0 z-20 backdrop-blur-md transition-colors duration-300 ${
+          isDark 
+            ? 'bg-zinc-950/70 border-zinc-800 text-white' 
+            : 'bg-white/70 border-zinc-200 text-zinc-900 shadow-sm'
+        }`}>
           <div>
-            <div className="text-[10px] text-sky-500 uppercase tracking-widest font-black">Management</div>
+            <div className={`text-[10px] uppercase tracking-widest font-black ${
+              isDark ? 'text-zinc-500' : 'text-zinc-400'
+            }`}>Management</div>
             <h1 className="mt-1 text-3xl font-black tracking-tighter text-foreground uppercase">{activeSection}</h1>
           </div>
-          <div className="hidden sm:block px-5 py-2 rounded-full border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-[10px] font-black uppercase tracking-widest text-slate-400">
+          <div className={`hidden sm:block px-5 py-2 rounded-full border text-[10px] font-black uppercase tracking-widest transition-colors duration-300 ${
+            isDark ? 'border-zinc-800 bg-zinc-900/50 text-zinc-500' : 'border-zinc-200 bg-zinc-100 text-zinc-400'
+          }`}>
             v1.0 Admin
           </div>
         </header>

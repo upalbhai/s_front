@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import api from '@/services/api';
 import SoundCard from '@/components/SoundCard';
 import useInfiniteScroll from '@/hooks/useInfiniteScroll';
+import { Search, X, Sparkles } from 'lucide-react';
 
 export default function NewSoundsPage() {
   const limit = 40;
@@ -12,13 +13,23 @@ export default function NewSoundsPage() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [initialized, setInitialized] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState('');
+
+  // Debounce search query
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(searchQuery);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   const hasMore = useMemo(() => sounds.length < total, [sounds.length, total]);
 
-  const fetchPage = useCallback(async (targetPage: number, append: boolean) => {
+  const fetchPage = useCallback(async (targetPage: number, append: boolean, queryText: string) => {
     setLoading(true);
     try {
-      const res = await api.get(`/sounds?page=${targetPage}&limit=${limit}`);
+      const res = await api.get(`/sounds?page=${targetPage}&limit=${limit}&q=${encodeURIComponent(queryText)}`);
       const incoming = Array.isArray(res.data.sounds) ? res.data.sounds : [];
       setSounds((prev) => (append ? [...prev, ...incoming] : incoming));
       setTotal(Number(res.data.total) || 0);
@@ -31,15 +42,15 @@ export default function NewSoundsPage() {
     }
   }, []);
 
+  // When debounced query changes, refetch page 1
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchPage(1, false);
-  }, [fetchPage]);
+    fetchPage(1, false, debouncedQuery);
+  }, [debouncedQuery, fetchPage]);
 
   const loadMore = useCallback(() => {
     if (loading || !hasMore) return;
-    fetchPage(page + 1, true);
-  }, [fetchPage, hasMore, loading, page]);
+    fetchPage(page + 1, true, debouncedQuery);
+  }, [fetchPage, hasMore, loading, page, debouncedQuery]);
 
   const sentinelRef = useInfiniteScroll({
     hasMore,
@@ -48,26 +59,94 @@ export default function NewSoundsPage() {
   });
 
   return (
-    <div className="container" style={{ padding: '4rem 0' }}>
-      <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-        <h1 className="text-gradient" style={{ fontSize: '3rem', marginBottom: '1rem' }}>New Sound Buttons</h1>
-        <p style={{ color: 'var(--text-muted)' }}>Latest meme sounds and viral audio clips added today.</p>
-      </div>
-
-      <div className="sound-grid">
-        {sounds.map((sound: any) => (
-          <SoundCard key={sound._id} sound={sound} />
-        ))}
-      </div>
-
-      <div ref={sentinelRef} style={{ height: 1 }} />
-      {(loading || (initialized && hasMore)) && (
-        <div className="pagination" style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
-          <span style={{ color: 'var(--text-muted)' }}>
-            {loading ? 'Loading more sounds...' : 'Scroll to load more'}
-          </span>
+    <div className="bg-background text-foreground animate-in fade-in duration-500 min-h-screen">
+      <section className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-16 md:py-24">
+        
+        {/* Hero Section */}
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-850 text-foreground text-xs font-black uppercase tracking-wider mb-4 border border-slate-200 dark:border-slate-800">
+            <Sparkles size={12} />
+            <span>Latest Sound Buttons</span>
+          </div>
+          <h1 className="text-4xl sm:text-5xl font-black text-foreground tracking-tight mb-4 leading-tight">
+            New <span className="bg-gradient-to-r from-sky-400 to-sky-600 dark:from-sky-300 dark:to-sky-500 bg-clip-text text-transparent">Sound Buttons</span>
+          </h1>
+          <p className="text-base text-slate-500 dark:text-slate-400 font-bold max-w-xl mx-auto">
+            Discover the freshest audio uploads, sound effects, and viral meme soundboard clips added to our library today.
+          </p>
         </div>
-      )}
+
+        {/* Premium Search Box */}
+        <div className="max-w-2xl mx-auto mb-16">
+          <div className="relative group">
+            <div className="absolute inset-0 bg-primary rounded-2xl blur-md opacity-5 group-focus-within:opacity-15 transition-all duration-300" />
+            <div className="relative flex items-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm group-focus-within:border-primary/50 transition-all">
+              <Search className="absolute left-4 text-slate-400 group-focus-within:text-primary transition-colors" size={20} />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search latest sound buttons..."
+                className="w-full pl-12 pr-12 py-4 bg-transparent text-foreground placeholder:text-slate-400 font-bold outline-none text-sm sm:text-base"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-4 p-1 rounded-full text-slate-400 hover:text-foreground hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
+                >
+                  <X size={16} />
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Sounds Grid - Matching Homepage exact cols and spacing */}
+        {sounds.length > 0 ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+            {sounds.map((sound: any) => (
+              <SoundCard key={sound._id} sound={sound} />
+            ))}
+          </div>
+        ) : (
+          initialized && !loading && (
+            <div className="text-center py-20 bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 max-w-lg mx-auto shadow-sm">
+              <div className="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mx-auto mb-4 text-slate-400 dark:text-slate-500">
+                <Search size={28} />
+              </div>
+              <h3 className="text-lg font-black text-foreground">No sounds match your search</h3>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mt-2 max-w-sm mx-auto font-medium">
+                We couldn&apos;t find any sound clips matching &ldquo;{searchQuery}&rdquo;. Try another keyword.
+              </p>
+              <button
+                onClick={() => setSearchQuery('')}
+                className="mt-6 px-5 py-2.5 bg-foreground text-background font-bold text-xs rounded-xl shadow-lg transition-all active:scale-95"
+              >
+                Clear Search
+              </button>
+            </div>
+          )
+        )}
+
+        {/* Infinite Scroll / Loading State Indicator */}
+        <div ref={sentinelRef} className="h-4" />
+        
+        {loading && (
+          <div className="flex flex-col items-center justify-center mt-16 gap-3">
+            <div className="w-8 h-8 rounded-full border-4 border-slate-200 dark:border-slate-800 border-t-primary dark:border-t-primary animate-spin" />
+            <span className="text-xs font-black text-foreground/80 uppercase tracking-widest animate-pulse">Loading more sounds...</span>
+          </div>
+        )}
+
+        {!loading && initialized && hasMore && (
+          <div className="flex justify-center mt-12">
+            <span className="text-xs font-bold text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-slate-900 px-4 py-2 rounded-full border border-slate-200/40 dark:border-slate-800/40 shadow-sm">
+              Scroll down to load more sounds
+            </span>
+          </div>
+        )}
+      </section>
     </div>
   );
 }

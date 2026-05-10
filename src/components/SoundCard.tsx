@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Download, Heart, Share2 } from 'lucide-react';
 import Link from 'next/link';
 import api from '../services/api';
@@ -34,9 +34,26 @@ const getFullUrl = (url: string) => {
   return `${baseUrl}${url}`;
 };
 
-const SoundCard: React.FC<SoundProps> = ({ sound, isFavorite = false }) => {
+const SoundCard: React.FC<SoundProps> = ({ sound }) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isFavorited, setIsFavorited] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const favs = JSON.parse(localStorage.getItem('favorites') || '[]');
+    setIsFavorited(favs.includes(sound._id));
+
+    const syncFav = () => {
+      const updatedFavs = JSON.parse(localStorage.getItem('favorites') || '[]');
+      setIsFavorited(updatedFavs.includes(sound._id));
+    };
+
+    window.addEventListener('favoritesChanged', syncFav);
+    return () => {
+      window.removeEventListener('favoritesChanged', syncFav);
+    };
+  }, [sound._id]);
 
   // Pick a color based on the sound ID
   const colorIndex = parseInt(sound._id.substring(sound._id.length - 2), 16) % BUTTON_COLORS.length;
@@ -62,7 +79,23 @@ const SoundCard: React.FC<SoundProps> = ({ sound, isFavorite = false }) => {
     }
   };
 
-  const soundLink = `/sound/${sound.slug}/${sound._id}`;
+  const handleFavoriteToggle = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const favs = JSON.parse(localStorage.getItem('favorites') || '[]');
+    let updated;
+    if (favs.includes(sound._id)) {
+      updated = favs.filter((id: string) => id !== sound._id);
+    } else {
+      updated = [...favs, sound._id];
+    }
+    localStorage.setItem('favorites', JSON.stringify(updated));
+    window.dispatchEvent(new Event('favoritesChanged'));
+  };
+
+  const categorySlug = sound.category?.slug || 'uncategorized';
+  const soundLink = `/${categorySlug}/${sound.slug}`;
 
   return (
     <div className="flex flex-col items-center gap-4 p-4 rounded-3xl transition-all duration-300 hover:bg-slate-100 dark:hover:bg-slate-900 group">
@@ -97,11 +130,15 @@ const SoundCard: React.FC<SoundProps> = ({ sound, isFavorite = false }) => {
       </div>
 
       <div className="flex items-center gap-5 pt-1">
-        <button className="text-red-500 hover:scale-125 transition-transform active:scale-90" title="Favorite">
-          <Heart size={18} fill={isFavorite ? 'currentColor' : 'none'} strokeWidth={3} />
+        <button 
+          onClick={handleFavoriteToggle}
+          className={`${isFavorited ? 'text-red-500' : 'text-slate-400 dark:text-slate-500 hover:text-red-500'} hover:scale-125 transition-transform active:scale-90`} 
+          title="Favorite"
+        >
+          <Heart size={18} fill={isFavorited ? 'currentColor' : 'none'} strokeWidth={3} />
         </button>
         <button 
-          className="text-sky-500 hover:scale-125 transition-transform active:scale-90" 
+          className="text-slate-400 dark:text-slate-500 hover:text-foreground hover:scale-125 transition-transform active:scale-90" 
           title="Share" 
           onClick={(e) => {
             e.preventDefault();
@@ -114,7 +151,7 @@ const SoundCard: React.FC<SoundProps> = ({ sound, isFavorite = false }) => {
         <a 
           href={getFullUrl(sound.fileUrl)} 
           download={`${sound.slug}.mp3`} 
-          className="text-amber-500 hover:scale-125 transition-transform active:scale-90" 
+          className="text-slate-400 dark:text-slate-500 hover:text-foreground hover:scale-125 transition-transform active:scale-90" 
           title="Download" 
           onClick={(e) => {
             e.stopPropagation();

@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { AdminCategory, AdminSound } from '../admin-types';
 import { getSoundCategoryId } from '../admin-types';
+import { useTheme } from 'next-themes';
 
 interface SoundFormValues {
   title: string;
@@ -67,18 +68,22 @@ function toValues(sound?: AdminSound | null): SoundFormValues {
   };
 }
 
-const inputClass = 'w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-foreground placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500/50 transition-all text-sm font-medium';
-const labelClass = 'text-[11px] font-black uppercase tracking-widest text-slate-400 mb-1.5 block';
-
 export default function SoundForm({ categories, initialSound, submitLabel, onSubmit, onCancel, saving }: SoundFormProps) {
   const [values, setValues] = useState<SoundFormValues>(() => toValues(initialSound));
   const [soundFile, setSoundFile] = useState<File | null>(null);
   const [activeTab, setActiveTab] = useState<'core' | 'media' | 'seo'>('core');
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === 'dark';
 
   const set = (field: keyof SoundFormValues, value: string | boolean) =>
     setValues(prev => ({ ...prev, [field]: value }));
 
-  // Auto-generate slug from title
   const handleTitleChange = (title: string) => {
     set('title', title);
     if (!initialSound) {
@@ -109,36 +114,58 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
   };
 
   const tabs = [
-    { key: 'core', label: 'Core' },
-    { key: 'media', label: 'Media' },
-    { key: 'seo', label: 'SEO' },
+    { key: 'core', label: 'Core Details' },
+    { key: 'media', label: 'Media & File' },
+    { key: 'seo', label: 'SEO Settings' },
   ] as const;
+
+  const inputClass = `w-full rounded-2xl border px-4 py-3.5 outline-none font-bold text-sm transition-all duration-300 ${
+    isDark
+      ? 'bg-zinc-950 border-zinc-800 text-white focus-within:ring-2 focus-within:ring-zinc-800 focus-within:border-zinc-700 placeholder:text-zinc-600'
+      : 'bg-zinc-50 border-zinc-200 text-zinc-900 focus-within:ring-2 focus-within:ring-zinc-200 focus-within:border-zinc-300 placeholder:text-zinc-400'
+  }`;
+
+  const labelClass = `text-[10px] font-black uppercase tracking-widest mb-1.5 block ${
+    isDark ? 'text-zinc-500' : 'text-zinc-400'
+  }`;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Tabs */}
-      <div className="flex gap-1 p-1 rounded-xl bg-slate-100 dark:bg-slate-800">
-        {tabs.map(tab => (
-          <button
-            key={tab.key}
-            type="button"
-            onClick={() => setActiveTab(tab.key)}
-            className={`flex-1 py-2 px-3 rounded-lg text-sm font-black transition-all ${
-              activeTab === tab.key
-                ? 'bg-white dark:bg-slate-700 text-foreground shadow-sm'
-                : 'text-slate-500 hover:text-foreground'
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
+      <div className={`flex gap-1 p-1 rounded-2xl border transition-colors duration-300 ${
+        isDark ? 'bg-zinc-950 border-zinc-800/80' : 'bg-zinc-100/80 border-zinc-200'
+      }`}>
+        {tabs.map(tab => {
+          const isActive = activeTab === tab.key;
+          const activeStyle = isDark
+            ? 'bg-zinc-900 text-white shadow-sm font-black'
+            : 'bg-white text-zinc-900 shadow-sm font-black';
+          const inactiveStyle = isDark
+            ? 'text-zinc-500 hover:text-zinc-300 font-bold'
+            : 'text-zinc-500 hover:text-zinc-800 font-bold';
+
+          return (
+            <button
+              key={tab.key}
+              type="button"
+              onClick={() => setActiveTab(tab.key)}
+              className={`flex-1 py-2.5 px-3 rounded-xl text-xs uppercase tracking-wider transition-all ${
+                isActive ? activeStyle : inactiveStyle
+              }`}
+            >
+              {tab.label}
+            </button>
+          );
+        })}
       </div>
 
       {/* Core Tab */}
       {activeTab === 'core' && (
-        <div className="space-y-5">
+        <div className={`p-6 rounded-3xl border transition-colors duration-300 space-y-5 ${
+          isDark ? 'border-zinc-800 bg-zinc-900/40 text-white' : 'border-zinc-200 bg-white text-zinc-900 shadow-sm'
+        }`}>
           <div>
-            <label className={labelClass}>Title <span className="text-red-400">*</span></label>
+            <label className={labelClass}>Title <span className="text-red-500">*</span></label>
             <input
               className={inputClass}
               value={values.title}
@@ -157,7 +184,7 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
             />
           </div>
           <div>
-            <label className={labelClass}>Category <span className="text-red-400">*</span></label>
+            <label className={labelClass}>Category <span className="text-red-500">*</span></label>
             <select
               className={inputClass}
               value={values.category}
@@ -166,12 +193,12 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
             >
               <option value="">Select a category</option>
               {categories.map(cat => (
-                <option key={cat._id} value={cat._id}>{cat.name}</option>
+                <option key={cat._id} value={cat._id} className={isDark ? 'bg-zinc-900 text-white' : 'bg-white text-zinc-900'}>{cat.name}</option>
               ))}
             </select>
           </div>
           <div>
-            <label className={labelClass}>Tags <span className="text-slate-300">(comma-separated)</span></label>
+            <label className={labelClass}>Tags <span className={isDark ? 'text-zinc-600' : 'text-zinc-400'}>(comma-separated)</span></label>
             <input
               className={inputClass}
               value={values.tags}
@@ -182,24 +209,26 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
           <div>
             <label className={labelClass}>Description</label>
             <textarea
-              className={`${inputClass} resize-none`}
+              className={`${inputClass} resize-y`}
               value={values.description}
               onChange={e => set('description', e.target.value)}
               placeholder="A short description of this sound."
               rows={3}
             />
           </div>
-          <div className="flex items-center gap-3 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">
+          <div className={`flex items-center gap-3 p-4 rounded-2xl border transition-colors duration-300 ${
+            isDark ? 'border-zinc-800 bg-zinc-950/40' : 'border-zinc-200 bg-zinc-50'
+          }`}>
             <input
               type="checkbox"
               id="isPublished"
               checked={values.isPublished}
               onChange={e => set('isPublished', e.target.checked)}
-              className="w-4 h-4 accent-sky-500"
+              className="w-4 h-4 rounded border-zinc-300 dark:border-zinc-700 accent-sky-500 cursor-pointer"
             />
             <div>
               <label htmlFor="isPublished" className="font-black text-sm text-foreground cursor-pointer">Published</label>
-              <p className="text-xs text-slate-400 mt-0.5">Unpublished sounds are hidden from public pages.</p>
+              <p className={`text-[11px] mt-0.5 ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>Unpublished sounds are hidden from public pages.</p>
             </div>
           </div>
         </div>
@@ -207,7 +236,9 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
 
       {/* Media Tab */}
       {activeTab === 'media' && (
-        <div className="space-y-5">
+        <div className={`p-6 rounded-3xl border transition-colors duration-300 space-y-5 ${
+          isDark ? 'border-zinc-800 bg-zinc-900/40 text-white' : 'border-zinc-200 bg-white text-zinc-900 shadow-sm'
+        }`}>
           <div>
             <label className={labelClass}>Upload Audio File</label>
             <div className="relative">
@@ -215,11 +246,15 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
                 type="file"
                 accept="audio/*"
                 onChange={e => setSoundFile(e.target.files?.[0] ?? null)}
-                className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-black file:bg-sky-500/10 file:text-sky-500 hover:file:bg-sky-500/20 transition-all cursor-pointer"
+                className={`w-full text-xs font-bold ${
+                  isDark ? 'text-zinc-400' : 'text-zinc-600'
+                } file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:uppercase file:tracking-wider ${
+                  isDark ? 'file:bg-zinc-800 file:text-white hover:file:bg-zinc-700' : 'file:bg-zinc-100 file:text-zinc-900 hover:file:bg-zinc-200'
+                } transition-all cursor-pointer`}
               />
             </div>
             {soundFile && (
-              <p className="text-xs text-emerald-500 mt-2 font-bold">✓ {soundFile.name}</p>
+              <p className="text-xs text-emerald-500 mt-2 font-black">✓ {soundFile.name}</p>
             )}
           </div>
           <div>
@@ -230,7 +265,7 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
               onChange={e => set('fileUrl', e.target.value)}
               placeholder="https://cdn.example.com/vine-boom.mp3"
             />
-            <p className="text-[11px] text-slate-400 mt-1.5">Leave blank if uploading a file above.</p>
+            <p className={`text-[10px] uppercase font-black mt-1.5 tracking-wider ${isDark ? 'text-zinc-600' : 'text-zinc-400'}`}>Leave blank if uploading a file above.</p>
           </div>
           <div>
             <label className={labelClass}>Audio Duration</label>
@@ -240,14 +275,16 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
               onChange={e => set('audioDuration', e.target.value)}
               placeholder="PT0H0M1S or 00:01"
             />
-            <p className="text-[11px] text-slate-400 mt-1.5">ISO 8601 format preferred for structured data.</p>
+            <p className={`text-[10px] uppercase font-black mt-1.5 tracking-wider ${isDark ? 'text-zinc-600' : 'text-zinc-400'}`}>ISO 8601 format preferred for structured data.</p>
           </div>
         </div>
       )}
 
       {/* SEO Tab */}
       {activeTab === 'seo' && (
-        <div className="space-y-5">
+        <div className={`p-6 rounded-3xl border transition-colors duration-300 space-y-5 ${
+          isDark ? 'border-zinc-800 bg-zinc-900/40 text-white' : 'border-zinc-200 bg-white text-zinc-900 shadow-sm'
+        }`}>
           <div>
             <label className={labelClass}>SEO Title</label>
             <input
@@ -256,18 +293,18 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
               onChange={e => set('seoTitle', e.target.value)}
               placeholder="Vine Boom Sound Button – Play Free Online"
             />
-            <p className="text-[11px] text-slate-400 mt-1.5">Recommended: 50-60 characters</p>
+            <p className={`text-[10px] uppercase font-black mt-1.5 tracking-wider ${isDark ? 'text-zinc-600' : 'text-zinc-400'}`}>Recommended: 50-60 characters</p>
           </div>
           <div>
             <label className={labelClass}>Meta Description</label>
             <textarea
-              className={`${inputClass} resize-none`}
+              className={`${inputClass} resize-y`}
               value={values.seoDescription}
               onChange={e => set('seoDescription', e.target.value)}
               placeholder="Play the viral Vine Boom sound for free. Instant playback, no sign-up needed."
               rows={3}
             />
-            <p className="text-[11px] text-slate-400 mt-1.5">Recommended: 150-160 characters</p>
+            <p className={`text-[10px] uppercase font-black mt-1.5 tracking-wider ${isDark ? 'text-zinc-600' : 'text-zinc-400'}`}>Recommended: 150-160 characters</p>
           </div>
           <div>
             <label className={labelClass}>OG Image URL</label>
@@ -281,7 +318,7 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
           <div>
             <label className={labelClass}>How To Use</label>
             <textarea
-              className={`${inputClass} resize-none`}
+              className={`${inputClass} resize-y`}
               value={values.howToUse}
               onChange={e => set('howToUse', e.target.value)}
               placeholder="Click the button to play. Right-click to download."
@@ -291,7 +328,7 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
           <div>
             <label className={labelClass}>Download Info</label>
             <textarea
-              className={`${inputClass} resize-none`}
+              className={`${inputClass} resize-y`}
               value={values.downloadInfo}
               onChange={e => set('downloadInfo', e.target.value)}
               placeholder="Free to download as MP3. No attribution required."
@@ -301,7 +338,7 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
           <div>
             <label className={labelClass}>Transcript / Lyrics</label>
             <textarea
-              className={`${inputClass} resize-none`}
+              className={`${inputClass} resize-y`}
               value={values.transcript}
               onChange={e => set('transcript', e.target.value)}
               placeholder="[BOOM]"
@@ -312,12 +349,18 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
       )}
 
       {/* Actions */}
-      <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+      <div className={`flex justify-end gap-3 pt-6 border-t ${
+        isDark ? 'border-zinc-800' : 'border-zinc-100'
+      }`}>
         {onCancel && (
           <button
             type="button"
             onClick={onCancel}
-            className="px-6 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-black text-slate-500 hover:text-foreground transition-all"
+            className={`px-6 py-3.5 rounded-xl font-black text-xs uppercase tracking-widest border transition-all active:scale-95 ${
+              isDark 
+                ? 'border-zinc-800 bg-zinc-900 text-white hover:bg-zinc-800' 
+                : 'border-zinc-200 bg-white text-zinc-900 hover:bg-zinc-50'
+            }`}
           >
             Cancel
           </button>
@@ -325,7 +368,11 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
         <button
           type="submit"
           disabled={saving}
-          className="px-8 py-3 rounded-xl bg-sky-500 text-white font-black text-sm hover:bg-sky-600 transition-all active:scale-95 shadow-lg shadow-sky-500/20 disabled:opacity-60 disabled:cursor-not-allowed"
+          className={`px-8 py-3.5 rounded-xl font-black text-xs uppercase tracking-widest transition-all active:scale-95 shadow-lg ${
+            isDark 
+              ? 'bg-white text-zinc-950 hover:bg-zinc-100 shadow-white/5' 
+              : 'bg-zinc-950 text-white hover:bg-zinc-900 shadow-zinc-950/10'
+          }`}
         >
           {saving ? 'Saving…' : submitLabel}
         </button>

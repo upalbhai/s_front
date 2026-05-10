@@ -69,7 +69,7 @@ const Header = () => {
                 {categories.slice(0, 10).map((cat) => (
                   <Link 
                     key={cat._id} 
-                    href={`/${cat.slug}/${cat._id}`}
+                    href={`/${cat.slug}`}
                     className="px-4 py-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-sm transition-colors"
                   >
                     {cat.name}
@@ -134,7 +134,7 @@ const Header = () => {
                   {categories.slice(0, 8).map((cat) => (
                     <Link 
                       key={cat._id} 
-                      href={`/${cat.slug}/${cat._id}`} 
+                      href={`/${cat.slug}`} 
                       className="text-sm font-bold p-3 rounded-2xl bg-slate-100 dark:bg-slate-800"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >

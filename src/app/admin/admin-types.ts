@@ -10,6 +10,7 @@ export interface AdminCategory {
   name: string;
   slug?: string;
   description?: string;
+  icon?: string;
   seoTitle?: string;
   seoDescription?: string;
   ogImage?: string;

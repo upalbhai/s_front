@@ -34,15 +34,11 @@ export default function CategoryClient({ initialSounds, totalSounds, categoryId,
 
   useEffect(() => {
     if (!searchTerm) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSounds(initialSounds || []);
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTotal(totalSounds || 0);
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPage(1);
       return;
     }
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchPage(1, false);
   }, [searchTerm, categoryId, initialSounds, totalSounds, fetchPage]);
 

@@ -7,7 +7,7 @@ import { ChevronLeft } from 'lucide-react';
 import api from '@/services/api';
 import { AdminCategory } from '../../admin-types';
 import { useAdminSession } from '../../useAdminSession';
-import CategoryForm from '../CategoryForm';
+import CategoryForm from '../../components/CategoryForm';
 
 export default function AdminEditCategoryPage() {
   const router = useRouter();
@@ -39,10 +39,10 @@ export default function AdminEditCategoryPage() {
     void loadCategory();
   }, [ready, categoryId]);
 
-  const handleSubmit = async (formData: FormData) => {
+  const handleSubmit = async (data: Partial<AdminCategory>) => {
     try {
       setSaving(true);
-      await api.put(`/categories/${categoryId}`, Object.fromEntries(formData.entries()));
+      await api.put(`/categories/${categoryId}`, data);
       router.push('/admin/categories');
     } catch {
       window.alert('Could not update the category');

@@ -25,7 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const categories = Array.isArray(catRes.data.categories) ? catRes.data.categories : [];
     
     const categoryRoutes = categories.map((cat: any) => ({
-      url: `${SITE_URL}${cat.canonicalUrl || `/${cat.slug}/${cat._id}`}`,
+      url: `${SITE_URL}${cat.canonicalUrl || `/${cat.slug}`}`,
       lastModified: new Date(cat.updatedAt),
       changeFrequency: 'weekly' as const,
       priority: cat.priority || 0.8,
@@ -35,12 +35,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const soundRes = await api.get('/sounds?limit=5000');
     const sounds = Array.isArray(soundRes.data.sounds) ? soundRes.data.sounds : [];
 
-    const soundRoutes = sounds.map((sound: any) => ({
-      url: `${SITE_URL}${sound.canonicalUrl || `/sound/${sound.slug}/${sound._id}`}`,
-      lastModified: new Date(sound.updatedAt),
-      changeFrequency: 'monthly' as const,
-      priority: 0.6,
-    }));
+    const soundRoutes = sounds.map((sound: any) => {
+      const categorySlug = sound.category?.slug || 'uncategorized';
+      return {
+        url: `${SITE_URL}${sound.canonicalUrl || `/${categorySlug}/${sound.slug}`}`,
+        lastModified: new Date(sound.updatedAt),
+        changeFrequency: 'monthly' as const,
+        priority: 0.6,
+      };
+    });
 
     return [...routes, ...categoryRoutes, ...soundRoutes];
   } catch (error) {
