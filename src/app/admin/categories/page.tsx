@@ -36,6 +36,7 @@ export default function AdminCategoriesPage() {
   // Drawer state
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<AdminCategory | null>(null);
+  const [formKey, setFormKey] = useState(0);
 
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -105,7 +106,11 @@ export default function AdminCategoriesPage() {
   // ── Drawer CRUD ───────────────────────────────────────────────────────────
   const openCreate = () => { setEditingCategory(null); setDrawerOpen(true); };
   const openEdit = (cat: AdminCategory) => { setEditingCategory(cat); setDrawerOpen(true); };
-  const closeDrawer = () => { setDrawerOpen(false); setEditingCategory(null); };
+  const closeDrawer = () => {
+    setDrawerOpen(false);
+    setEditingCategory(null);
+    setFormKey(prev => prev + 1);
+  };
 
   const handleSubmit = async (data: Partial<AdminCategory>) => {
     setSaving(true);
@@ -297,7 +302,7 @@ export default function AdminCategoriesPage() {
       >
         {/* key forces remount so form pre-fills correctly when switching between items */}
         <CategoryForm
-          key={editingCategory?._id ?? 'new'}
+          key={editingCategory?._id ? `${editingCategory._id}-${formKey}` : `new-${formKey}`}
           initialCategory={editingCategory}
           submitLabel={editingCategory ? 'Save changes' : 'Create category'}
           onSubmit={handleSubmit}

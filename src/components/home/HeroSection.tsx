@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { useState, useRef, useEffect } from 'react';
 import { Search, Sparkles, Play, Pause, Loader2 } from 'lucide-react';
 import api from '@/services/api';
@@ -9,6 +10,10 @@ interface HeroSectionProps {
   trendingSounds?: any[];
   onSearchChange: (value: string) => void;
   isLoading?: boolean;
+  title?: string;
+  subtitle?: string;
+  badge?: string;
+  placeholder?: string;
 }
 
 const getFullUrl = (url: string) => {
@@ -22,7 +27,11 @@ export default function HeroSection({
   searchQuery = '',
   trendingSounds = [],
   onSearchChange,
-  isLoading = false
+  isLoading = false,
+  title = "Unlimited Free Meme Sound Buttons",
+  subtitle = "",
+  badge = "Unblocked Soundboard",
+  placeholder = "Search 100,000+ meme sounds..."
 }: HeroSectionProps) {
   const [localSearch, setLocalSearch] = useState(searchQuery);
   const [activePlayingId, setActivePlayingId] = useState<string | null>(null);
@@ -73,7 +82,7 @@ export default function HeroSection({
     : defaultItems;
 
   return (
-    <section className="relative overflow-hidden pt-10 p-0">
+    <section className="relative overflow-hidden p-10">
       {/* Subtle dynamic background glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[600px] bg-gradient-to-b from-primary/10 via-transparent to-transparent blur-3xl -z-10 pointer-events-none" />
 
@@ -84,12 +93,18 @@ export default function HeroSection({
           <div className="space-y-6 flex flex-col items-center">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/25 text-xs font-black uppercase tracking-widest">
               <Sparkles size={14} />
-              <span>Unblocked Soundboard</span>
+              <span>{badge}</span>
             </div>
 
-            <h1 className="text-2xl font-black tracking-tight leading-[1.05] text-foreground">
-              Unlimited Free Meme Sound Buttons
+            <h1 className="text-3xl md:text-5xl font-black tracking-tight leading-[1.05] text-foreground max-w-4xl mx-auto">
+              {title}
             </h1>
+
+            {subtitle && (
+              <p className="text-base text-slate-500 dark:text-slate-400 font-bold max-w-2xl mx-auto">
+                {subtitle}
+              </p>
+            )}
           </div>
 
           {/* Advanced Search bar */}
@@ -102,7 +117,7 @@ export default function HeroSection({
               )}
               <input
                 type="text"
-                placeholder="Search 100,000+ meme sounds..."
+                placeholder={placeholder}
                 value={localSearch}
                 onChange={(e) => {
                   const val = e.target.value;

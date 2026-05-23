@@ -1,33 +1,110 @@
 import api from '@/services/api';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
-import { Metadata } from 'next';
+import { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 import CategoryClient from '@/app/[slug]/CategoryClient';
-import { buildNotFoundMetadata, buildSeoMetadata, DEFAULT_IMAGE, SITE_URL } from '@/lib/seo';
+import { SITE_URL } from '@/lib/seo';
+
+export const viewport: Viewport = {
+  themeColor: '#2563eb',
+  width: 'device-width',
+  initialScale: 1,
+};
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   try {
     const res = await api.get(`/categories/${slug}`);
     const category = res.data;
+    if (!category) {
+      throw new Error('Category not found');
+    }
     
-    const canonicalPath = category.canonicalUrl || `/${slug}`;
-    const title = category.seoTitle || `${category.name} - Free Sound Buttons & Clips | Sound Buttons Max`;
-    const description =
-      category.seoDescription ||
-      `Browse the best ${category.name} sound buttons online. Play or download free ${category.name} clips instantly. No login, no download. Fully unblocked.`;
-    const image = category.ogImage || DEFAULT_IMAGE;
+    const categoryName = category.name;
+    const canonicalUrl = `https://soundboardmax.net/category/${slug}`;
+    const ogImageUrl = `https://soundboardmax.net/category/${slug}/opengraph-image.png`;
 
-    return buildSeoMetadata({
-      title,
-      description,
-      canonicalPath,
-      image,
-      type: 'website',
-    });
+    return {
+      title: `${categoryName} Soundboard: Sound Buttons Unblocked | SoundboardMax`,
+      description: `Discover thousands of ${categoryName} soundboard collections with the sound buttons and meme soundboard. Play instantly & download on SoundboardMax.`,
+      alternates: {
+        canonical: canonicalUrl,
+      },
+      keywords: "soundboard categories, meme sounds, gaming sound effects, comedy audio, viral sounds, free sound effects, unblocked sound buttons, audio categories, soundboard categories, sound effects library, meme audio, gaming audio, comedy sounds, viral audio, free audio, unblocked audio,",
+      authors: [{ name: "SoundboardMax.net" }],
+      publisher: "SoundboardMax.net",
+      creator: "SoundboardMax.net",
+      applicationName: "SoundboardMax",
+      robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+          index: true,
+          follow: true,
+          'max-video-preview': -1,
+          'max-image-preview': 'large',
+          'max-snippet': -1,
+        },
+      },
+      formatDetection: {
+        telephone: false,
+      },
+      appleWebApp: {
+        capable: true,
+        title: "SoundboardMax",
+        statusBarStyle: "default",
+      },
+      openGraph: {
+        title: `${categoryName} Soundboard: Sound Buttons Unblocked | SoundboardMax`,
+        description: `Discover thousands of ${categoryName} soundboard collections with the sound buttons and meme soundboard. Play instantly & download on SoundboardMax.`,
+        type: "website",
+        url: canonicalUrl,
+        siteName: "SoundboardMax",
+        locale: "en_US",
+        alternateLocale: ["fr_FR"],
+        images: [
+          {
+            url: ogImageUrl,
+            alt: `${categoryName} Soundboard | SoundboardMax`,
+            width: 1200,
+            height: 630,
+            type: "image/png",
+          }
+        ],
+      },
+      twitter: {
+        card: "summary_large_image",
+        site: "@soundboardmax",
+        creator: "@soundboardmax",
+        title: `${categoryName} Soundboard: Sound Buttons Unblocked | SoundboardMax`,
+        description: `Discover thousands of ${categoryName} soundboard collections with the sound buttons and meme soundboard. Play instantly & download on SoundboardMax.`,
+        images: [
+          {
+            url: ogImageUrl,
+            alt: `${categoryName} Soundboard | SoundboardMax`,
+          }
+        ],
+      },
+      other: {
+        rating: "general",
+        distribution: "global",
+        coverage: "worldwide",
+        target: "all",
+        HandheldFriendly: "true",
+        MobileOptimized: "width",
+        'mobile-web-app-capable': "yes",
+        'msapplication-TileColor': "#2563eb",
+        'msapplication-config': "/browserconfig.xml",
+        'bingbot': "index, follow",
+      }
+    };
   } catch (error) {
-    return buildNotFoundMetadata('Category Not Found | Sound Buttons Max', 'This category could not be found on Sound Buttons Max.');
+    return {
+      title: 'Category Not Found | SoundboardMax',
+      description: 'This category could not be found on SoundboardMax.',
+      robots: { index: false, follow: true },
+    };
   }
 }
 
@@ -80,15 +157,6 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         <ChevronRight size={14} className="shrink-0" />
         <span className="text-primary font-bold">{category.name}</span>
       </nav>
-
-      <div className="text-center mb-16">
-        <h1 className="text-4xl md:text-5xl font-black text-foreground tracking-tight mb-4 leading-tight text-gradient">
-          {category.name} Soundboard
-        </h1>
-        <p className="text-base text-slate-500 dark:text-slate-400 font-bold max-w-2xl mx-auto">
-          {category.seoDescription || category.description || `Explore the best ${category.name} sounds online. Play or download free clips instantly.`}
-        </p>
-      </div>
 
       <CategoryClient 
         initialSounds={soundsData.sounds} 

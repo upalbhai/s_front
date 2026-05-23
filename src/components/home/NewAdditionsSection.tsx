@@ -10,7 +10,7 @@ interface NewAdditionsSectionProps {
 
 export default function NewAdditionsSection({ newSounds = [] }: NewAdditionsSectionProps) {
   return (
-    <section className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-16 md:py-24 border-t border-slate-200 dark:border-slate-800">
+    <section className="max-w-7xl mx-auto px-4 border-t border-slate-200 dark:border-slate-800">
       <div className="flex items-center justify-between mb-10">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800/50 flex items-center justify-center text-foreground">
@@ -25,7 +25,7 @@ export default function NewAdditionsSection({ newSounds = [] }: NewAdditionsSect
           See All <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
         </Link>
       </div>
-      
+
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
         {newSounds.map((sound: any) => (
           <SoundCard key={sound._id} sound={sound} />

@@ -159,16 +159,16 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       {currentSound && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md animate-in slide-in-from-bottom-8 duration-300">
           <div className={`flex items-center justify-between gap-4 p-3 rounded-2xl border shadow-2xl backdrop-blur-md transition-colors duration-300 ${isDark
-              ? 'bg-slate-900/95 text-white border-slate-800'
-              : 'bg-white/95 text-slate-900 border-slate-200'
+            ? 'bg-slate-900/95 text-white border-slate-800'
+            : 'bg-white/95 text-slate-900 border-slate-200'
             }`}>
 
             {/* Left: Icon & Sound info */}
             <div className="flex items-center gap-3 min-w-0">
               {/* Icon */}
               <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0 overflow-hidden select-none border transition-colors duration-300 ${isDark
-                  ? 'bg-slate-800 border-slate-700'
-                  : 'bg-slate-100 border-slate-200'
+                ? 'bg-slate-800 border-slate-700'
+                : 'bg-slate-100 border-slate-200'
                 }`}>
                 {currentSound.iconUrl ? (
                   <img
@@ -186,7 +186,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
               {/* Title & Time */}
               <div className="min-w-0">
-                <h4 className={`text-sm font-bold truncate pr-2 ${isDark ? 'text-slate-100' : 'text-black'
+                <h4 className={`text-sm font-bold truncate pr-2 ${isDark ? 'text-white' : 'text-black'
                   }`}>
                   {currentSound.title}
                 </h4>
@@ -221,8 +221,8 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
               <button
                 onClick={closePlayer}
                 className={`w-9 h-9 rounded-xl border flex items-center justify-center transition-all active:scale-95 cursor-pointer ${isDark
-                    ? 'border-slate-700 bg-slate-800/80 text-slate-400 hover:bg-slate-750 hover:text-white'
-                    : 'border-slate-200 bg-slate-100/80 text-slate-500 hover:bg-slate-200 hover:text-slate-900'
+                  ? 'border-slate-700 bg-slate-800/80 text-slate-400 hover:bg-slate-750 hover:text-white'
+                  : 'border-slate-200 bg-slate-100/80 text-slate-500 hover:bg-slate-200 hover:text-slate-900'
                   }`}
               >
                 <svg className="w-4 h-4 stroke-current fill-none" strokeWidth="2.5" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round">

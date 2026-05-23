@@ -6,6 +6,7 @@ import SoundCard from '@/components/SoundCard';
 import { Search } from 'lucide-react';
 import useInfiniteScroll from '@/hooks/useInfiniteScroll';
 import useDebounce from '@/hooks/useDebounce';
+import HeroSection from '@/components/home/HeroSection';
 
 export default function CategoryClient({ initialSounds, totalSounds, categoryId, categoryName }: any) {
   const limit = 40;
@@ -62,24 +63,16 @@ export default function CategoryClient({ initialSounds, totalSounds, categoryId,
 
   return (
     <>
-      <div className="flex justify-center mb-12">
-        <div className="w-full max-w-lg p-1.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl flex items-center gap-3 focus-within:ring-4 focus-within:ring-primary/10 transition-all">
-          <div className="flex-1 flex items-center gap-3 px-4 w-full">
-            {loading ? (
-              <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin shrink-0" />
-            ) : (
-              <Search size={20} className="text-slate-500 dark:text-slate-400 shrink-0" />
-            )}
-            <input 
-              type="text" 
-              placeholder={`Search in ${categoryName}...`} 
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-transparent border-none outline-none py-2.5 font-bold text-foreground placeholder-slate-400 text-sm md:text-base"
-            />
-          </div>
-        </div>
-      </div>
+      <HeroSection
+        searchQuery={search}
+        onSearchChange={setSearch}
+        isLoading={loading}
+        title={`${categoryName} Soundboard`}
+        subtitle={`Explore the best ${categoryName} sounds online. Play or download free clips instantly.`}
+        badge="Category Soundboard"
+        placeholder={`Search in ${categoryName}...`}
+      />
+      <div className="mt-12" />
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
         {sounds.map((sound: any) => (

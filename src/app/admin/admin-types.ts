@@ -11,12 +11,6 @@ export interface AdminCategory {
   slug?: string;
   description?: string;
   icon?: string;
-  seoTitle?: string;
-  seoDescription?: string;
-  ogImage?: string;
-  seoText?: string;
-  canonicalUrl?: string;
-  priority?: number;
   isIndexable?: boolean;
 }
 
@@ -27,13 +21,9 @@ export interface AdminSound {
   description?: string;
   category?: AdminCategory | string | null;
   fileUrl?: string;
-  seoTitle?: string;
-  seoDescription?: string;
-  ogImage?: string;
   howToUse?: string;
   downloadInfo?: string;
   transcript?: string;
-  audioDuration?: string;
   tags?: string[];
   isPublished?: boolean;
   playCount?: number;

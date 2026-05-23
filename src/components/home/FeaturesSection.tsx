@@ -4,7 +4,7 @@ import { Zap, Download, ShieldCheck } from 'lucide-react';
 
 export default function FeaturesSection() {
   return (
-    <section className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-16 md:py-24 border-t border-slate-200 dark:border-slate-800">
+    <section className="max-w-7xl mx-auto px-4 border-t border-slate-200 dark:border-slate-800">
       <div className="flex flex-col items-center text-center space-y-4 mb-16">
         <p className="text-[10px] font-black uppercase tracking-widest text-primary">Uncompromised Design</p>
         <h2 className="text-3xl md:text-4xl font-black tracking-tight text-foreground">Features Designed for Creators</h2>

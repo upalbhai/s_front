@@ -1,30 +1,114 @@
 import api from '@/services/api';
-import { Metadata } from 'next';
+import { Metadata, Viewport } from 'next';
 import ArticleClient from './ArticleClient';
-import { buildNotFoundMetadata, buildSeoMetadata, DEFAULT_IMAGE } from '@/lib/seo';
+
+export const viewport: Viewport = {
+  themeColor: '#2563eb',
+  width: 'device-width',
+  initialScale: 1,
+};
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const canonicalPath = `/article/${slug}`;
   try {
     const res = await api.get(`/blogs/${slug}`);
     const blog = res.data;
+    if (!blog) {
+      throw new Error('Blog post not found');
+    }
 
-    const title = blog.seoTitle || `${blog.title} | Sound Buttons Max Blog`;
-    const description =
-      blog.seoDescription ||
-      blog.excerpt ||
-      'Read the latest guides, tips, and meme culture articles from Sound Buttons Max.';
+    const postTitle = blog.title;
+    const authorName = blog.author || 'SoundboardMax';
+    const canonicalUrl = `https://soundboardmax.net/blog/${slug}`;
+    const ogImageUrl = blog.ogImage || blog.featuredImage || 'https://soundboardmax.net/blog/default-image.png';
+    const publishedTime = blog.publishedDate ? new Date(blog.publishedDate).toISOString() : new Date(blog.createdAt).toISOString();
+    const modifiedTime = blog.updatedAt ? new Date(blog.updatedAt).toISOString() : publishedTime;
 
-    return buildSeoMetadata({
-      title,
-      description,
-      canonicalPath,
-      image: blog.ogImage || blog.featuredImage || DEFAULT_IMAGE,
-      type: 'article',
-    });
+    return {
+      title: `${postTitle} | SoundboardMax Blog`,
+      description: blog.seoDescription || blog.excerpt || `Read the latest guides, tips, and meme culture articles from SoundboardMax.`,
+      alternates: {
+        canonical: canonicalUrl,
+      },
+      keywords: `soundboard, sound effects, ${postTitle}, audio clips, meme sounds, sound buttons, blog`,
+      authors: [{ name: authorName }],
+      publisher: "SoundboardMax.net",
+      creator: "SoundboardMax.net",
+      applicationName: "SoundboardMax",
+      robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+          index: true,
+          follow: true,
+          'max-video-preview': -1,
+          'max-image-preview': 'large',
+          'max-snippet': -1,
+        },
+      },
+      formatDetection: {
+        telephone: false,
+      },
+      appleWebApp: {
+        capable: true,
+        title: "SoundboardMax",
+        statusBarStyle: "default",
+      },
+      openGraph: {
+        title: `${postTitle} | SoundboardMax Blog`,
+        description: blog.seoDescription || blog.excerpt || `Read the latest guides, tips, and meme culture articles from SoundboardMax.`,
+        type: "article",
+        url: canonicalUrl,
+        siteName: "SoundboardMax",
+        locale: "en_US",
+        publishedTime: publishedTime,
+        modifiedTime: modifiedTime,
+        authors: [authorName],
+        section: "SoundboardMax Blog",
+        tags: ["soundboard", "sound effects", "audio clips", "meme sounds", "sound buttons"],
+        images: [
+          {
+            url: ogImageUrl,
+            alt: postTitle,
+            width: 1200,
+            height: 630,
+            type: "image/png",
+          }
+        ],
+      },
+      twitter: {
+        card: "summary_large_image",
+        site: "@soundboardmax",
+        creator: "@soundboardmax",
+        title: `${postTitle} | SoundboardMax Blog`,
+        description: blog.seoDescription || blog.excerpt || `Read the latest guides, tips, and meme culture articles from SoundboardMax.`,
+        images: [
+          {
+            url: ogImageUrl,
+            alt: postTitle,
+            width: 1200,
+            height: 630,
+          }
+        ],
+      },
+      other: {
+        rating: "general",
+        distribution: "global",
+        coverage: "worldwide",
+        target: "all",
+        HandheldFriendly: "true",
+        MobileOptimized: "width",
+        'mobile-web-app-capable': "yes",
+        'msapplication-TileColor': "#2563eb",
+        'msapplication-config': "/browserconfig.xml",
+      }
+    };
   } catch (error) {
-    return buildNotFoundMetadata('Article Not Found | Sound Buttons Max', 'This article could not be found on Sound Buttons Max.');
+    return {
+      title: 'Article Not Found | SoundboardMax Blog',
+      description: 'This article could not be found on SoundboardMax Blog.',
+      robots: { index: false, follow: true },
+    };
   }
 }
 

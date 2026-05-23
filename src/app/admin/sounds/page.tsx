@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Edit3, Plus, RefreshCw, Search, Trash2, Volume2 } from 'lucide-react';
+import { Edit3, Plus, RefreshCw, Search, Trash2, Volume2, Play, Pause } from 'lucide-react';
 import api from '@/services/api';
 import { AdminCategory, AdminSound, getSoundCategoryName } from '../admin-types';
 import { useAdminSession } from '../useAdminSession';
@@ -10,6 +10,7 @@ import Drawer from '../components/Drawer';
 import SoundForm from './SoundForm';
 import { useTheme } from 'next-themes';
 import { toast } from 'react-hot-toast';
+import useAudio from '@/hooks/useAudio';
 
 const COOLDOWN_SECONDS = 15;
 
@@ -34,6 +35,24 @@ export default function AdminSoundsPage() {
   const [query, setQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [saving, setSaving] = useState(false);
+
+  const { currentSound, isPlaying: globalIsPlaying, playSound } = useAudio();
+
+  const isSoundPlaying = (soundId: string) => currentSound?._id === soundId && globalIsPlaying;
+
+  const handlePlayClick = (sound: AdminSound) => {
+    playSound({
+      _id: sound._id,
+      title: sound.title,
+      slug: sound.slug || '',
+      fileUrl: sound.fileUrl || '',
+      category: typeof sound.category === 'object' && sound.category ? {
+        _id: sound.category._id,
+        name: sound.category.name,
+        slug: sound.category.slug || '',
+      } : undefined,
+    });
+  };
   
   // Cooldown logic
   const [cooldown, setCooldown] = useState(0);
@@ -42,6 +61,7 @@ export default function AdminSoundsPage() {
   // Drawer state
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [editingSound, setEditingSound] = useState<AdminSound | null>(null);
+  const [formKey, setFormKey] = useState(0);
 
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -125,7 +145,11 @@ export default function AdminSoundsPage() {
   // ── Drawer CRUD ───────────────────────────────────────────────────────────
   const openCreate = () => { setEditingSound(null); setDrawerOpen(true); };
   const openEdit = (sound: AdminSound) => { setEditingSound(sound); setDrawerOpen(true); };
-  const closeDrawer = () => { setDrawerOpen(false); setEditingSound(null); };
+  const closeDrawer = () => {
+    setDrawerOpen(false);
+    setEditingSound(null);
+    setFormKey(prev => prev + 1);
+  };
 
   const handleSubmit = async (formData: FormData) => {
     setSaving(true);
@@ -257,6 +281,9 @@ export default function AdminSoundsPage() {
             <table className="w-full border-collapse">
               <thead>
                 <tr className={isDark ? 'bg-zinc-950/30' : 'bg-zinc-50'}>
+                  <th className={`px-6 py-4 border-b w-[60px] ${
+                    isDark ? 'border-zinc-800/60' : 'border-zinc-100'
+                  }`}></th>
                   <th className={`text-left px-6 py-4 text-[10px] font-black uppercase tracking-widest border-b w-1/2 ${
                     isDark ? 'text-zinc-500 border-zinc-800/60' : 'text-zinc-400 border-zinc-100'
                   }`}>Title</th>
@@ -275,6 +302,7 @@ export default function AdminSoundsPage() {
                 {isLoading ? (
                   [...Array(5)].map((_, i) => (
                     <tr key={i}>
+                      <td className="px-6 py-4"><div className={`h-8 w-8 rounded-full animate-pulse ${isDark ? 'bg-zinc-800' : 'bg-zinc-100'}`} /></td>
                       <td className="px-6 py-4"><div className={`h-4 rounded animate-pulse w-3/4 ${isDark ? 'bg-zinc-800' : 'bg-zinc-100'}`} /></td>
                       <td className="px-6 py-4"><div className={`h-4 rounded animate-pulse w-1/2 ${isDark ? 'bg-zinc-800' : 'bg-zinc-100'}`} /></td>
                       <td className="px-6 py-4"><div className={`h-6 w-12 rounded-full animate-pulse ${isDark ? 'bg-zinc-800' : 'bg-zinc-100'}`} /></td>
@@ -286,6 +314,25 @@ export default function AdminSoundsPage() {
                     <tr key={sound._id} className={`group transition-colors duration-200 ${
                       isDark ? 'hover:bg-zinc-900/20' : 'hover:bg-zinc-50/50'
                     }`}>
+                      <td className="px-6 py-4">
+                        <button
+                          onClick={() => handlePlayClick(sound)}
+                          className={`w-8 h-8 flex items-center justify-center rounded-full transition-all active:scale-95 cursor-pointer ${
+                            isSoundPlaying(sound._id)
+                              ? 'bg-sky-500 text-white shadow-md shadow-sky-500/20'
+                              : (isDark
+                                  ? 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
+                                  : 'bg-zinc-100 text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900')
+                          }`}
+                          title={isSoundPlaying(sound._id) ? 'Pause' : 'Play'}
+                        >
+                          {isSoundPlaying(sound._id) ? (
+                            <Pause size={12} className="fill-current" />
+                          ) : (
+                            <Play size={12} className="fill-current ml-0.5" />
+                          )}
+                        </button>
+                      </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3 min-w-0">
                           <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
@@ -348,7 +395,7 @@ export default function AdminSoundsPage() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={4} className="px-6 py-24 text-center">
+                    <td colSpan={5} className="px-6 py-24 text-center">
                       <Volume2 size={40} className="text-slate-200 dark:text-slate-700 mx-auto mb-4" />
                       <p className="text-slate-400 font-bold">No sounds found{query ? ` for "${query}"` : ''}.</p>
                       {query && (
@@ -374,7 +421,7 @@ export default function AdminSoundsPage() {
         width="max-w-2xl"
       >
         <SoundForm
-          key={editingSound?._id ?? 'new'}
+          key={editingSound?._id ? `${editingSound._id}-${formKey}` : `new-${formKey}`}
           categories={categories}
           initialSound={editingSound}
           submitLabel={editingSound ? 'Save changes' : 'Create sound'}

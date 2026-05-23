@@ -89,7 +89,7 @@ export default function HomeClient({
         />
       )}
       <TrendingSoundsSection trendingSounds={homeData.trendingSounds} />
-      <CategoryGridSection categories={homeData.categories} />
+      {/* <CategoryGridSection categories={homeData.categories} /> */}
       <NewAdditionsSection newSounds={homeData.newSounds} />
       {/* <FeaturesSection /> */}
       {/* <TestimonialsSection /> */}

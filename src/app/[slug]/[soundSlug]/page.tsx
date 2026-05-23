@@ -1,32 +1,108 @@
 import api from '@/services/api';
-import { Metadata } from 'next';
+import { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 import SoundDetailClient from './SoundDetailClient';
-import { buildNotFoundMetadata, buildSeoMetadata, DEFAULT_IMAGE, SITE_URL } from '@/lib/seo';
+import { SITE_URL } from '@/lib/seo';
+
+export const viewport: Viewport = {
+  themeColor: '#e53935',
+  width: 'device-width',
+  initialScale: 1,
+};
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string; soundSlug: string }> }): Promise<Metadata> {
-  const { slug, soundSlug } = await params;
+  const { soundSlug } = await params;
   try {
     const res = await api.get(`/sounds/${soundSlug}`);
     const sound = res.data;
+    if (!sound) {
+      throw new Error('Sound not found');
+    }
     
-    const categorySlug = sound.category?.slug || slug;
-    const canonicalPath = sound.canonicalUrl || `/${categorySlug}/${soundSlug}`;
-    const title = sound.seoTitle || `${sound.title} Sound Button - Free Play & MP3 Download | Sound Buttons Max`;
-    const description =
-      sound.seoDescription ||
-      `Play the ${sound.title} sound button for free. Instant browser playback — no download needed. Use in Discord, streams & videos. Free MP3 download available.`;
-    const image = sound.ogImage || (sound.iconUrl ? `${SITE_URL}${sound.iconUrl}` : DEFAULT_IMAGE);
+    const soundName = sound.title;
+    const canonicalUrl = `https://soundboardmax.net/sounds/${soundSlug}`;
+    const ogImageUrl = `https://soundboardmax.net/${soundSlug}/opengraph-image.png`;
+    
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5001';
+    const mp3Url = sound.fileUrl ? (sound.fileUrl.startsWith('http') ? sound.fileUrl : `${backendUrl}${sound.fileUrl}`) : '';
 
-    return buildSeoMetadata({
-      title,
-      description,
-      canonicalPath,
-      image,
-      type: 'music.song',
-    });
+    return {
+      title: `${soundName} Sound Effect Button | SoundboardMax`,
+      description: `Play and download ${soundName} sound effect buttons instantly on SoundboardMax. Perfect for memes, pranks, gaming and hilarious fun reactions.`,
+      alternates: {
+        canonical: canonicalUrl,
+      },
+      keywords: "soundboard, meme sounds, sound effects, unblocked sound buttons, free sound effects, viral sounds, meme soundboard, audio effects, soundboard download, funny sounds, notification sounds, sound buttons for discord, sound buttons for tiktok, sound buttons for youtube, sound buttons for streaming, sound buttons for gaming, sound buttons for pranks, sound buttons for memes, sound buttons for reactions, sound buttons for content creation",
+      authors: [{ name: "SoundboardMax.net" }],
+      publisher: "SoundboardMax.net",
+      creator: "SoundboardMax.net",
+      applicationName: "SoundboardMax: 100K+ Meme Soundboard Unblocked and Sound Buttons",
+      robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+          index: true,
+          follow: true,
+          'max-video-preview': -1,
+          'max-image-preview': 'large',
+          'max-snippet': -1,
+        },
+      },
+      formatDetection: {
+        telephone: false,
+      },
+      appleWebApp: {
+        capable: true,
+        title: "SoundboardMax: 100K+ Meme Soundboard Unblocked and Sound Buttons",
+        statusBarStyle: "black-translucent",
+      },
+      openGraph: {
+        title: `${soundName} Sound Effect Button | SoundboardMax`,
+        description: `Play and download ${soundName} sound effect buttons instantly on SoundboardMax. Perfect for memes, pranks, gaming and hilarious fun reactions.`,
+        type: "music.song",
+        url: canonicalUrl,
+        siteName: "SoundboardMax",
+        locale: "en_US",
+        alternateLocale: ["fr_FR"],
+        images: [
+          {
+            url: ogImageUrl,
+            alt: `${soundName} - SoundboardMax.net`,
+            width: 1200,
+            height: 630,
+            type: "image/png",
+          }
+        ],
+      },
+      twitter: {
+        card: "summary_large_image",
+        site: "@soundboardmax",
+        creator: "@soundboardmax",
+        title: `${soundName} Sound Effect Button | SoundboardMax`,
+        description: `Play and download ${soundName} sound effect buttons instantly on SoundboardMax. Perfect for memes, pranks, gaming and hilarious fun reactions.`,
+        images: [
+          {
+            url: ogImageUrl,
+            alt: `${soundName} - SoundboardMax.net`,
+            width: 1200,
+            height: 630,
+          }
+        ],
+      },
+      other: {
+        HandheldFriendly: "true",
+        MobileOptimized: "width",
+        'mobile-web-app-capable': "yes",
+        'msapplication-TileColor': "#e53935",
+        'og:audio': mp3Url,
+      }
+    };
   } catch (error) {
-    return buildNotFoundMetadata('Sound Not Found | Sound Buttons Max', 'This sound could not be found on Sound Buttons Max.');
+    return {
+      title: 'Sound Not Found | SoundboardMax',
+      description: 'This sound could not be found on SoundboardMax.',
+      robots: { index: false, follow: true },
+    };
   }
 }
 

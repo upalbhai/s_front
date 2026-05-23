@@ -38,11 +38,10 @@ const Header = () => {
   };
 
   return (
-    <header className={`sticky top-0 z-50 w-full transition-all duration-300 ${
-      isScrolled 
-        ? 'py-3 bg-background/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800' 
+    <header className={`sticky top-0 z-50 w-full transition-all duration-300 ${isScrolled
+        ? 'py-3 bg-background/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800'
         : 'py-5 bg-transparent'
-    }`}>
+      }`}>
       <div className="container mx-auto px-4 flex items-center justify-between gap-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
@@ -59,8 +58,8 @@ const Header = () => {
           <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
           <Link href="/new" className="hover:text-foreground transition-colors">New</Link>
           <Link href="/trending" className="hover:text-foreground transition-colors">Trending</Link>
-          
-          <div className="relative group">
+
+          {/* <div className="relative group">
             <button className="flex items-center gap-1 hover:text-foreground transition-colors">
               Soundboards <ChevronDown size={14} />
             </button>
@@ -78,8 +77,8 @@ const Header = () => {
                 {categories.length === 0 && <p className="p-4 text-[10px] text-center italic text-slate-500">No categories loaded</p>}
               </div>
             </div>
-          </div>
-          
+          </div> */}
+
           <Link href="/blog" className="hover:text-foreground transition-colors">Blog</Link>
         </nav>
 
@@ -87,9 +86,9 @@ const Header = () => {
         <div className="flex items-center gap-3">
           <form onSubmit={handleSearch} className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 w-full max-w-[240px] focus-within:ring-2 focus-within:ring-primary/20 transition-all">
             <Search size={16} className="text-slate-400" />
-            <input 
-              type="text" 
-              placeholder="Search sounds..." 
+            <input
+              type="text"
+              placeholder="Search sounds..."
               className="bg-transparent border-none outline-none text-sm w-full text-foreground placeholder:text-slate-400"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -98,8 +97,8 @@ const Header = () => {
 
           <div className="flex items-center gap-2 border-l border-slate-200 dark:border-slate-800 pl-3">
             <ThemeToggle />
-            <button 
-              className="lg:hidden p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-foreground transition-colors" 
+            <button
+              className="lg:hidden p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-foreground transition-colors"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -127,14 +126,14 @@ const Header = () => {
               <Link href="/new" onClick={() => setIsMobileMenuOpen(false)}>New</Link>
               <Link href="/trending" onClick={() => setIsMobileMenuOpen(false)}>Trending</Link>
               <Link href="/blog" onClick={() => setIsMobileMenuOpen(false)}>Blog</Link>
-              
+
               <div className="mt-4 pt-6 border-t border-slate-200 dark:border-slate-800">
                 <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-4">Categories</p>
                 <div className="grid grid-cols-2 gap-3">
                   {categories.slice(0, 8).map((cat) => (
-                    <Link 
-                      key={cat._id} 
-                      href={`/${cat.slug}`} 
+                    <Link
+                      key={cat._id}
+                      href={`/${cat.slug}`}
                       className="text-sm font-bold p-3 rounded-2xl bg-slate-100 dark:bg-slate-800"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
@@ -144,9 +143,9 @@ const Header = () => {
                 </div>
               </div>
             </nav>
-            
+
             <div className="mt-auto pt-6 flex justify-center">
-               <ThemeToggle />
+              <ThemeToggle />
             </div>
           </div>
         </div>

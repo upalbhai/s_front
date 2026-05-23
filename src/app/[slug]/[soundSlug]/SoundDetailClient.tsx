@@ -3,9 +3,19 @@
 import { useEffect } from 'react';
 import api from '@/services/api';
 import SoundCard from '@/components/SoundCard';
-import { Pause, Download, ChevronRight, Phone, Bell } from 'lucide-react';
+import { Pause, Download, ChevronRight, Copy, Send } from 'lucide-react';
 import Link from 'next/link';
 import useAudio from '@/hooks/useAudio';
+import { toast } from 'react-hot-toast';
+
+const BUTTON_COLORS = [
+  { main: '#ff3b30', dark: '#a31a12', shadow: 'rgba(255, 59, 48, 0.3)' }, // Red
+  { main: '#ffcc00', dark: '#b28f00', shadow: 'rgba(255, 204, 0, 0.3)' }, // Yellow
+  { main: '#af52de', dark: '#7a399b', shadow: 'rgba(175, 82, 222, 0.3)' }, // Purple
+  { main: '#555555', dark: '#222222', shadow: 'rgba(85, 85, 85, 0.3)' }, // Black
+  { main: '#007aff', dark: '#0055b3', shadow: 'rgba(0, 122, 255, 0.3)' }, // Blue
+  { main: '#34c759', dark: '#248a3d', shadow: 'rgba(52, 199, 89, 0.3)' }, // Green
+];
 
 const getFullUrl = (url: string) => {
   if (!url) return '';
@@ -15,18 +25,50 @@ const getFullUrl = (url: string) => {
 };
 
 export default function SoundDetailClient({ sound, relatedSounds }: any) {
-  const { currentSound, isPlaying, playSound, togglePlay } = useAudio();
+  const { currentSound, isPlaying, playSound } = useAudio();
   const isThisPlaying = currentSound?._id === sound._id && isPlaying;
 
   useEffect(() => {
     if (sound?._id) {
-      api.patch(`/sounds/${sound._id}/stats`, { type: 'view' }).catch(() => {});
+      api.patch(`/sounds/${sound._id}/stats`, { type: 'view' }).catch(() => { });
     }
   }, [sound?._id]);
 
   const handlePlayClick = () => {
     playSound(sound);
   };
+
+  const handleCopyLink = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const categorySlug = sound.category?.slug || 'uncategorized';
+    const soundLink = `/${categorySlug}/${sound.slug}`;
+    navigator.clipboard.writeText(`${window.location.origin}${soundLink}`);
+    toast.success('Link copied!');
+  };
+
+  const handleShare = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const categorySlug = sound.category?.slug || 'uncategorized';
+    const soundLink = `/${categorySlug}/${sound.slug}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: sound.title,
+          url: `${window.location.origin}${soundLink}`
+        });
+      } catch (_) {}
+    } else {
+      navigator.clipboard.writeText(`${window.location.origin}${soundLink}`);
+      toast.success('Link copied!');
+    }
+  };
+
+  // Pick a color based on the sound ID
+  const soundIdStr = sound?._id || '00';
+  const colorIndex = parseInt(soundIdStr.substring(Math.max(0, soundIdStr.length - 2)), 16) % BUTTON_COLORS.length || 0;
+  const color = BUTTON_COLORS[colorIndex] || BUTTON_COLORS[0];
 
   return (
     <div className="container mx-auto px-4 py-16">
@@ -39,103 +81,204 @@ export default function SoundDetailClient({ sound, relatedSounds }: any) {
         <span className="text-primary font-black">{sound.title}</span>
       </nav>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-10">
-        {/* Main Content */}
-        <div className="space-y-8">
-          {/* Play Card */}
-          <div className="text-center p-10 md:p-16 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-            <h1 className="text-3xl md:text-4xl font-black tracking-tighter text-foreground mb-10">
-              {sound.title} <span className="text-primary">Sound Button</span>
+      <div className="space-y-12">
+        {/* Main Sound Layout (Two-column Grid) */}
+        <div className="p-8 md:p-12 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm grid grid-cols-1 md:grid-cols-[auto_1fr] gap-10 md:gap-16 items-center">
+          
+          {/* Left: Giant 3D Play Button */}
+          <div className="relative flex justify-center select-none w-full md:w-[325px] h-[300px]">
+            {/* Pulse / Glow Effect behind the button base */}
+            <div
+              className="absolute rounded-full blur-3xl opacity-35 animate-pulse transition-all duration-300"
+              style={{
+                width: '300px',
+                height: '180px',
+                backgroundColor: color.main,
+                filter: 'blur(50px)',
+                top: '20px',
+              }}
+            />
+
+            <div
+              className="relative cursor-pointer select-none transition-transform hover:scale-[1.02] active:scale-[0.98]"
+              style={{ width: 325, height: 300 }}
+              onClick={handlePlayClick}
+            >
+              {/* Platter bottom rim (darkest, for depth) */}
+              <div
+                className="absolute rounded-[50%]"
+                style={{
+                  width: 300,
+                  height: 225,
+                  bottom: 0,
+                  left: 12.5,
+                  background: '#7a7a7a',
+                  zIndex: 1,
+                }}
+              />
+
+              {/* Platter top surface (lighter grey) */}
+              <div
+                className="absolute rounded-[50%]"
+                style={{
+                  width: 300,
+                  height: 225,
+                  bottom: 30,
+                  left: 12.5,
+                  background: '#d0d0d0',
+                  zIndex: 2,
+                }}
+              />
+
+              {/* Button cylinder bottom curve (darker shade of button color) */}
+              <div
+                className="absolute rounded-[50%] transition-all duration-75 ease-out"
+                style={{
+                  width: 250,
+                  height: 188,
+                  bottom: isThisPlaying ? 30 : 50,
+                  left: 37.5,
+                  backgroundColor: color.dark,
+                  zIndex: 3,
+                }}
+              />
+
+              {/* Button cylinder vertical wall connecting bottom and top cap */}
+              <div
+                className="absolute transition-all duration-75 ease-out"
+                style={{
+                  width: 250,
+                  height: isThisPlaying ? 30 : 50,
+                  bottom: isThisPlaying ? 124 : 144,
+                  left: 37.5,
+                  backgroundColor: color.dark,
+                  zIndex: 3,
+                }}
+              />
+
+              {/* Button top cap (main color) — moves down when playing */}
+              <div
+                className="absolute rounded-[50%] transition-all duration-75 ease-out flex items-center justify-center text-white"
+                style={{
+                  width: 250,
+                  height: 188,
+                  bottom: isThisPlaying ? 60 : 100,
+                  left: 37.5,
+                  backgroundColor: color.main,
+                  zIndex: 4,
+                  boxShadow: isThisPlaying ? 'none' : `0 12px 24px ${color.shadow}`,
+                }}
+              >
+                <div className="absolute top-[20%] flex items-center justify-center w-full h-[60%]">
+                  {isThisPlaying ? (
+                    <Pause size={56} className="drop-shadow-lg text-white" fill="currentColor" />
+                  ) : (
+                    <span className="text-6xl drop-shadow-lg select-none">🔊</span>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right: Sound Details */}
+          <div className="flex flex-col items-center md:items-start text-center md:text-left">
+            <h1 className="text-3xl md:text-5xl font-black text-foreground underline decoration-2 underline-offset-8 decoration-foreground/30 leading-tight">
+              {sound.title}
             </h1>
 
-            {/* Large Play Button */}
-            <div className="relative inline-block mb-12">
-              <div className="absolute inset-0 rounded-full bg-primary/20 blur-3xl scale-150 animate-pulse" />
+            {/* Category tag pill */}
+            {sound.category && (
+              <Link href={`/${sound.category.slug}`} className="inline-block mt-6">
+                <span className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-bold bg-sky-500/10 text-sky-500 border border-sky-500/20 hover:bg-sky-500/20 transition-all">
+                  #{sound.category.name}
+                </span>
+              </Link>
+            )}
+
+            {/* Stats (Plays, Views) */}
+            <div className="flex items-center gap-6 mt-6 text-sm md:text-base font-bold text-slate-500 dark:text-slate-400">
+              <div className="flex items-center gap-2">
+                <span className="text-sky-500 text-lg">▶</span>
+                <span className="font-black text-foreground">{sound.playCount?.toLocaleString() || '0'}</span> plays
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sky-500 text-lg">👁</span>
+                <span className="font-black text-foreground">{sound.viewCount?.toLocaleString() || '0'}</span> views
+              </div>
+            </div>
+
+            {/* Uploaded By */}
+            <div className="mt-3 text-xs md:text-sm font-bold text-slate-450 dark:text-slate-500">
+              Uploaded by <span className="text-sky-500 font-extrabold">SoundButtonsMax</span>
+            </div>
+
+            {/* Action buttons (Copy link, Share, Download MP3) */}
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 mt-8 w-full">
               <button
-                onClick={handlePlayClick}
-                className={`relative w-40 h-40 rounded-full bg-primary flex items-center justify-center text-background shadow-2xl shadow-primary/40 transition-transform active:scale-90 hover:scale-105 ${
-                  isThisPlaying ? 'scale-95' : ''
-                }`}
+                onClick={handleCopyLink}
+                className="flex items-center gap-2 px-5 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-foreground font-bold hover:bg-slate-50 dark:hover:bg-slate-850 active:scale-95 transition-all cursor-pointer text-sm"
               >
-                {isThisPlaying ? <Pause size={64} fill="currentColor" /> : <span className="text-6xl">🔊</span>}
+                <Copy size={16} /> Copy link
               </button>
-            </div>
 
-            {/* Stats */}
-            <div className="flex justify-center gap-12 mb-10">
-              {[
-                { value: sound.playCount?.toLocaleString() || '0', label: 'Plays' },
-                { value: sound.viewCount?.toLocaleString() || '0', label: 'Views' },
-                { value: sound.favoriteCount?.toLocaleString() || '0', label: 'Favorites' },
-              ].map(stat => (
-                <div key={stat.label} className="text-center">
-                  <span className="text-2xl font-black text-foreground">{stat.value}</span>
-                  <span className="block text-xs text-slate-500 dark:text-slate-400 font-bold mt-1">{stat.label}</span>
-                </div>
-              ))}
-            </div>
+              <button
+                onClick={handleShare}
+                className="flex items-center gap-2 px-5 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-foreground font-bold hover:bg-slate-50 dark:hover:bg-slate-850 active:scale-95 transition-all cursor-pointer text-sm"
+              >
+                <Send size={16} /> Share
+              </button>
 
-            {/* Download Actions */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <a
                 href={getFullUrl(sound.fileUrl)}
                 download={`${sound.slug}.mp3`}
-                className="flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-primary text-background font-black hover:bg-primary-hover transition-all active:scale-95 shadow-lg shadow-primary/20"
+                className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-sky-500 text-white font-extrabold hover:bg-sky-600 active:scale-95 transition-all shadow-lg shadow-sky-500/20 text-sm cursor-pointer"
               >
-                <Download size={18} /> Download MP3
+                <Download size={16} /> Download MP3
               </a>
-              <button className="flex items-center justify-center gap-2 px-6 py-3 rounded-2xl border border-slate-200 dark:border-slate-700 text-foreground font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
-                <Phone size={18} /> Get Ringtone
-              </button>
-              <button className="flex items-center justify-center gap-2 px-6 py-3 rounded-2xl border border-slate-200 dark:border-slate-700 text-foreground font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
-                <Bell size={18} /> Notification
-              </button>
             </div>
           </div>
 
-          {/* SEO Content Sections */}
-          <div className="space-y-6">
-            <div className="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-              <h2 className="text-xl font-black text-foreground mb-4">About the {sound.title} Sound</h2>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
-                {sound.description || `The ${sound.title} sound button is one of the most popular clips in the ${sound.category?.name} category.`}
-              </p>
-            </div>
-
-            <div className="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-              <h2 className="text-xl font-black text-foreground mb-4">How to Use {sound.title} Sound</h2>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
-                {sound.howToUse || `You can use the ${sound.title} sound in your OBS streams, Discord soundboards, or video editing projects.`}
-              </p>
-            </div>
-
-            {sound.transcript && (
-              <div className="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-                <h2 className="text-xl font-black text-foreground mb-4">Sound Transcript</h2>
-                <p className="italic text-slate-600 dark:text-slate-400 border-l-4 border-primary pl-4 leading-relaxed font-medium">
-                  &quot;{sound.transcript}&quot;
-                </p>
-              </div>
-            )}
-          </div>
         </div>
 
-        {/* Sidebar */}
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-black text-foreground">You Might Also Like</h3>
-            <Link href={`/${sound.category?.slug}`} className="text-sm font-bold text-sky-500 hover:underline">
-              See All
-            </Link>
+        {/* SEO Content Sections */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+            <h2 className="text-xl font-black text-foreground mb-4">About the {sound.title} Sound</h2>
+            <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
+              {sound.description || `The ${sound.title} sound button is one of the most popular clips in the ${sound.category?.name} category.`}
+            </p>
           </div>
-          <div className="grid grid-cols-2 lg:grid-cols-1 gap-4">
-            {relatedSounds.map((s: any) => (
+
+          <div className="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+            <h2 className="text-xl font-black text-foreground mb-4">How to Use {sound.title} Sound</h2>
+            <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
+              {sound.howToUse || `You can use the ${sound.title} sound in your OBS streams, Discord soundboards, or video editing projects.`}
+            </p>
+          </div>
+
+          {sound.transcript && (
+            <div className="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 md:col-span-2">
+              <h2 className="text-xl font-black text-foreground mb-4">Sound Transcript</h2>
+              <p className="italic text-slate-600 dark:text-slate-400 border-l-4 border-primary pl-4 leading-relaxed font-medium">
+                &quot;{sound.transcript}&quot;
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Related Sounds (You may also like) */}
+        <div className="pt-6">
+          <h2 className="text-2xl md:text-3xl font-black text-center text-foreground mb-10">
+            You may also like
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 justify-items-center">
+            {relatedSounds.slice(0, 6).map((s: any) => (
               <SoundCard key={s._id} sound={s} />
             ))}
           </div>
         </div>
+
       </div>
     </div>
   );
 }
-
