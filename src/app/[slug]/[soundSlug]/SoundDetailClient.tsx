@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect } from 'react';
 import api from '@/services/api';
 import SoundCard from '@/components/SoundCard';
 import { Pause, Download, ChevronRight, Phone, Bell } from 'lucide-react';
 import Link from 'next/link';
+import useAudio from '@/hooks/useAudio';
 
 const getFullUrl = (url: string) => {
   if (!url) return '';
@@ -14,8 +15,8 @@ const getFullUrl = (url: string) => {
 };
 
 export default function SoundDetailClient({ sound, relatedSounds }: any) {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const { currentSound, isPlaying, playSound, togglePlay } = useAudio();
+  const isThisPlaying = currentSound?._id === sound._id && isPlaying;
 
   useEffect(() => {
     if (sound?._id) {
@@ -23,20 +24,8 @@ export default function SoundDetailClient({ sound, relatedSounds }: any) {
     }
   }, [sound?._id]);
 
-  const togglePlay = async () => {
-    if (!audioRef.current) return;
-    if (isPlaying) {
-      audioRef.current.pause();
-      setIsPlaying(false);
-    } else {
-      try {
-        await audioRef.current.play();
-        setIsPlaying(true);
-        api.patch(`/sounds/${sound._id}/stats`, { type: 'play' }).catch(() => {});
-      } catch (err) {
-        console.error('Playback failed:', err);
-      }
-    }
+  const handlePlayClick = () => {
+    playSound(sound);
   };
 
   return (
@@ -63,12 +52,12 @@ export default function SoundDetailClient({ sound, relatedSounds }: any) {
             <div className="relative inline-block mb-12">
               <div className="absolute inset-0 rounded-full bg-primary/20 blur-3xl scale-150 animate-pulse" />
               <button
-                onClick={togglePlay}
+                onClick={handlePlayClick}
                 className={`relative w-40 h-40 rounded-full bg-primary flex items-center justify-center text-background shadow-2xl shadow-primary/40 transition-transform active:scale-90 hover:scale-105 ${
-                  isPlaying ? 'scale-95' : ''
+                  isThisPlaying ? 'scale-95' : ''
                 }`}
               >
-                {isPlaying ? <Pause size={64} fill="currentColor" /> : <span className="text-6xl">🔊</span>}
+                {isThisPlaying ? <Pause size={64} fill="currentColor" /> : <span className="text-6xl">🔊</span>}
               </button>
             </div>
 
@@ -146,8 +135,7 @@ export default function SoundDetailClient({ sound, relatedSounds }: any) {
           </div>
         </div>
       </div>
-
-      <audio ref={audioRef} src={getFullUrl(sound.fileUrl)} onEnded={() => setIsPlaying(false)} preload="auto" />
     </div>
   );
 }
+

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import api from '@/services/api';
 import { Lock, Mail, ArrowRight } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -24,7 +25,7 @@ export default function LoginPage() {
       }
       setTimeout(() => window.location.reload(), 100);
     } catch (error) {
-      alert('Invalid credentials');
+      toast.error('Invalid credentials');
     } finally {
       setLoading(false);
     }

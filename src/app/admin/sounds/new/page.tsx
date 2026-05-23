@@ -8,6 +8,7 @@ import { AdminCategory } from '../../admin-types';
 import { useAdminSession } from '../../useAdminSession';
 import SoundForm from '../SoundForm';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-hot-toast';
 
 export default function AdminNewSoundPage() {
   const router = useRouter();
@@ -38,9 +39,10 @@ export default function AdminNewSoundPage() {
       await api.post('/sounds', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
+      toast.success('Sound created successfully');
       router.push('/admin/sounds');
     } catch {
-      window.alert('Could not create the sound');
+      toast.error('Could not create the sound');
     } finally {
       setSaving(false);
     }

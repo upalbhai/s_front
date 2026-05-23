@@ -9,6 +9,7 @@ import { useAdminSession } from '../useAdminSession';
 import Drawer from '../components/Drawer';
 import SoundForm from './SoundForm';
 import { useTheme } from 'next-themes';
+import { toast } from 'react-hot-toast';
 
 const COOLDOWN_SECONDS = 15;
 
@@ -109,7 +110,11 @@ export default function AdminSoundsPage() {
     mutationFn: (soundId: string) => api.delete(`/sounds/${soundId}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-sounds'] });
+      toast.success('Sound deleted successfully');
     },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message ?? 'Failed to delete sound.');
+    }
   });
 
   const handleDelete = async (soundId: string) => {
@@ -136,8 +141,9 @@ export default function AdminSoundsPage() {
       }
       closeDrawer();
       queryClient.invalidateQueries({ queryKey: ['admin-sounds'] });
+      toast.success(editingSound ? 'Sound updated successfully' : 'Sound created successfully');
     } catch (err: any) {
-      alert(err?.response?.data?.message ?? 'Failed to save sound.');
+      toast.error(err?.response?.data?.message ?? 'Failed to save sound.');
     } finally {
       setSaving(false);
     }

@@ -1,9 +1,11 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import { Download, Heart, Share2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Heart, Copy, Send } from 'lucide-react';
 import Link from 'next/link';
 import api from '../services/api';
+import { toast } from 'react-hot-toast';
+import useAudio from '../hooks/useAudio';
 
 interface SoundProps {
   sound: {
@@ -27,17 +29,10 @@ const BUTTON_COLORS = [
   { main: '#34c759', dark: '#248a3d', shadow: 'rgba(52, 199, 89, 0.3)' }, // Green
 ];
 
-const getFullUrl = (url: string) => {
-  if (!url) return '';
-  if (url.startsWith('http')) return url;
-  const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5001';
-  return `${baseUrl}${url}`;
-};
-
 const SoundCard: React.FC<SoundProps> = ({ sound }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const { currentSound, isPlaying, playSound } = useAudio();
+  const isThisPlaying = currentSound?._id === sound._id && isPlaying;
   const [isFavorited, setIsFavorited] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -59,24 +54,10 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
   const colorIndex = parseInt(sound._id.substring(sound._id.length - 2), 16) % BUTTON_COLORS.length;
   const color = BUTTON_COLORS[colorIndex];
 
-  const handlePlay = async (e: React.MouseEvent) => {
+  const handlePlay = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-
-    if (!audioRef.current) return;
-
-    if (isPlaying) {
-      audioRef.current.pause();
-      setIsPlaying(false);
-    } else {
-      try {
-        await audioRef.current.play();
-        setIsPlaying(true);
-        api.patch(`/sounds/${sound._id}/stats`, { type: 'play' }).catch(() => {});
-      } catch (err) {
-        console.error('Playback failed:', err);
-      }
-    }
+    playSound(sound);
   };
 
   const handleFavoriteToggle = (e: React.MouseEvent) => {
@@ -98,73 +79,113 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
   const soundLink = `/${categorySlug}/${sound.slug}`;
 
   return (
-    <div className="flex flex-col items-center gap-4 p-4 rounded-3xl transition-all duration-300 hover:bg-slate-100 dark:hover:bg-slate-900 group">
+    <div className="flex flex-col items-center gap-4 p-4 rounded-3xl transition-all duration-300 hover:bg-slate-100 dark:hover:bg-slate-800/50 group">
       <div 
-        className="relative w-28 h-28 flex items-center justify-center cursor-pointer perspective-1000 active:scale-95 transition-transform" 
+        className="relative w-[110px] h-[100px] flex items-center justify-center cursor-pointer select-none transition-transform" 
         onClick={handlePlay}
       >
-        <div className={`relative w-24 h-24 transition-transform duration-100 preserve-3d ${isPlaying ? 'translate-y-2' : ''}`}>
-          {/* Button Top */}
-          <div 
-            className="absolute inset-0 h-20 rounded-full z-10 shadow-[inset_0_4px_10px_rgba(255,255,255,0.3),inset_0_-4px_10px_rgba(0,0,0,0.2)] transition-all overflow-hidden" 
-            style={{ backgroundColor: color.main }}
-          >
-            <div className="absolute top-[10%] left-[15%] w-[40%] h-[20%] bg-white/40 rounded-full blur-[4px]" />
-          </div>
-          {/* Button Side/Bottom */}
-          <div 
-            className="absolute inset-0 h-20 rounded-full top-[8px] z-[5]" 
-            style={{ backgroundColor: color.dark }}
-          />
-          {/* Button Base */}
-          <div className="absolute top-[15px] -left-[4px] w-[104px] h-[84px] bg-slate-800 dark:bg-black rounded-full z-[1] shadow-xl shadow-black/20" />
-        </div>
+        {/* Layer 1: Grey base platter bottom rim (darkest grey, for depth) */}
+        <div 
+          className="absolute rounded-[50%] z-[1]"
+          style={{
+            width: '100px',
+            height: '50px',
+            bottom: '0px',
+            left: '5px',
+            background: 'linear-gradient(to bottom, #b0b0b0, #909090)',
+          }}
+        />
+
+        {/* Layer 2: Grey base platter top surface */}
+        <div 
+          className="absolute rounded-[50%] z-[2]"
+          style={{
+            width: '100px',
+            height: '50px',
+            bottom: '6px',
+            left: '5px',
+            background: 'linear-gradient(to bottom, #e8e8e8, #c8c8c8)',
+          }}
+        />
+
+        {/* Layer 3: Colored button cylinder wall (darker shade) */}
+        <div 
+          className="absolute rounded-[50%] z-[3] transition-all duration-100 ease-out"
+          style={{
+            width: '84px',
+            height: '42px',
+            bottom: isThisPlaying ? '8px' : '12px',
+            left: '13px',
+            backgroundColor: color.dark,
+          }}
+        />
+
+        {/* Layer 4: Colored button top cap (main color) */}
+        <div 
+          className="absolute rounded-[50%] z-[4] transition-all duration-100 ease-out"
+          style={{
+            width: '84px',
+            height: '42px',
+            bottom: isThisPlaying ? '22px' : '34px',
+            left: '13px',
+            background: `linear-gradient(to bottom, ${color.main}, ${color.main}dd)`,
+          }}
+        />
       </div>
 
       <div className="text-center w-full min-w-0">
         <Link href={soundLink}>
-          <h3 className="text-sm font-bold text-foreground truncate hover:text-primary transition-colors cursor-pointer decoration-slate-300 dark:decoration-slate-700 underline underline-offset-4 decoration-dashed group-hover:decoration-primary">
+          <h3 className="text-[13px] font-bold text-foreground truncate hover:text-primary transition-colors cursor-pointer underline underline-offset-4 decoration-current group-hover:decoration-primary px-1">
             {sound.title}
           </h3>
         </Link>
       </div>
 
-      <div className="flex items-center gap-5 pt-1">
+      <div className="flex items-center gap-6 pt-1">
         <button 
           onClick={handleFavoriteToggle}
-          className={`${isFavorited ? 'text-red-500' : 'text-slate-400 dark:text-slate-500 hover:text-red-500'} hover:scale-125 transition-transform active:scale-90`} 
+          className={`${isFavorited ? 'text-red-500' : 'text-slate-500 dark:text-slate-400 hover:text-red-500'} hover:scale-110 transition-transform active:scale-95`} 
           title="Favorite"
         >
-          <Heart size={18} fill={isFavorited ? 'currentColor' : 'none'} strokeWidth={3} />
+          <Heart size={16} fill={isFavorited ? 'currentColor' : 'none'} strokeWidth={2} />
         </button>
         <button 
-          className="text-slate-400 dark:text-slate-500 hover:text-foreground hover:scale-125 transition-transform active:scale-90" 
-          title="Share" 
+          className="text-slate-500 dark:text-slate-400 hover:text-foreground hover:scale-110 transition-transform active:scale-95" 
+          title="Copy Link" 
           onClick={(e) => {
             e.preventDefault();
-            navigator.clipboard.writeText(`${window.location.origin}${soundLink}`);
-            alert('Link copied!');
-          }}
-        >
-          <Share2 size={18} strokeWidth={3} />
-        </button>
-        <a 
-          href={getFullUrl(sound.fileUrl)} 
-          download={`${sound.slug}.mp3`} 
-          className="text-slate-400 dark:text-slate-500 hover:text-foreground hover:scale-125 transition-transform active:scale-90" 
-          title="Download" 
-          onClick={(e) => {
             e.stopPropagation();
-            api.patch(`/sounds/${sound._id}/stats`, { type: 'download' }).catch(() => {});
+            navigator.clipboard.writeText(`${window.location.origin}${soundLink}`);
+            toast.success('Link copied!');
           }}
         >
-          <Download size={18} strokeWidth={3} />
-        </a>
+          <Copy size={16} strokeWidth={2} />
+        </button>
+        <button 
+          className="text-slate-500 dark:text-slate-400 hover:text-foreground hover:scale-110 transition-transform active:scale-95" 
+          title="Share" 
+          onClick={async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (navigator.share) {
+              try {
+                await navigator.share({
+                  title: sound.title,
+                  url: `${window.location.origin}${soundLink}`
+                });
+              } catch (err) {}
+            } else {
+              navigator.clipboard.writeText(`${window.location.origin}${soundLink}`);
+              toast.success('Link copied!');
+            }
+          }}
+        >
+          <Send size={16} strokeWidth={2} />
+        </button>
       </div>
-
-      <audio ref={audioRef} src={getFullUrl(sound.fileUrl)} onEnded={() => setIsPlaying(false)} preload="none" />
     </div>
   );
 };
 
 export default SoundCard;
+

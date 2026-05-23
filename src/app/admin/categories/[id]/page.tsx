@@ -8,6 +8,7 @@ import api from '@/services/api';
 import { AdminCategory } from '../../admin-types';
 import { useAdminSession } from '../../useAdminSession';
 import CategoryForm from '../../components/CategoryForm';
+import { toast } from 'react-hot-toast';
 
 export default function AdminEditCategoryPage() {
   const router = useRouter();
@@ -43,9 +44,10 @@ export default function AdminEditCategoryPage() {
     try {
       setSaving(true);
       await api.put(`/categories/${categoryId}`, data);
+      toast.success('Category updated successfully');
       router.push('/admin/categories');
     } catch {
-      window.alert('Could not update the category');
+      toast.error('Could not update the category');
     } finally {
       setSaving(false);
     }

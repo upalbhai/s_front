@@ -8,6 +8,7 @@ import { AdminCategory } from '../admin-types';
 import { useAdminSession } from '../useAdminSession';
 import Drawer from '../components/Drawer';
 import CategoryForm from '../components/CategoryForm';
+import { toast } from 'react-hot-toast';
 
 const COOLDOWN_SECONDS = 15;
 
@@ -89,7 +90,11 @@ export default function AdminCategoriesPage() {
     mutationFn: (catId: string) => api.delete(`/categories/${catId}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-categories'] });
+      toast.success('Category deleted successfully');
     },
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.message ?? 'Failed to delete category.');
+    }
   });
 
   const handleDelete = async (catId: string) => {
@@ -112,8 +117,9 @@ export default function AdminCategoriesPage() {
       }
       closeDrawer();
       queryClient.invalidateQueries({ queryKey: ['admin-categories'] });
+      toast.success(editingCategory ? 'Category updated successfully' : 'Category created successfully');
     } catch (err: any) {
-      alert(err?.response?.data?.message ?? 'Failed to save category.');
+      toast.error(err?.response?.data?.message ?? 'Failed to save category.');
     } finally {
       setSaving(false);
     }

@@ -6,6 +6,7 @@ import { ChevronLeft } from 'lucide-react';
 import api from '@/services/api';
 import CategoryForm from '../../components/CategoryForm';
 import { useAdminSession } from '../../useAdminSession';
+import { toast } from 'react-hot-toast';
 
 export default function AdminNewCategoryPage() {
   const router = useRouter();
@@ -14,9 +15,10 @@ export default function AdminNewCategoryPage() {
   const handleSubmit = async (data: any) => {
     try {
       await api.post('/categories', data);
+      toast.success('Category created successfully');
       router.push('/admin/categories');
     } catch {
-      window.alert('Could not create the category');
+      toast.error('Could not create the category');
     }
   };
 

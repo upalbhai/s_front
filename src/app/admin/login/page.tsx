@@ -6,6 +6,7 @@ import api from '@/services/api';
 import { ArrowRight, Lock, Mail, ShieldCheck } from 'lucide-react';
 import { getStoredAdminUser, isAdminUser } from '../admin-types';
 import { useTheme } from 'next-themes';
+import { toast } from 'react-hot-toast';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -32,7 +33,7 @@ export default function AdminLoginPage() {
     try {
       const { data } = await api.post('/users/login', { email, password });
       if (data?.role !== 'admin') {
-        window.alert('Admin access required');
+        toast.error('Admin access required');
         return;
       }
 
@@ -41,7 +42,7 @@ export default function AdminLoginPage() {
       router.push('/admin');
       router.refresh();
     } catch {
-      window.alert('Invalid admin credentials');
+      toast.error('Invalid admin credentials');
     } finally {
       setLoading(false);
     }

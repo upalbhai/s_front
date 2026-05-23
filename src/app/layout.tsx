@@ -3,6 +3,7 @@ import "./globals.css";
 import AppChrome from "@/components/AppChrome";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { QueryProvider } from "@/components/QueryProvider";
+import { AudioProvider } from "@/context/AudioContext";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
 
@@ -10,8 +11,10 @@ const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
   title: "Sound Buttons Max: Free Meme Soundboard Unblocked",
-  description: "Play 100,000+ free meme sound buttons instantly. Vine Boom, Bruh, Goofy Ahh & more. Unblocked on school and work networks.",
+  description: "Play 100,000+ free meme sound buttons instantly. Vine Boom, Bruh, Goofy Ahh & more. No download, no login. Unblocked on school and work networks.",
 };
+
+import { Toaster } from "react-hot-toast";
 
 export default function RootLayout({
   children,
@@ -31,7 +34,16 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <QueryProvider>
-            <AppChrome>{children}</AppChrome>
+            <AudioProvider>
+              <AppChrome>{children}</AppChrome>
+              <Toaster position="bottom-right" toastOptions={{
+                style: {
+                  background: '#333',
+                  color: '#fff',
+                  borderRadius: '12px',
+                },
+              }} />
+            </AudioProvider>
           </QueryProvider>
         </ThemeProvider>
       </body>

@@ -69,21 +69,23 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
   };
 
   return (
-    <div className="container category-page" style={{ padding: '4rem 0' }}>
+    <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-16">
       <Script
         id={`jsonld-category-${category._id}`}
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <nav className="breadcrumbs" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)', marginBottom: '2rem', fontSize: '0.9rem' }}>
-        <Link href="/">Home</Link>
-        <ChevronRight size={16} />
-        <span className="text-primary">{category.name}</span>
+      <nav className="flex items-center gap-2 text-slate-500 dark:text-slate-400 mb-8 text-sm font-medium">
+        <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
+        <ChevronRight size={14} className="shrink-0" />
+        <span className="text-primary font-bold">{category.name}</span>
       </nav>
 
-      <div className="category-header" style={{ textAlign: 'center', marginBottom: '4rem' }}>
-        <h1 className="text-gradient" style={{ fontSize: '3rem', marginBottom: '1rem' }}>{category.name} Soundboard</h1>
-        <p className="category-desc" style={{ color: 'var(--text-muted)', maxWidth: '800px', margin: '0 auto 2rem' }}>
+      <div className="text-center mb-16">
+        <h1 className="text-4xl md:text-5xl font-black text-foreground tracking-tight mb-4 leading-tight text-gradient">
+          {category.name} Soundboard
+        </h1>
+        <p className="text-base text-slate-500 dark:text-slate-400 font-bold max-w-2xl mx-auto">
           {category.seoDescription || category.description || `Explore the best ${category.name} sounds online. Play or download free clips instantly.`}
         </p>
       </div>
@@ -95,9 +97,12 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         categoryName={category.name}
       />
 
-      <section className="glass-card seo-text-block" style={{ marginTop: '6rem', padding: '3rem' }}>
-        <h2>About {category.name} Soundboard</h2>
-        <div dangerouslySetInnerHTML={{ __html: category.seoText || `<p>Our ${category.name} soundboard features a curated collection of high-quality audio clips. All sounds are free to download and unblocked for use anywhere.</p>` }} />
+      <section className="glass-card mt-24 p-8 md:p-12">
+        <h2 className="text-2xl font-black text-foreground mb-6">About {category.name} Soundboard</h2>
+        <div 
+          className="prose prose-slate dark:prose-invert max-w-none text-slate-600 dark:text-slate-400 font-medium space-y-4"
+          dangerouslySetInnerHTML={{ __html: category.seoText || `<p>Our ${category.name} soundboard features a curated collection of high-quality audio clips. All sounds are free to download and unblocked for use anywhere.</p>` }} 
+        />
       </section>
     </div>
   );

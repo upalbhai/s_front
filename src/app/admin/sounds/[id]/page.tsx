@@ -8,6 +8,7 @@ import { ChevronLeft } from 'lucide-react';
 import { AdminCategory, AdminSound } from '../../admin-types';
 import { useAdminSession } from '../../useAdminSession';
 import SoundForm from '../SoundForm';
+import { toast } from 'react-hot-toast';
 
 export default function AdminEditSoundPage() {
   const router = useRouter();
@@ -51,9 +52,10 @@ export default function AdminEditSoundPage() {
       await api.put(`/sounds/${soundId}`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
+      toast.success('Sound updated successfully');
       router.push('/admin/sounds');
     } catch {
-      window.alert('Could not update the sound');
+      toast.error('Could not update the sound');
     } finally {
       setSaving(false);
     }
