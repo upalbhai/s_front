@@ -1,0 +1,53 @@
+{
+  "nav.home": "Главная",
+  "nav.new": "Новые",
+  "nav.trending": "В тренде",
+  "nav.blog": "Блог",
+  "nav.search_placeholder": "Поиск звуков...",
+
+  "hero.badge": "Разблокированный Саундборд",
+  "hero.title": "Безлимитные Бесплатные Кнопки Мем-Звуков",
+  "hero.placeholder": "Поиск среди 100 000+ мем-звуков...",
+
+  "trending.badge": "В Тренде по Всему Миру",
+  "trending.title": "Трендовые Кнопки Звуков",
+  "trending.placeholder": "Поиск трендовых кнопок звуков...",
+  "trending.no_results_title": "Нет звуков, соответствующих вашему запросу",
+  "trending.no_results_desc": "Мы не нашли трендовых звуковых клипов, соответствующих \"{query}\". Попробуйте другой термин.",
+  "trending.scroll_more": "Прокрутите вниз для загрузки трендовых звуков",
+
+  "new.badge": "Последние Кнопки Звуков",
+  "new.title": "Новые Кнопки Звуков",
+  "new.placeholder": "Поиск последних кнопок звуков...",
+  "new.no_results_title": "Нет звуков, соответствующих вашему запросу",
+  "new.no_results_desc": "Мы не нашли звуковых клипов, соответствующих \"{query}\". Попробуйте другое ключевое слово.",
+  "new.scroll_more": "Прокрутите вниз для загрузки звуков",
+
+  "category.badge": "Категория Саундборда",
+  "category.placeholder": "Поиск в {name}...",
+  "category.title": "Саундборд {name}",
+  "category.subtitle": "Исследуйте лучшие звуки {name} онлайн. Слушайте или скачивайте клипы бесплатно.",
+
+  "common.loading": "Загрузка звуков...",
+  "common.clear_search": "Очистить Поиск",
+  "common.scroll_more": "Прокрутите для загрузки",
+
+  "footer.tagline": "Крупнейший в мире бесплатный мем-саундборд. Мгновенное воспроизведение без загрузок.",
+  "footer.quick_links": "Быстрые Ссылки",
+  "footer.categories": "Категории",
+  "footer.stay_tuned": "Оставайтесь в Курсе",
+  "footer.newsletter_desc": "Получайте уведомления о последних вирусных звуках.",
+  "footer.email_placeholder": "Ваш Email",
+  "footer.join_newsletter": "Подписаться на Рассылку",
+  "footer.copyright": "© {year} Sound Buttons Max. Все права защищены.",
+  "footer.link_home": "Главная",
+  "footer.link_new": "Новые Звуки",
+  "footer.link_trending": "В Тренде",
+  "footer.link_blog": "Блог",
+  "footer.link_about": "О Нас",
+  "footer.link_contact": "Связаться с Нами",
+  "footer.privacy": "Политика Конфиденциальности",
+  "footer.terms": "Условия и Положения",
+  "footer.dmca": "DMCA",
+  "footer.disclaimer": "Отказ от Ответственности"
+}

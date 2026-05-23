@@ -1,0 +1,53 @@
+{
+  "nav.home": "Accueil",
+  "nav.new": "Nouveau",
+  "nav.trending": "Tendances",
+  "nav.blog": "Blog",
+  "nav.search_placeholder": "Rechercher des sons...",
+
+  "hero.badge": "Soundboard Débloqué",
+  "hero.title": "Boutons de Sons Mème Gratuits et Illimités",
+  "hero.placeholder": "Rechercher parmi plus de 100 000 sons mème...",
+
+  "trending.badge": "Tendances Mondiales",
+  "trending.title": "Boutons de Sons Tendance",
+  "trending.placeholder": "Rechercher des boutons de sons tendance...",
+  "trending.no_results_title": "Aucun son ne correspond à votre recherche",
+  "trending.no_results_desc": "Nous n'avons trouvé aucun clip sonore tendance correspondant à \"{query}\". Essayez un autre terme.",
+  "trending.scroll_more": "Faites défiler pour charger plus de sons tendance",
+
+  "new.badge": "Derniers Boutons de Sons",
+  "new.title": "Nouveaux Boutons de Sons",
+  "new.placeholder": "Rechercher les derniers boutons de sons...",
+  "new.no_results_title": "Aucun son ne correspond à votre recherche",
+  "new.no_results_desc": "Nous n'avons trouvé aucun clip sonore correspondant à \"{query}\". Essayez un autre mot-clé.",
+  "new.scroll_more": "Faites défiler pour charger plus de sons",
+
+  "category.badge": "Soundboard de Catégorie",
+  "category.placeholder": "Rechercher dans {name}...",
+  "category.title": "Soundboard {name}",
+  "category.subtitle": "Explorez les meilleurs sons {name} en ligne. Lisez ou téléchargez des clips gratuitement.",
+
+  "common.loading": "Chargement de plus de sons...",
+  "common.clear_search": "Effacer la Recherche",
+  "common.scroll_more": "Faites défiler pour charger plus",
+
+  "footer.tagline": "Le plus grand soundboard mème gratuit au monde. Lecture instantanée, sans téléchargement.",
+  "footer.quick_links": "Liens Rapides",
+  "footer.categories": "Catégories",
+  "footer.stay_tuned": "Restez Connecté",
+  "footer.newsletter_desc": "Soyez informé des derniers sons viraux.",
+  "footer.email_placeholder": "Votre E-mail",
+  "footer.join_newsletter": "Rejoindre la Newsletter",
+  "footer.copyright": "© {year} Sound Buttons Max. Tous droits réservés.",
+  "footer.link_home": "Accueil",
+  "footer.link_new": "Nouveaux Sons",
+  "footer.link_trending": "Tendances",
+  "footer.link_blog": "Blog",
+  "footer.link_about": "À Propos",
+  "footer.link_contact": "Contact",
+  "footer.privacy": "Politique de Confidentialité",
+  "footer.terms": "Conditions Générales",
+  "footer.dmca": "DMCA",
+  "footer.disclaimer": "Avertissement"
+}

@@ -6,8 +6,10 @@ import SoundCard from '@/components/SoundCard';
 import useInfiniteScroll from '@/hooks/useInfiniteScroll';
 import { Search } from 'lucide-react';
 import HeroSection from '@/components/home/HeroSection';
+import { useTranslation } from '@/i18n';
 
 export default function TrendingClient() {
+  const { t } = useTranslation();
   const limit = 40;
   const [sounds, setSounds] = useState<any[]>([]);
   const [total, setTotal] = useState(0);
@@ -67,10 +69,9 @@ export default function TrendingClient() {
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           isLoading={loading}
-          title="Trending Sound Buttons"
-          // subtitle="The hottest, most played viral meme sounds, soundboard clips, and sound effect buttons trending online right now."
-          badge="Trending Worldwide"
-          placeholder="Search trending sound buttons..."
+          title={t('trending.title')}
+          badge={t('trending.badge')}
+          placeholder={t('trending.placeholder')}
         />
 
         {/* Sounds Grid */}
@@ -86,15 +87,15 @@ export default function TrendingClient() {
               <div className="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mx-auto mb-4 text-slate-400 dark:text-slate-500">
                 <Search size={28} />
               </div>
-              <h3 className="text-lg font-black text-foreground">No sounds match your search</h3>
+              <h3 className="text-lg font-black text-foreground">{t('trending.no_results_title')}</h3>
               <p className="text-sm text-slate-500 dark:text-slate-400 mt-2 max-w-sm mx-auto font-medium">
-                We couldn&apos;t find any trending sound clips matching &ldquo;{searchQuery}&rdquo;. Try another term.
+                {t('trending.no_results_desc', { query: searchQuery })}
               </p>
               <button
                 onClick={() => setSearchQuery('')}
                 className="mt-6 px-5 py-2.5 bg-foreground text-background font-bold text-xs rounded-xl shadow-lg transition-all active:scale-95"
               >
-                Clear Search
+                {t('common.clear_search')}
               </button>
             </div>
           )
@@ -106,14 +107,14 @@ export default function TrendingClient() {
         {loading && (
           <div className="flex flex-col items-center justify-center mt-16 gap-3">
             <div className="w-8 h-8 rounded-full border-4 border-slate-200 dark:border-slate-800 border-t-primary dark:border-t-primary animate-spin" />
-            <span className="text-xs font-black text-foreground/80 uppercase tracking-widest animate-pulse">Loading more sounds...</span>
+            <span className="text-xs font-black text-foreground/80 uppercase tracking-widest animate-pulse">{t('common.loading')}</span>
           </div>
         )}
 
         {!loading && initialized && hasMore && (
           <div className="flex justify-center mt-12">
             <span className="text-xs font-bold text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-slate-900 px-4 py-2 rounded-full border border-slate-200/40 dark:border-slate-800/40 shadow-sm">
-              Scroll down to load more trending sounds
+              {t('trending.scroll_more')}
             </span>
           </div>
         )}

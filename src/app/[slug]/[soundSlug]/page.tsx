@@ -18,11 +18,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     if (!sound) {
       throw new Error('Sound not found');
     }
-    
+
     const soundName = sound.title;
     const canonicalUrl = `https://soundboardmax.net/sounds/${soundSlug}`;
     const ogImageUrl = `https://soundboardmax.net/${soundSlug}/opengraph-image.png`;
-    
+
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5001';
     const mp3Url = sound.fileUrl ? (sound.fileUrl.startsWith('http') ? sound.fileUrl : `${backendUrl}${sound.fileUrl}`) : '';
 
@@ -108,14 +108,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function SoundDetailPage({ params }: { params: Promise<{ slug: string; soundSlug: string }> }) {
   const { slug, soundSlug } = await params;
-  
+
   let sound: any = null;
   let relatedSounds: any[] = [];
 
   try {
     const soundRes = await api.get(`/sounds/${soundSlug}`);
     sound = soundRes.data;
-    
+
     if (sound && sound.category?._id) {
       const relatedRes = await api.get(`/sounds?category=${sound.category._id}&limit=12`);
       relatedSounds = relatedRes.data.sounds.filter((s: any) => s._id !== sound._id);
@@ -143,7 +143,7 @@ export default async function SoundDetailPage({ params }: { params: Promise<{ sl
     "encodingFormat": "audio/mpeg",
     "duration": sound.audioDuration || "PT0M2S",
     "uploadDate": sound.createdAt,
-    "thumbnailUrl": sound.ogImage || (sound.iconUrl ? `${SITE_URL}${sound.iconUrl}` : DEFAULT_IMAGE),
+    "thumbnailUrl": sound.ogImage || (sound.iconUrl ? `${SITE_URL}${sound.iconUrl}` : ''),
     "transcript": sound.transcript || ""
   };
 

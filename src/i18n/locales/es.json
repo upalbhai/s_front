@@ -1,0 +1,53 @@
+{
+  "nav.home": "Inicio",
+  "nav.new": "Nuevo",
+  "nav.trending": "Tendencias",
+  "nav.blog": "Blog",
+  "nav.search_placeholder": "Buscar sonidos...",
+
+  "hero.badge": "Tablero de Sonidos",
+  "hero.title": "Botones de Sonido Meme Gratis e Ilimitados",
+  "hero.placeholder": "Buscar más de 100.000 sonidos meme...",
+
+  "trending.badge": "Tendencias Mundiales",
+  "trending.title": "Botones de Sonido en Tendencia",
+  "trending.placeholder": "Buscar botones de sonido en tendencia...",
+  "trending.no_results_title": "Ningún sonido coincide con tu búsqueda",
+  "trending.no_results_desc": "No encontramos clips de sonido en tendencia que coincidan con \"{query}\". Prueba otro término.",
+  "trending.scroll_more": "Desplázate para cargar más sonidos en tendencia",
+
+  "new.badge": "Últimos Botones de Sonido",
+  "new.title": "Nuevos Botones de Sonido",
+  "new.placeholder": "Buscar los últimos botones de sonido...",
+  "new.no_results_title": "Ningún sonido coincide con tu búsqueda",
+  "new.no_results_desc": "No encontramos clips de sonido que coincidan con \"{query}\". Prueba otra palabra clave.",
+  "new.scroll_more": "Desplázate para cargar más sonidos",
+
+  "category.badge": "Tablero de Categorías",
+  "category.placeholder": "Buscar en {name}...",
+  "category.title": "Tablero de Sonidos de {name}",
+  "category.subtitle": "Explora los mejores sonidos de {name} en línea. Reproduce o descarga clips gratis al instante.",
+
+  "common.loading": "Cargando más sonidos...",
+  "common.clear_search": "Borrar Búsqueda",
+  "common.scroll_more": "Desplázate para cargar más",
+
+  "footer.tagline": "El tablero de sonidos meme gratuito más grande del mundo. Reproducción instantánea, sin descargas.",
+  "footer.quick_links": "Enlaces Rápidos",
+  "footer.categories": "Categorías",
+  "footer.stay_tuned": "Mantente al Día",
+  "footer.newsletter_desc": "Recibe notificaciones sobre los últimos sonidos virales.",
+  "footer.email_placeholder": "Tu Correo Electrónico",
+  "footer.join_newsletter": "Unirse al Boletín",
+  "footer.copyright": "© {year} Sound Buttons Max. Todos los derechos reservados.",
+  "footer.link_home": "Inicio",
+  "footer.link_new": "Sonidos Nuevos",
+  "footer.link_trending": "Tendencias",
+  "footer.link_blog": "Blog",
+  "footer.link_about": "Sobre Nosotros",
+  "footer.link_contact": "Contáctenos",
+  "footer.privacy": "Política de Privacidad",
+  "footer.terms": "Términos y Condiciones",
+  "footer.dmca": "DMCA",
+  "footer.disclaimer": "Aviso Legal"
+}

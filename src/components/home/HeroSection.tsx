@@ -2,8 +2,9 @@
 
 import React from 'react';
 import { useState, useRef, useEffect } from 'react';
-import { Search, Sparkles, Play, Pause, Loader2 } from 'lucide-react';
+import { Search, Sparkles, Loader2 } from 'lucide-react';
 import api from '@/services/api';
+import { useTranslation } from '@/i18n';
 
 interface HeroSectionProps {
   searchQuery?: string;
@@ -28,11 +29,15 @@ export default function HeroSection({
   trendingSounds = [],
   onSearchChange,
   isLoading = false,
-  title = "Unlimited Free Meme Sound Buttons",
-  subtitle = "",
-  badge = "Unblocked Soundboard",
-  placeholder = "Search 100,000+ meme sounds..."
+  title,
+  subtitle,
+  badge,
+  placeholder,
 }: HeroSectionProps) {
+  const { t } = useTranslation();
+  const resolvedTitle = title ?? t('hero.title');
+  const resolvedBadge = badge ?? t('hero.badge');
+  const resolvedPlaceholder = placeholder ?? t('hero.placeholder');
   const [localSearch, setLocalSearch] = useState(searchQuery);
   const [activePlayingId, setActivePlayingId] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -93,11 +98,11 @@ export default function HeroSection({
           <div className="space-y-6 flex flex-col items-center">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/25 text-xs font-black uppercase tracking-widest">
               <Sparkles size={14} />
-              <span>{badge}</span>
+              <span>{resolvedBadge}</span>
             </div>
 
             <h1 className="text-3xl md:text-5xl font-black tracking-tight leading-[1.05] text-foreground max-w-4xl mx-auto">
-              {title}
+              {resolvedTitle}
             </h1>
 
             {subtitle && (
@@ -117,7 +122,7 @@ export default function HeroSection({
               )}
               <input
                 type="text"
-                placeholder={placeholder}
+                placeholder={resolvedPlaceholder}
                 value={localSearch}
                 onChange={(e) => {
                   const val = e.target.value;

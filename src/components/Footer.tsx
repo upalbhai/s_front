@@ -3,9 +3,11 @@
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
+import { useTranslation } from '@/i18n';
 
 const Footer = () => {
   const { resolvedTheme } = useTheme();
+  const { t } = useTranslation();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -13,11 +15,28 @@ const Footer = () => {
   }, []);
 
   const isDark = mounted && resolvedTheme === 'dark';
+  const year = new Date().getFullYear().toString();
+
+  const quickLinks = [
+    { key: 'footer.link_home', href: '/' },
+    { key: 'footer.link_new', href: '/new' },
+    { key: 'footer.link_trending', href: '/trending' },
+    { key: 'footer.link_blog', href: '/blog' },
+    { key: 'footer.link_about', href: '/about' },
+    { key: 'footer.link_contact', href: '/contact' },
+  ];
+
+  const legalLinks = [
+    { key: 'footer.privacy', href: '/privacy' },
+    { key: 'footer.terms', href: '/terms' },
+    { key: 'footer.dmca', href: '/dmca' },
+    { key: 'footer.disclaimer', href: '/disclaimer' },
+  ];
 
   return (
     <footer className={`mt-16 border-t pt-20 pb-10 transition-all duration-300 ${
-      isDark 
-        ? 'bg-zinc-950 border-zinc-800' 
+      isDark
+        ? 'bg-zinc-950 border-zinc-800'
         : 'bg-white border-zinc-200'
     }`}>
       <div className="container mx-auto px-4">
@@ -28,21 +47,22 @@ const Footer = () => {
               SOUND BUTTONS <span className="text-primary">MAX</span>
             </h2>
             <p className={`font-medium leading-relaxed transition-all duration-300 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
-              World's largest free meme soundboard. Instant playback, no downloads required to play.
+              {t('footer.tagline')}
             </p>
             <div className={`space-y-2 text-sm font-bold transition-all duration-300 ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
-              <p>123 Sound Lane, Meme City</p>
               <p>contact@soundbuttonsmax.com</p>
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className={`text-lg font-black tracking-tight mb-6 ${isDark ? 'text-white' : 'text-zinc-900'}`}>Quick Links</h3>
+            <h3 className={`text-lg font-black tracking-tight mb-6 ${isDark ? 'text-white' : 'text-zinc-900'}`}>
+              {t('footer.quick_links')}
+            </h3>
             <ul className={`space-y-4 font-bold transition-all duration-300 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
-              {['Home', 'New Sounds', 'Trending', 'Blog', 'About Us', 'Contact Us'].map(link => (
-                <li key={link}>
-                  <Link href={`/${link.toLowerCase().replace(' ', '-')}`} className="hover:text-primary transition-colors">{link}</Link>
+              {quickLinks.map((link) => (
+                <li key={link.key}>
+                  <Link href={link.href} className="hover:text-primary transition-colors">{t(link.key)}</Link>
                 </li>
               ))}
             </ul>
@@ -50,7 +70,9 @@ const Footer = () => {
 
           {/* Categories */}
           <div>
-            <h3 className={`text-lg font-black tracking-tight mb-6 ${isDark ? 'text-white' : 'text-zinc-900'}`}>Categories</h3>
+            <h3 className={`text-lg font-black tracking-tight mb-6 ${isDark ? 'text-white' : 'text-zinc-900'}`}>
+              {t('footer.categories')}
+            </h3>
             <ul className={`space-y-4 font-bold transition-all duration-300 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
               {[
                 { name: 'Meme', href: '/meme-soundboard/1' },
@@ -66,25 +88,29 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Newsletter/Contact */}
+          {/* Newsletter */}
           <div className="space-y-6">
-            <h3 className={`text-lg font-black tracking-tight mb-6 ${isDark ? 'text-white' : 'text-zinc-900'}`}>Stay Tuned</h3>
-            <p className={`text-sm font-medium transition-all duration-300 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>Get notified about the latest viral sounds.</p>
+            <h3 className={`text-lg font-black tracking-tight mb-6 ${isDark ? 'text-white' : 'text-zinc-900'}`}>
+              {t('footer.stay_tuned')}
+            </h3>
+            <p className={`text-sm font-medium transition-all duration-300 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
+              {t('footer.newsletter_desc')}
+            </p>
             <form className="space-y-3">
-              <input 
-                type="email" 
-                placeholder="Your Email" 
+              <input
+                type="email"
+                placeholder={t('footer.email_placeholder')}
                 className={`w-full px-4 py-3 rounded-xl border outline-none focus:ring-2 focus:ring-primary/20 transition-all font-bold text-sm ${
-                  isDark 
-                    ? 'bg-zinc-900 border-zinc-800 text-white' 
+                  isDark
+                    ? 'bg-zinc-900 border-zinc-800 text-white'
                     : 'bg-zinc-100 border-zinc-200 text-zinc-900'
-                }`} 
+                }`}
               />
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 className="w-full py-3 rounded-xl bg-primary text-background font-black hover:bg-primary-hover transition-all active:scale-95 shadow-lg shadow-primary/20"
               >
-                Join Newsletter
+                {t('footer.join_newsletter')}
               </button>
             </form>
           </div>
@@ -92,16 +118,16 @@ const Footer = () => {
 
         <div className={`pt-10 border-t flex flex-col md:flex-row justify-between items-center gap-6 ${isDark ? 'border-zinc-800' : 'border-zinc-200'}`}>
           <p className={`text-sm font-bold transition-all duration-300 ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
-            &copy; {new Date().getFullYear()} Sound Buttons Max. All rights reserved.
+            {t('footer.copyright').replace('{year}', year)}
           </p>
           <div className={`flex flex-wrap justify-center gap-6 text-sm font-bold transition-all duration-300 ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
-            {['Privacy Policy', 'Terms & Conditions', 'DMCA', 'Disclaimer'].map(link => (
-              <Link 
-                key={link}
-                href={`/${link.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-')}`} 
+            {legalLinks.map((link) => (
+              <Link
+                key={link.key}
+                href={link.href}
                 className="hover:text-primary transition-colors"
               >
-                {link}
+                {t(link.key)}
               </Link>
             ))}
           </div>

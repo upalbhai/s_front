@@ -1,0 +1,53 @@
+{
+  "nav.home": "ホーム",
+  "nav.new": "新着",
+  "nav.trending": "トレンド",
+  "nav.blog": "ブログ",
+  "nav.search_placeholder": "サウンドを検索...",
+
+  "hero.badge": "無制限サウンドボード",
+  "hero.title": "無料ミームサウンドボタン無制限",
+  "hero.placeholder": "10万以上のミームサウンドを検索...",
+
+  "trending.badge": "世界のトレンド",
+  "trending.title": "トレンドサウンドボタン",
+  "trending.placeholder": "トレンドサウンドボタンを検索...",
+  "trending.no_results_title": "検索に一致するサウンドがありません",
+  "trending.no_results_desc": "「{query}」に一致するトレンドサウンドクリップが見つかりませんでした。別の検索語を試してください。",
+  "trending.scroll_more": "スクロールしてトレンドサウンドをさらに読み込む",
+
+  "new.badge": "最新サウンドボタン",
+  "new.title": "新着サウンドボタン",
+  "new.placeholder": "最新のサウンドボタンを検索...",
+  "new.no_results_title": "検索に一致するサウンドがありません",
+  "new.no_results_desc": "「{query}」に一致するサウンドクリップが見つかりませんでした。別のキーワードを試してください。",
+  "new.scroll_more": "スクロールしてさらにサウンドを読み込む",
+
+  "category.badge": "カテゴリサウンドボード",
+  "category.placeholder": "{name}内を検索...",
+  "category.title": "{name}サウンドボード",
+  "category.subtitle": "オンラインで最高の{name}サウンドを探索。無料でクリップを即座に再生またはダウンロード。",
+
+  "common.loading": "さらにサウンドを読み込み中...",
+  "common.clear_search": "検索をクリア",
+  "common.scroll_more": "スクロールしてさらに読み込む",
+
+  "footer.tagline": "世界最大の無料ミームサウンドボード。ダウンロード不要で即座に再生。",
+  "footer.quick_links": "クイックリンク",
+  "footer.categories": "カテゴリ",
+  "footer.stay_tuned": "最新情報をチェック",
+  "footer.newsletter_desc": "最新のバイラルサウンドについて通知を受け取る。",
+  "footer.email_placeholder": "メールアドレス",
+  "footer.join_newsletter": "ニュースレターに登録",
+  "footer.copyright": "© {year} Sound Buttons Max. 全著作権所有。",
+  "footer.link_home": "ホーム",
+  "footer.link_new": "新着サウンド",
+  "footer.link_trending": "トレンド",
+  "footer.link_blog": "ブログ",
+  "footer.link_about": "私たちについて",
+  "footer.link_contact": "お問い合わせ",
+  "footer.privacy": "プライバシーポリシー",
+  "footer.terms": "利用規約",
+  "footer.dmca": "DMCA",
+  "footer.disclaimer": "免責事項"
+}

@@ -1,0 +1,53 @@
+{
+  "nav.home": "홈",
+  "nav.new": "새로운",
+  "nav.trending": "트렌딩",
+  "nav.blog": "블로그",
+  "nav.search_placeholder": "사운드 검색...",
+
+  "hero.badge": "차단 해제 사운드보드",
+  "hero.title": "무제한 무료 밈 사운드 버튼",
+  "hero.placeholder": "100,000개 이상의 밈 사운드 검색...",
+
+  "trending.badge": "전 세계 트렌딩",
+  "trending.title": "트렌딩 사운드 버튼",
+  "trending.placeholder": "트렌딩 사운드 버튼 검색...",
+  "trending.no_results_title": "검색과 일치하는 사운드가 없습니다",
+  "trending.no_results_desc": "\"{query}\"와 일치하는 트렌딩 사운드 클립을 찾을 수 없습니다. 다른 검색어를 시도해 보세요.",
+  "trending.scroll_more": "아래로 스크롤하여 트렌딩 사운드 더 불러오기",
+
+  "new.badge": "최신 사운드 버튼",
+  "new.title": "새 사운드 버튼",
+  "new.placeholder": "최신 사운드 버튼 검색...",
+  "new.no_results_title": "검색과 일치하는 사운드가 없습니다",
+  "new.no_results_desc": "\"{query}\"와 일치하는 사운드 클립을 찾을 수 없습니다. 다른 키워드를 시도해 보세요.",
+  "new.scroll_more": "아래로 스크롤하여 사운드 더 불러오기",
+
+  "category.badge": "카테고리 사운드보드",
+  "category.placeholder": "{name}에서 검색...",
+  "category.title": "{name} 사운드보드",
+  "category.subtitle": "온라인에서 최고의 {name} 사운드를 탐색하세요. 클립을 무료로 즉시 재생하거나 다운로드하세요.",
+
+  "common.loading": "사운드 더 불러오는 중...",
+  "common.clear_search": "검색 지우기",
+  "common.scroll_more": "스크롤하여 더 불러오기",
+
+  "footer.tagline": "세계 최대의 무료 밈 사운드보드. 다운로드 없이 즉시 재생.",
+  "footer.quick_links": "빠른 링크",
+  "footer.categories": "카테고리",
+  "footer.stay_tuned": "최신 소식 받기",
+  "footer.newsletter_desc": "최신 바이럴 사운드에 대한 알림을 받으세요.",
+  "footer.email_placeholder": "이메일 주소",
+  "footer.join_newsletter": "뉴스레터 구독",
+  "footer.copyright": "© {year} Sound Buttons Max. 모든 권리 보유.",
+  "footer.link_home": "홈",
+  "footer.link_new": "새 사운드",
+  "footer.link_trending": "트렌딩",
+  "footer.link_blog": "블로그",
+  "footer.link_about": "회사 소개",
+  "footer.link_contact": "문의하기",
+  "footer.privacy": "개인정보 처리방침",
+  "footer.terms": "이용약관",
+  "footer.dmca": "DMCA",
+  "footer.disclaimer": "면책 조항"
+}

@@ -1,0 +1,53 @@
+{
+  "nav.home": "Home",
+  "nav.new": "Nuovo",
+  "nav.trending": "Di Tendenza",
+  "nav.blog": "Blog",
+  "nav.search_placeholder": "Cerca suoni...",
+
+  "hero.badge": "Soundboard Sbloccato",
+  "hero.title": "Pulsanti Sonori Meme Gratuiti e Illimitati",
+  "hero.placeholder": "Cerca tra oltre 100.000 suoni meme...",
+
+  "trending.badge": "Di Tendenza nel Mondo",
+  "trending.title": "Pulsanti Sonori di Tendenza",
+  "trending.placeholder": "Cerca pulsanti sonori di tendenza...",
+  "trending.no_results_title": "Nessun suono corrisponde alla tua ricerca",
+  "trending.no_results_desc": "Non abbiamo trovato clip audio di tendenza corrispondenti a \"{query}\". Prova un altro termine.",
+  "trending.scroll_more": "Scorri per caricare altri suoni di tendenza",
+
+  "new.badge": "Ultimi Pulsanti Sonori",
+  "new.title": "Nuovi Pulsanti Sonori",
+  "new.placeholder": "Cerca gli ultimi pulsanti sonori...",
+  "new.no_results_title": "Nessun suono corrisponde alla tua ricerca",
+  "new.no_results_desc": "Non abbiamo trovato clip audio corrispondenti a \"{query}\". Prova un'altra parola chiave.",
+  "new.scroll_more": "Scorri per caricare altri suoni",
+
+  "category.badge": "Soundboard di Categoria",
+  "category.placeholder": "Cerca in {name}...",
+  "category.title": "Soundboard di {name}",
+  "category.subtitle": "Esplora i migliori suoni di {name} online. Riproduci o scarica clip gratuitamente.",
+
+  "common.loading": "Caricamento altri suoni...",
+  "common.clear_search": "Cancella Ricerca",
+  "common.scroll_more": "Scorri per caricare altro",
+
+  "footer.tagline": "Il più grande soundboard meme gratuito al mondo. Riproduzione istantanea, nessun download.",
+  "footer.quick_links": "Link Rapidi",
+  "footer.categories": "Categorie",
+  "footer.stay_tuned": "Rimani Aggiornato",
+  "footer.newsletter_desc": "Ricevi notifiche sugli ultimi suoni virali.",
+  "footer.email_placeholder": "La Tua Email",
+  "footer.join_newsletter": "Iscriviti alla Newsletter",
+  "footer.copyright": "© {year} Sound Buttons Max. Tutti i diritti riservati.",
+  "footer.link_home": "Home",
+  "footer.link_new": "Suoni Nuovi",
+  "footer.link_trending": "Di Tendenza",
+  "footer.link_blog": "Blog",
+  "footer.link_about": "Chi Siamo",
+  "footer.link_contact": "Contattaci",
+  "footer.privacy": "Informativa sulla Privacy",
+  "footer.terms": "Termini e Condizioni",
+  "footer.dmca": "DMCA",
+  "footer.disclaimer": "Dichiarazione di Non Responsabilità"
+}

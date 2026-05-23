@@ -1,0 +1,53 @@
+{
+  "nav.home": "Início",
+  "nav.new": "Novo",
+  "nav.trending": "Em Alta",
+  "nav.blog": "Blog",
+  "nav.search_placeholder": "Pesquisar sons...",
+
+  "hero.badge": "Soundboard Desbloqueado",
+  "hero.title": "Botões de Som Meme Gratuitos e Ilimitados",
+  "hero.placeholder": "Pesquisar mais de 100.000 sons meme...",
+
+  "trending.badge": "Em Alta no Mundo",
+  "trending.title": "Botões de Som em Alta",
+  "trending.placeholder": "Pesquisar botões de som em alta...",
+  "trending.no_results_title": "Nenhum som corresponde à sua pesquisa",
+  "trending.no_results_desc": "Não encontramos clipes de som em alta correspondentes a \"{query}\". Tente outro termo.",
+  "trending.scroll_more": "Role para carregar mais sons em alta",
+
+  "new.badge": "Últimos Botões de Som",
+  "new.title": "Novos Botões de Som",
+  "new.placeholder": "Pesquisar os últimos botões de som...",
+  "new.no_results_title": "Nenhum som corresponde à sua pesquisa",
+  "new.no_results_desc": "Não encontramos clipes de som correspondentes a \"{query}\". Tente outra palavra-chave.",
+  "new.scroll_more": "Role para carregar mais sons",
+
+  "category.badge": "Soundboard de Categoria",
+  "category.placeholder": "Pesquisar em {name}...",
+  "category.title": "Soundboard de {name}",
+  "category.subtitle": "Explore os melhores sons de {name} online. Reproduza ou baixe clipes grátis instantaneamente.",
+
+  "common.loading": "Carregando mais sons...",
+  "common.clear_search": "Limpar Pesquisa",
+  "common.scroll_more": "Role para carregar mais",
+
+  "footer.tagline": "O maior soundboard meme gratuito do mundo. Reprodução instantânea, sem downloads.",
+  "footer.quick_links": "Links Rápidos",
+  "footer.categories": "Categorias",
+  "footer.stay_tuned": "Fique por Dentro",
+  "footer.newsletter_desc": "Seja notificado sobre os últimos sons virais.",
+  "footer.email_placeholder": "Seu E-mail",
+  "footer.join_newsletter": "Assinar Newsletter",
+  "footer.copyright": "© {year} Sound Buttons Max. Todos os direitos reservados.",
+  "footer.link_home": "Início",
+  "footer.link_new": "Sons Novos",
+  "footer.link_trending": "Em Alta",
+  "footer.link_blog": "Blog",
+  "footer.link_about": "Sobre Nós",
+  "footer.link_contact": "Contate-nos",
+  "footer.privacy": "Política de Privacidade",
+  "footer.terms": "Termos e Condições",
+  "footer.dmca": "DMCA",
+  "footer.disclaimer": "Aviso Legal"
+}

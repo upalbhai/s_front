@@ -1,0 +1,53 @@
+{
+  "nav.home": "Home",
+  "nav.new": "New",
+  "nav.trending": "Trending",
+  "nav.blog": "Blog",
+  "nav.search_placeholder": "Search sounds...",
+
+  "hero.badge": "Unblocked Soundboard",
+  "hero.title": "Unlimited Free Meme Sound Buttons",
+  "hero.placeholder": "Search 100,000+ meme sounds...",
+
+  "trending.badge": "Trending Worldwide",
+  "trending.title": "Trending Sound Buttons",
+  "trending.placeholder": "Search trending sound buttons...",
+  "trending.no_results_title": "No sounds match your search",
+  "trending.no_results_desc": "We couldn't find any trending sound clips matching \"{query}\". Try another term.",
+  "trending.scroll_more": "Scroll down to load more trending sounds",
+
+  "new.badge": "Latest Sound Buttons",
+  "new.title": "New Sound Buttons",
+  "new.placeholder": "Search latest sound buttons...",
+  "new.no_results_title": "No sounds match your search",
+  "new.no_results_desc": "We couldn't find any sound clips matching \"{query}\". Try another keyword.",
+  "new.scroll_more": "Scroll down to load more sounds",
+
+  "category.badge": "Category Soundboard",
+  "category.placeholder": "Search in {name}...",
+  "category.title": "{name} Soundboard",
+  "category.subtitle": "Explore the best {name} sounds online. Play or download free clips instantly.",
+
+  "common.loading": "Loading more sounds...",
+  "common.clear_search": "Clear Search",
+  "common.scroll_more": "Scroll to load more",
+
+  "footer.tagline": "World's largest free meme soundboard. Instant playback, no downloads required.",
+  "footer.quick_links": "Quick Links",
+  "footer.categories": "Categories",
+  "footer.stay_tuned": "Stay Tuned",
+  "footer.newsletter_desc": "Get notified about the latest viral sounds.",
+  "footer.email_placeholder": "Your Email",
+  "footer.join_newsletter": "Join Newsletter",
+  "footer.copyright": "© {year} Sound Buttons Max. All rights reserved.",
+  "footer.link_home": "Home",
+  "footer.link_new": "New Sounds",
+  "footer.link_trending": "Trending",
+  "footer.link_blog": "Blog",
+  "footer.link_about": "About Us",
+  "footer.link_contact": "Contact Us",
+  "footer.privacy": "Privacy Policy",
+  "footer.terms": "Terms & Conditions",
+  "footer.dmca": "DMCA",
+  "footer.disclaimer": "Disclaimer"
+}

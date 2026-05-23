@@ -4,6 +4,7 @@ import AppChrome from "@/components/AppChrome";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { QueryProvider } from "@/components/QueryProvider";
 import { AudioProvider } from "@/context/AudioContext";
+import { LanguageProvider } from "@/i18n";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
 
@@ -35,7 +36,8 @@ export default function RootLayout({
         >
           <QueryProvider>
             <AudioProvider>
-              <AppChrome>{children}</AppChrome>
+              <LanguageProvider>
+                <AppChrome>{children}</AppChrome>
               <Toaster position="bottom-right" toastOptions={{
                 style: {
                   background: '#333',
@@ -43,6 +45,7 @@ export default function RootLayout({
                   borderRadius: '12px',
                 },
               }} />
+              </LanguageProvider>
             </AudioProvider>
           </QueryProvider>
         </ThemeProvider>
