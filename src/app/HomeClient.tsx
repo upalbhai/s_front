@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import api from '@/services/api';
 import useDebounce from '@/hooks/useDebounce';
@@ -14,6 +14,8 @@ import FeaturesSection from '@/components/home/FeaturesSection';
 import TestimonialsSection from '@/components/home/TestimonialsSection';
 import FaqSection from '@/components/home/FaqSection';
 import EditorialSeoSection from '@/components/home/EditorialSeoSection';
+import HomeSEOContent from '@/components/home/HomeSEOContent';
+import TagsScrollSection from '@/components/home/TagsScrollSection';
 
 export default function HomeClient({
   trendingSounds = [],
@@ -24,6 +26,13 @@ export default function HomeClient({
 }: any) {
   const [query, setQuery] = useState(searchQuery || '');
   const debouncedQuery = useDebounce(query, 300);
+
+  // States for tabbed sound selection
+  const [activeTab, setActiveTab] = useState('trending');
+  const [tabSounds, setTabSounds] = useState<any[]>(trendingSounds);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   // Sync state if initial searchQuery changes (e.g. page mount)
   useEffect(() => {
@@ -67,6 +76,39 @@ export default function HomeClient({
     staleTime: 30 * 1000,
   });
 
+  // Function to fetch sounds for the active tab (paginated)
+  const fetchTabSounds = useCallback(async (tab: string, pageNum: number, append: boolean) => {
+    // Optimistically use SSR/initial data for trending tab page 1 on first load
+    if (tab === 'trending' && pageNum === 1 && trendingSounds.length > 0 && !append) {
+      setTabSounds(trendingSounds);
+      setHasMore(true);
+      setPage(1);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await api.get(`/sounds?sort=${tab}&page=${pageNum}&limit=12`);
+      const incoming = res.data.sounds || [];
+      setTabSounds((prev) => (append ? [...prev, ...incoming] : incoming));
+      setHasMore(res.data.hasNextPage || incoming.length === 12);
+      setPage(pageNum);
+    } catch (error) {
+      console.error('Error fetching tab sounds:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [trendingSounds]);
+
+  // Fetch new tab data whenever tab changes
+  useEffect(() => {
+    fetchTabSounds(activeTab, 1, false);
+  }, [activeTab, fetchTabSounds]);
+
+  const handleLoadMoreTabSounds = () => {
+    fetchTabSounds(activeTab, page + 1, true);
+  };
+
   const handleClearSearch = () => {
     setQuery('');
   };
@@ -79,6 +121,10 @@ export default function HomeClient({
         isLoading={isLoading && debouncedQuery === query}
         trendingSounds={homeData.trendingSounds}
       />
+      
+      {/* Horizontal scrolling tags section */}
+      <TagsScrollSection />
+
       {/* <StatsSection /> */}
       {query && (
         <SearchResultsSection
@@ -88,13 +134,24 @@ export default function HomeClient({
           onClear={handleClearSearch}
         />
       )}
-      <TrendingSoundsSection trendingSounds={homeData.trendingSounds} />
+      
+      {/* Unified Tabbed Sounds section */}
+      <TrendingSoundsSection
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        sounds={tabSounds}
+        loading={loading}
+        hasMore={hasMore}
+        onLoadMore={handleLoadMoreTabSounds}
+      />
+      
       {/* <CategoryGridSection categories={homeData.categories} /> */}
-      <NewAdditionsSection newSounds={homeData.newSounds} />
+      {/* <NewAdditionsSection newSounds={homeData.newSounds} /> */}
       {/* <FeaturesSection /> */}
       {/* <TestimonialsSection /> */}
       {/* <FaqSection /> */}
       {/* <EditorialSeoSection /> */}
+      <HomeSEOContent />
     </div>
   );
 }

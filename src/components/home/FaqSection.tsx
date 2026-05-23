@@ -2,28 +2,30 @@
 
 import { useState } from 'react';
 import { HelpCircle, Plus, Minus } from 'lucide-react';
-
-const FAQ_ITEMS = [
-  {
-    question: "What are meme sound buttons?",
-    answer: "Meme sound buttons are instant-play audio clips from popular internet culture, viral TikTok videos, and gaming. With a single click, you can play sound effects like the Vine Boom, Bruh, or Goofy Ahh instantly on your phone or PC."
-  },
-  {
-    question: "Are all sound buttons free to play and download?",
-    answer: "Yes, 100% free! You can play any sound button as many times as you like, and download them as high-quality MP3 files for your video editing, stream overlays, or phone ringtones."
-  },
-  {
-    question: "Is Sound Buttons Max unblocked at school and work?",
-    answer: "Yes. Our web app is optimized to load lightning-fast and run flawlessly across restricted networks, making it the perfect unblocked soundboard for school classrooms, discord channels, or office laughs."
-  },
-  {
-    question: "How do I use these sounds on Discord or OBS?",
-    answer: "Simple! You can download the high-quality MP3 file from our platform and upload it directly into your Discord Soundboard or OBS Studio media source overlays."
-  }
-];
+import { useTranslation } from '@/i18n';
 
 export default function FaqSection() {
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+  const { t } = useTranslation();
+
+  const FAQ_ITEMS = [
+    {
+      question: t('home.faq.q1'),
+      answer: t('home.faq.a1')
+    },
+    {
+      question: t('home.faq.q2'),
+      answer: t('home.faq.a2')
+    },
+    {
+      question: t('home.faq.q3'),
+      answer: t('home.faq.a3')
+    },
+    {
+      question: t('home.faq.q4'),
+      answer: t('home.faq.a4')
+    }
+  ];
 
   const toggleFaq = (index: number) => {
     setOpenFaqIndex(openFaqIndex === index ? null : index);
@@ -35,8 +37,8 @@ export default function FaqSection() {
         <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
           <HelpCircle size={24} />
         </div>
-        <p className="text-[10px] font-black uppercase tracking-widest text-primary">Got questions?</p>
-        <h2 className="text-3xl font-black tracking-tight text-foreground">Frequently Asked Questions</h2>
+        <p className="text-[10px] font-black uppercase tracking-widest text-primary">{t('home.faq.badge')}</p>
+        <h2 className="text-3xl font-black tracking-tight text-foreground">{t('home.faq.title')}</h2>
       </div>
 
       <div className="space-y-4">

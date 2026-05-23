@@ -48,8 +48,8 @@ const Header = () => {
       <div className="container mx-auto px-4 flex items-center justify-between gap-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group shrink-0">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary transition-transform group-hover:scale-110">
-            <Music size={24} />
+          <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center transition-transform group-hover:scale-110 shadow-xs border border-slate-200/55 dark:border-slate-800/55">
+            <img src="/logo.jpeg" alt="Sound Buttons Max Logo" className="w-full h-full object-cover" />
           </div>
           <span className="text-xl font-black tracking-tighter text-foreground whitespace-nowrap">
             SOUND BUTTONS <span className="text-primary">MAX</span>
@@ -96,7 +96,9 @@ const Header = () => {
           <div className="p-6 flex flex-col h-full">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-2">
-                <Music size={24} className="text-primary" />
+                <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center border border-slate-200/55 dark:border-slate-800/55">
+                  <img src="/logo.jpeg" alt="Sound Buttons Max Logo" className="w-full h-full object-cover" />
+                </div>
                 <span className="text-lg font-black">SOUND BUTTONS MAX</span>
               </div>
               <button className="p-2" onClick={() => setIsMobileMenuOpen(false)}>
@@ -111,7 +113,7 @@ const Header = () => {
               <Link href="/blog" onClick={() => setIsMobileMenuOpen(false)}>{t('nav.blog')}</Link>
 
               <div className="mt-4 pt-6 border-t border-slate-200 dark:border-slate-800">
-                <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-4">Categories</p>
+                <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-4">{t('common.categories')}</p>
                 <div className="grid grid-cols-2 gap-3">
                   {categories.slice(0, 8).map((cat) => (
                     <Link

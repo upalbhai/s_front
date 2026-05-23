@@ -69,16 +69,16 @@ export default function HeroSection({
   };
 
   const defaultItems = [
-    { _id: '1', name: 'Vine Boom Effect', plays: '12M+ Plays', icon: '💥', color: 'from-red-500 to-rose-600', fileUrl: '' },
-    { _id: '2', name: 'Bruh Sound', plays: '8M+ Plays', icon: '🗣️', color: 'from-amber-500 to-orange-600', fileUrl: '' },
-    { _id: '3', name: 'Goofy Ahh Car', plays: '5M+ Plays', icon: '🚗', color: 'from-indigo-500 to-blue-600', fileUrl: '' },
+    { _id: '1', name: 'Vine Boom Effect', plays: `12M+ ${t('sound.plays_simple')}`, icon: '💥', color: 'from-red-500 to-rose-600', fileUrl: '' },
+    { _id: '2', name: 'Bruh Sound', plays: `8M+ ${t('sound.plays_simple')}`, icon: '🗣️', color: 'from-amber-500 to-orange-600', fileUrl: '' },
+    { _id: '3', name: 'Goofy Ahh Car', plays: `5M+ ${t('sound.plays_simple')}`, icon: '🚗', color: 'from-indigo-500 to-blue-600', fileUrl: '' },
   ];
 
   const displaySounds = trendingSounds && trendingSounds.length > 0
     ? trendingSounds.slice(0, 3).map((sound: any, idx: number) => ({
       _id: sound._id,
       name: sound.title,
-      plays: `${(sound.playCount || 0).toLocaleString()} Plays`,
+      plays: t('sound.plays', { count: (sound.playCount || 0).toLocaleString() }),
       icon: sound.iconUrl ? getFullUrl(sound.iconUrl) : null,
       color: idx === 0 ? 'from-red-500 to-rose-600' : idx === 1 ? 'from-amber-500 to-orange-600' : 'from-indigo-500 to-blue-600',
       fileUrl: sound.fileUrl,

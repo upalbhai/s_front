@@ -1,37 +1,40 @@
 'use client';
 
 import { Star } from 'lucide-react';
-
-const TESTIMONIALS = [
-  {
-    name: "Alex Rivera",
-    role: "Twitch Streamer",
-    quote: "Sound Buttons Max is my go-to overlay companion. The instant unblocked play means I don't suffer from streams lagging while triggering sound effects.",
-    rating: 5,
-    avatar: "AR"
-  },
-  {
-    name: "Devon Carter",
-    role: "Video Editor",
-    quote: "Finding high-quality MP3 downloads of current viral TikTok memes used to take ages. This site has everything categorized and organized with one-click downloads.",
-    rating: 5,
-    avatar: "DC"
-  },
-  {
-    name: "Sophia Martinez",
-    role: "Discord Community Admin",
-    quote: "Our server relies heavily on customized soundboards. This platform is a goldmine for meme reactions. Easy to browse and fully unblocked.",
-    rating: 5,
-    avatar: "SM"
-  }
-];
+import { useTranslation } from '@/i18n';
 
 export default function TestimonialsSection() {
+  const { t } = useTranslation();
+
+  const TESTIMONIALS = [
+    {
+      name: "Alex Rivera",
+      role: t('home.testimonials.t1_role'),
+      quote: t('home.testimonials.t1_quote'),
+      rating: 5,
+      avatar: "AR"
+    },
+    {
+      name: "Devon Carter",
+      role: t('home.testimonials.t2_role'),
+      quote: t('home.testimonials.t2_quote'),
+      rating: 5,
+      avatar: "DC"
+    },
+    {
+      name: "Sophia Martinez",
+      role: t('home.testimonials.t3_role'),
+      quote: t('home.testimonials.t3_quote'),
+      rating: 5,
+      avatar: "SM"
+    }
+  ];
+
   return (
     <section className="max-w-7xl mx-auto px-4 border-t border-slate-100 dark:border-slate-900">
       <div className="flex flex-col items-center text-center space-y-4 mb-16">
-        <p className="text-[10px] font-black uppercase tracking-widest text-primary">Trusted globally</p>
-        <h2 className="text-3xl md:text-4xl font-black tracking-tight text-foreground">What Meme Lovers Say</h2>
+        <p className="text-[10px] font-black uppercase tracking-widest text-primary">{t('home.testimonials.badge')}</p>
+        <h2 className="text-3xl md:text-4xl font-black tracking-tight text-foreground">{t('home.testimonials.title')}</h2>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

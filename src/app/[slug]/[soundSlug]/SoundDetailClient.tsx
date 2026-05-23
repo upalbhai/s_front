@@ -186,14 +186,29 @@ export default function SoundDetailClient({ sound, relatedSounds }: any) {
               {sound.title}
             </h1>
 
-            {/* Category tag pill */}
-            {sound.category && (
-              <Link href={`/${sound.category.slug}`} className="inline-block mt-6">
-                <span className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-bold bg-sky-500/10 text-sky-500 border border-sky-500/20 hover:bg-sky-500/20 transition-all">
-                  #{sound.category.name}
-                </span>
-              </Link>
-            )}
+            {/* Category and tag pills */}
+            <div className="flex flex-wrap gap-2 items-center justify-center md:justify-start mt-6">
+              {sound.category && (
+                <Link href={`/${sound.category.slug}`} className="inline-block">
+                  <span className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-bold bg-sky-500/10 text-sky-500 border border-sky-500/20 hover:bg-sky-500/20 transition-all">
+                    #{sound.category.name}
+                  </span>
+                </Link>
+              )}
+
+              {sound.tags && sound.tags.length > 0 && sound.tags.map((tag: string) => {
+                const tagTrimmed = tag.trim();
+                if (!tagTrimmed) return null;
+                const slug = encodeURIComponent(tagTrimmed.toLowerCase().replace(/\s+/g, '-'));
+                return (
+                  <Link key={tagTrimmed} href={`/tag/${slug}`} className="inline-block">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-650 dark:text-slate-350 border border-slate-205 dark:border-slate-750 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+                      #{tagTrimmed}
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
 
             {/* Stats (Plays, Views) */}
             <div className="flex items-center gap-6 mt-6 text-sm md:text-base font-bold text-slate-500 dark:text-slate-400">

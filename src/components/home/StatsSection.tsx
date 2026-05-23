@@ -1,8 +1,10 @@
 'use client';
 
 import { Volume2, Users, ShieldCheck } from 'lucide-react';
+import { useTranslation } from '@/i18n';
 
 export default function StatsSection() {
+  const { t } = useTranslation();
   return (
     <section className="border-y border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/20 py-12">
       <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
@@ -14,7 +16,7 @@ export default function StatsSection() {
             </div>
             <div>
               <h3 className="text-2xl md:text-3xl font-black text-foreground">100,000+</h3>
-              <p className="text-sm text-slate-500 font-medium">Meme Sound Buttons Available</p>
+              <p className="text-sm text-slate-500 font-medium">{t('home.stats.s1_label')}</p>
             </div>
           </div>
 
@@ -24,7 +26,7 @@ export default function StatsSection() {
             </div>
             <div>
               <h3 className="text-2xl md:text-3xl font-black text-foreground">5,000,000+</h3>
-              <p className="text-sm text-slate-500 font-medium">Monthly Active Sound Seekers</p>
+              <p className="text-sm text-slate-500 font-medium">{t('home.stats.s2_label')}</p>
             </div>
           </div>
 
@@ -33,8 +35,8 @@ export default function StatsSection() {
               <ShieldCheck size={24} />
             </div>
             <div>
-              <h3 className="text-2xl md:text-3xl font-black text-foreground">100% Free</h3>
-              <p className="text-sm text-slate-500 font-medium">Unblocked & School-Safe Delivery</p>
+              <h3 className="text-2xl md:text-3xl font-black text-foreground">{t('home.stats.s3_value')}</h3>
+              <p className="text-sm text-slate-500 font-medium">{t('home.stats.s3_label')}</p>
             </div>
           </div>
 

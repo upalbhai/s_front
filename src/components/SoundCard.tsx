@@ -6,6 +6,7 @@ import Link from 'next/link';
 import api from '../services/api';
 import { toast } from 'react-hot-toast';
 import useAudio from '../hooks/useAudio';
+import { useTranslation } from '@/i18n';
 
 interface SoundProps {
   sound: {
@@ -33,6 +34,7 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
   const { currentSound, isPlaying, playSound } = useAudio();
   const isThisPlaying = currentSound?._id === sound._id && isPlaying;
   const [isFavorited, setIsFavorited] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -164,19 +166,19 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
             ? 'text-red-500'
             : 'text-slate-500 dark:text-slate-400 hover:text-red-500'
             } hover:scale-110 transition-transform active:scale-95`}
-          title="Favorite"
+          title={t('sound.fav_tooltip')}
         >
           <Heart size={16} fill={isFavorited ? 'currentColor' : 'none'} strokeWidth={2} />
         </button>
 
         <button
           className="text-slate-500 dark:text-slate-400 hover:text-foreground hover:scale-110 transition-transform active:scale-95"
-          title="Copy Link"
+          title={t('sound.copy_tooltip')}
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
             navigator.clipboard.writeText(`${window.location.origin}${soundLink}`);
-            toast.success('Link copied!');
+            toast.success(t('sound.link_copied'));
           }}
         >
           <Copy size={16} strokeWidth={2} />
@@ -184,7 +186,7 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
 
         <button
           className="text-slate-500 dark:text-slate-400 hover:text-foreground hover:scale-110 transition-transform active:scale-95"
-          title="Share"
+          title={t('sound.share_tooltip')}
           onClick={async (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -194,7 +196,7 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
               } catch (_) { }
             } else {
               navigator.clipboard.writeText(`${window.location.origin}${soundLink}`);
-              toast.success('Link copied!');
+              toast.success(t('sound.link_copied'));
             }
           }}
         >

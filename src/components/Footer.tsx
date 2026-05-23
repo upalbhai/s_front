@@ -75,14 +75,14 @@ const Footer = () => {
             </h3>
             <ul className={`space-y-4 font-bold transition-all duration-300 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
               {[
-                { name: 'Meme', href: '/meme-soundboard/1' },
-                { name: 'Games', href: '/games-soundboard/2' },
-                { name: 'Movies', href: '/movies-soundboard/3' },
-                { name: 'Reaction', href: '/reaction-soundboard/4' },
-                { name: 'TikTok', href: '/tiktok-trends-soundboard/8' }
+                { key: 'category.name.meme', href: '/meme-soundboard/1' },
+                { key: 'category.name.games', href: '/games-soundboard/2' },
+                { key: 'category.name.movies', href: '/movies-soundboard/3' },
+                { key: 'category.name.reaction', href: '/reaction-soundboard/4' },
+                { key: 'category.name.tiktok', href: '/tiktok-trends-soundboard/8' }
               ].map(cat => (
-                <li key={cat.name}>
-                  <Link href={cat.href} className="hover:text-primary transition-colors">{cat.name}</Link>
+                <li key={cat.key}>
+                  <Link href={cat.href} className="hover:text-primary transition-colors">{t(cat.key)}</Link>
                 </li>
               ))}
             </ul>
