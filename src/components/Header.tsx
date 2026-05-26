@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { Music, Search, Menu, X } from 'lucide-react';
+import { Music, Search, Menu, X, ChevronDown } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { useTranslation } from '@/i18n';
@@ -21,7 +21,7 @@ const Header = () => {
     const fetchCategories = async () => {
       try {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
-        const res = await fetch(`${apiUrl}/categories`);
+        const res = await fetch(`${apiUrl}/categories?limit=5`);
         const data = await res.json();
         setCategories(Array.isArray(data?.categories) ? data.categories : []);
       } catch (err) {
@@ -42,8 +42,8 @@ const Header = () => {
 
   return (
     <header className={`sticky top-0 z-50 w-full transition-all duration-300 ${isScrolled
-        ? 'py-3 bg-background/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800'
-        : 'py-5 bg-transparent'
+      ? 'py-3 bg-background/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800'
+      : 'py-5 bg-transparent'
       }`}>
       <div className="container mx-auto px-4 flex items-center justify-between gap-4">
         {/* Logo */}
@@ -51,7 +51,7 @@ const Header = () => {
           <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center transition-transform group-hover:scale-110 shadow-xs border border-slate-200/55 dark:border-slate-800/55">
             <img src="/logo.jpeg" alt="Sound Buttons Max Logo" className="w-full h-full object-cover" />
           </div>
-          <span className="text-xl font-black tracking-tighter text-foreground whitespace-nowrap">
+          <span className="hidden lg:inline text-xl font-black tracking-tighter text-foreground whitespace-nowrap">
             SOUND BUTTONS <span className="text-primary">MAX</span>
           </span>
         </Link>
@@ -59,6 +59,32 @@ const Header = () => {
         {/* Desktop Nav */}
         <nav className="hidden lg:flex items-center gap-8 font-bold text-sm text-slate-500 dark:text-slate-400">
           <Link href="/" className="hover:text-foreground transition-colors">{t('nav.home')}</Link>
+          <div className="relative group py-2">
+            <button className="flex items-center gap-1 hover:text-foreground transition-colors font-bold text-sm text-slate-500 dark:text-slate-400 focus:outline-none">
+              {t('common.categories') || 'Categories'}
+              <ChevronDown size={14} className="transition-transform group-hover:rotate-180" />
+            </button>
+            <div className="absolute top-full left-0 mt-1 w-56 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 p-2 z-50">
+              <div className="flex flex-col gap-1">
+                {categories.map((cat) => (
+                  <Link
+                    key={cat._id}
+                    href={`/categories/${cat.slug}`}
+                    className="px-4 py-2.5 text-sm rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-black dark:hover:text-white transition-colors"
+                  >
+                    {cat.name}
+                  </Link>
+                ))}
+                <div className="border-t border-slate-100 dark:border-slate-800 my-1"></div>
+                <Link
+                  href="/categories"
+                  className="px-4 py-2 text-center text-xs font-bold text-primary hover:bg-primary/5 hover:text-black dark:hover:bg-primary/10 rounded-xl transition-colors block"
+                >
+                  View All
+                </Link>
+              </div>
+            </div>
+          </div>
           <Link href="/new" className="hover:text-foreground transition-colors">{t('nav.new')}</Link>
           <Link href="/trending" className="hover:text-foreground transition-colors">{t('nav.trending')}</Link>
           <Link href="/blog" className="hover:text-foreground transition-colors">{t('nav.blog')}</Link>
@@ -99,7 +125,6 @@ const Header = () => {
                 <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center border border-slate-200/55 dark:border-slate-800/55">
                   <img src="/logo.jpeg" alt="Sound Buttons Max Logo" className="w-full h-full object-cover" />
                 </div>
-                <span className="text-lg font-black">SOUND BUTTONS MAX</span>
               </div>
               <button className="p-2" onClick={() => setIsMobileMenuOpen(false)}>
                 <X size={28} />
@@ -115,16 +140,23 @@ const Header = () => {
               <div className="mt-4 pt-6 border-t border-slate-200 dark:border-slate-800">
                 <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-4">{t('common.categories')}</p>
                 <div className="grid grid-cols-2 gap-3">
-                  {categories.slice(0, 8).map((cat) => (
+                  {categories.map((cat) => (
                     <Link
                       key={cat._id}
-                      href={`/${cat.slug}`}
-                      className="text-sm font-bold p-3 rounded-2xl bg-slate-100 dark:bg-slate-800"
+                      href={`/categories/${cat.slug}`}
+                      className="text-sm font-bold p-3 rounded-2xl bg-slate-100 dark:bg-slate-800 text-center"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       {cat.name}
                     </Link>
                   ))}
+                  <Link
+                    href="/categories"
+                    className="text-sm font-bold p-3 rounded-2xl bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 text-center flex items-center justify-center transition-colors col-span-2 mt-2"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    View All
+                  </Link>
                 </div>
               </div>
             </nav>

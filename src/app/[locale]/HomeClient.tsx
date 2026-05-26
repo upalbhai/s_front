@@ -41,10 +41,11 @@ export default function HomeClient({
 
   // Sync debounced query to URL search param in browser history dynamically without reload
   useEffect(() => {
+    const basePath = window.location.pathname;
     if (debouncedQuery) {
-      window.history.replaceState(null, '', `/?q=${encodeURIComponent(debouncedQuery)}`);
+      window.history.replaceState(null, '', `${basePath}?q=${encodeURIComponent(debouncedQuery)}`);
     } else {
-      window.history.replaceState(null, '', '/');
+      window.history.replaceState(null, '', basePath);
     }
   }, [debouncedQuery]);
 
@@ -121,9 +122,9 @@ export default function HomeClient({
         isLoading={isLoading && debouncedQuery === query}
         trendingSounds={homeData.trendingSounds}
       />
-      
+
       {/* Horizontal scrolling tags section */}
-      <TagsScrollSection />
+      {/* <TagsScrollSection /> */}
 
       {/* <StatsSection /> */}
       {query && (
@@ -134,7 +135,7 @@ export default function HomeClient({
           onClear={handleClearSearch}
         />
       )}
-      
+
       {/* Unified Tabbed Sounds section */}
       <TrendingSoundsSection
         activeTab={activeTab}
@@ -144,7 +145,7 @@ export default function HomeClient({
         hasMore={hasMore}
         onLoadMore={handleLoadMoreTabSounds}
       />
-      
+
       {/* <CategoryGridSection categories={homeData.categories} /> */}
       {/* <NewAdditionsSection newSounds={homeData.newSounds} /> */}
       {/* <FeaturesSection /> */}

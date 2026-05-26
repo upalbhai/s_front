@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import enTranslations from './locales/en.json';
 
 export type Locale = 'en' | 'es' | 'fr' | 'pt' | 'ru' | 'it' | 'ja' | 'ko' | 'de';
 
@@ -65,14 +66,26 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // On mount: read from localStorage or detect browser locale
+  // On mount: detect locale ONLY from URL pathname to keep URL and language in sync
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY) as Locale | null;
-    const initial = stored && SUPPORTED_LOCALES.some((l) => l.code === stored)
-      ? stored
-      : detectBrowserLocale();
+    let initial: Locale = 'en';
+    
+    if (typeof window !== 'undefined') {
+      const pathSegments = window.location.pathname.split('/').filter(Boolean);
+      const firstSegment = pathSegments[0] as Locale;
+      if (SUPPORTED_LOCALES.some((l) => l.code === firstSegment)) {
+        initial = firstSegment;
+      }
+      // If no locale in URL, default to English (URL is the source of truth)
+    }
+    
     setLocaleState(initial);
     loadTranslations(initial);
+    localStorage.setItem(STORAGE_KEY, initial);
+    
+    if (typeof window !== 'undefined') {
+      document.documentElement.lang = initial;
+    }
   }, [loadTranslations]);
 
   const setLocale = useCallback((loc: Locale) => {
@@ -84,7 +97,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   }, [loadTranslations]);
 
   const t = useCallback((key: string, vars?: Record<string, string>): string => {
-    let str = translations[key] ?? key;
+    let str = translations[key] ?? (enTranslations as Record<string, string>)[key] ?? key;
     if (vars) {
       Object.entries(vars).forEach(([k, v]) => {
         str = str.replace(new RegExp(`\\{${k}\\}`, 'g'), v);

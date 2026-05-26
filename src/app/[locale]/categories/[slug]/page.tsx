@@ -3,7 +3,7 @@ import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { Metadata, Viewport } from 'next';
 import Script from 'next/script';
-import CategoryClient from '@/app/[slug]/CategoryClient';
+import CategoryClient from './CategoryClient';
 import { SITE_URL } from '@/lib/seo';
 
 export const viewport: Viewport = {
@@ -12,7 +12,7 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   try {
     const res = await api.get(`/categories/${slug}`);
@@ -22,8 +22,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     }
     
     const categoryName = category.name;
-    const canonicalUrl = `https://soundboardmax.net/category/${slug}`;
-    const ogImageUrl = `https://soundboardmax.net/category/${slug}/opengraph-image.png`;
+    const canonicalUrl = `https://soundboardmax.net/categories/${slug}`;
+    const ogImageUrl = `https://soundboardmax.net/categories/${slug}/opengraph-image.png`;
 
     return {
       title: `${categoryName} Soundboard: Sound Buttons Unblocked | SoundboardMax`,
@@ -95,7 +95,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         MobileOptimized: "width",
         'mobile-web-app-capable': "yes",
         'msapplication-TileColor': "#2563eb",
-        'msapplication-config': "/browserconfig.xml",
         'bingbot': "index, follow",
       }
     };
@@ -108,7 +107,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 }
 
-export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function LocaleCategoryPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const { slug } = await params;
   
   let category: any = null;
@@ -133,13 +132,13 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
     "@type": "CollectionPage",
     "name": category.name,
     "description": category.seoDescription || category.description,
-    "url": `${SITE_URL}/${slug}`,
+    "url": `${SITE_URL}/categories/${slug}`,
     "mainEntity": {
       "@type": "ItemList",
       "itemListElement": soundsData.sounds.slice(0, 10).map((sound: any, index: number) => ({
         "@type": "ListItem",
         "position": index + 1,
-        "url": `${SITE_URL}/${slug}/${sound.slug}`,
+        "url": `${SITE_URL}/sounds/${sound.slug}`,
         "name": sound.title
       }))
     }

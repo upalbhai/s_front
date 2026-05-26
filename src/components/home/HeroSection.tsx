@@ -96,10 +96,10 @@ export default function HeroSection({
 
           {/* Context & Call to action */}
           <div className="space-y-6 flex flex-col items-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/25 text-xs font-black uppercase tracking-widest">
+            {/* <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/25 text-xs font-black uppercase tracking-widest">
               <Sparkles size={14} />
               <span>{resolvedBadge}</span>
-            </div>
+            </div> */}
 
             <h1 className="text-3xl md:text-5xl font-black tracking-tight leading-[1.05] text-foreground max-w-4xl mx-auto">
               {resolvedTitle}
@@ -113,7 +113,7 @@ export default function HeroSection({
           </div>
 
           {/* Advanced Search bar */}
-          <form onSubmit={(e) => e.preventDefault()} className="p-1.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl flex items-center gap-3 focus-within:ring-4 focus-within:ring-primary/10 transition-all max-w-2xl w-full mx-auto">
+          {/* <form onSubmit={(e) => e.preventDefault()} className="p-1.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl flex items-center gap-3 focus-within:ring-4 focus-within:ring-primary/10 transition-all max-w-2xl w-full mx-auto">
             <div className="flex-1 flex items-center gap-3 px-4 w-full">
               {isLoading ? (
                 <Loader2 size={22} className="text-primary animate-spin shrink-0" />
@@ -132,7 +132,7 @@ export default function HeroSection({
                 className="w-full bg-transparent border-none outline-none py-3.5 font-bold text-foreground placeholder-slate-400 text-sm md:text-base"
               />
             </div>
-          </form>
+          </form> */}
 
         </div>
       </div>

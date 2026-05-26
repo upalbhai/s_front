@@ -26,7 +26,7 @@ export default function TrendingSoundsSection({
   const TABS = [
     { id: 'trending', label: t('home.tabs.trending') || 'Trending', icon: TrendingUp },
     { id: 'popular', label: t('home.tabs.popular') || 'Popular', icon: Heart },
-    { id: 'views', label: t('home.tabs.views') || 'Views', icon: Eye },
+    // { id: 'views', label: t('home.tabs.views') || 'Views', icon: Eye },
     { id: 'latest', label: t('home.tabs.latest') || 'Latest', icon: Sparkles },
   ];
 

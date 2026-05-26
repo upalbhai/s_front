@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 import { useLanguage, SUPPORTED_LOCALES, type Locale } from '@/i18n';
 import { useTheme } from 'next-themes';
 import {
@@ -13,6 +14,8 @@ import {
 export default function LanguageSwitcher() {
   const { locale, setLocale } = useLanguage();
   const { theme } = useTheme();
+  const router = useRouter();
+  const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
 
   // Avoid hydration mismatch
@@ -29,8 +32,33 @@ export default function LanguageSwitcher() {
   const isDark = theme === 'dark';
   const current = SUPPORTED_LOCALES.find((l) => l.code === locale) ?? SUPPORTED_LOCALES[0];
 
+  // Helper to get the route path without locale prefix
+  const getPathWithoutLocale = (path: string): string => {
+    const localePrefix = SUPPORTED_LOCALES.map((l) => `/${l.code}`);
+    for (const prefix of localePrefix) {
+      if (path.startsWith(prefix + '/') || path === prefix) {
+        return path.slice(prefix.length) || '/';
+      }
+    }
+    return path;
+  };
+
+  // Handle language change and navigate to new locale-prefixed route
+  const handleLanguageChange = (newLocale: Locale) => {
+    setLocale(newLocale);
+    const pathWithoutLocale = getPathWithoutLocale(pathname);
+    
+    // Use full navigation so the middleware processes the locale prefix correctly
+    if (newLocale === 'en') {
+      window.location.href = pathWithoutLocale;
+    } else {
+      const suffix = pathWithoutLocale === '/' ? '' : pathWithoutLocale;
+      window.location.href = `/${newLocale}${suffix}`;
+    }
+  };
+
   return (
-    <Select value={locale} onValueChange={(val) => setLocale(val as Locale)}>
+    <Select value={locale} onValueChange={(val) => handleLanguageChange(val as Locale)}>
       <SelectTrigger
         className={`flex items-center gap-1.5 px-3 py-2.5 rounded-full text-sm font-black
           transition-all duration-200 select-none whitespace-nowrap border-2 cursor-pointer shadow-xs active:scale-95 h-10 w-fit

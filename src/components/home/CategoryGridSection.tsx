@@ -28,7 +28,7 @@ export default function CategoryGridSection({ categories = [] }: CategoryGridSec
           const isGoogleIcon = cat.icon && /^[a-z0-9_]+$/.test(cat.icon);
           return (
             <Link
-              href={`/${cat.slug}`}
+              href={`/categories/${cat.slug}`}
               key={cat._id}
               className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-primary/50 hover:shadow-xl hover:-translate-y-1 transition-all group"
             >

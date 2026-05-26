@@ -71,8 +71,7 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
     window.dispatchEvent(new Event('favoritesChanged'));
   };
 
-  const categorySlug = sound.category?.slug || 'uncategorized';
-  const soundLink = `/${categorySlug}/${sound.slug}`;
+  const soundLink = `/sounds/${sound.slug}`;
 
   return (
     <div className="flex flex-col items-center gap-4 p-4 rounded-3xl transition-all duration-300 hover:bg-slate-100 dark:hover:bg-slate-800/50 group">

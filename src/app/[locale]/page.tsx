@@ -13,6 +13,18 @@ export const metadata: Metadata = {
   description: "Explore thousands of meme soundboard including sound buttons, soundboard unblocked, prank sounds, meme buttons, and sound effects on soundboardmax.net.",
   alternates: {
     canonical: "https://soundboardmax.net/",
+    languages: {
+      'en': 'http://soundboardmax.net/',
+      'es': 'http://soundboardmax.net/es/',
+      'fr': 'http://soundboardmax.net/fr/',
+      'pt': 'http://soundboardmax.net/pt/',
+      'ru': 'http://soundboardmax.net/ru/',
+      'it': 'http://soundboardmax.net/it/',
+      'ja': 'http://soundboardmax.net/ja/',
+      'ko': 'http://soundboardmax.net/ko/',
+      'de': 'http://soundboardmax.net/de/',
+      'x-default': 'http://soundboardmax.net/',
+    },
   },
   keywords: "soundboard, meme soundboard, meme soundboard unblocked, unblocked soundboard, sound buttons, meme sounds, viral meme sounds, funny meme sounds, meme sound effects, free soundboard, free sound effects, viral sounds, unblocked sound buttons, audio effects, online soundboard, soundboard online, prank sounds, funny soundboard",
   authors: [{ name: "SoundboardMax.net" }],

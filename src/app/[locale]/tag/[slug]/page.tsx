@@ -3,7 +3,7 @@ import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { Metadata, Viewport } from 'next';
 import Script from 'next/script';
-import TagClient from '@/app/tag/[slug]/TagClient';
+import TagClient from './TagClient';
 import { SITE_URL } from '@/lib/seo';
 
 export const viewport: Viewport = {

@@ -1,5 +1,6 @@
 import api from '@/services/api';
 import { Metadata, Viewport } from 'next';
+import Link from 'next/link';
 import Script from 'next/script';
 import SoundDetailClient from './SoundDetailClient';
 import { SITE_URL } from '@/lib/seo';
@@ -10,7 +11,7 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string; soundSlug: string }> }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string; soundSlug: string }> }): Promise<Metadata> {
   const { soundSlug } = await params;
   try {
     const res = await api.get(`/sounds/${soundSlug}`);
@@ -21,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
     const soundName = sound.title;
     const canonicalUrl = `https://soundboardmax.net/sounds/${soundSlug}`;
-    const ogImageUrl = `https://soundboardmax.net/${soundSlug}/opengraph-image.png`;
+    const ogImageUrl = `https://soundboardmax.net/sounds/${soundSlug}/opengraph-image.png`;
 
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5001';
     const mp3Url = sound.fileUrl ? (sound.fileUrl.startsWith('http') ? sound.fileUrl : `${backendUrl}${sound.fileUrl}`) : '';
@@ -106,8 +107,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 }
 
-export default async function SoundDetailPage({ params }: { params: Promise<{ slug: string; soundSlug: string }> }) {
-  const { slug, soundSlug } = await params;
+export default async function LocaleSoundDetailPage({ params }: { params: Promise<{ locale: string; soundSlug: string }> }) {
+  const { soundSlug } = await params;
 
   let sound: any = null;
   let relatedSounds: any[] = [];
