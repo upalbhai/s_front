@@ -12,12 +12,8 @@ export default function CategoryGridSection({ categories = [] }: CategoryGridSec
   const { t } = useTranslation();
   const lp = useLocalePath();
   return (
-    <section className="max-w-7xl mx-auto px-4 border-t border-slate-200 dark:border-slate-800">
+    <section className="max-w-7xl mx-auto px-4  dark:border-slate-800">
       <div className="flex flex-col items-center text-center space-y-4 mb-12">
-        <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800/50 flex items-center justify-center text-foreground">
-          <LayoutGrid size={24} />
-        </div>
-        <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">{t('home.categories.badge')}</p>
         <h2 className="text-3xl font-black tracking-tight text-foreground">{t('home.categories.title')}</h2>
         <p className="text-slate-500 dark:text-slate-400 font-medium max-w-xl">
           {t('home.categories.subtitle')}

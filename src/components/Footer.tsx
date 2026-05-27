@@ -10,9 +10,21 @@ const Footer = () => {
   const { t } = useTranslation();
   const lp = useLocalePath();
   const [mounted, setMounted] = useState(false);
+  const [categories, setCategories] = useState<any[]>([]);
 
   useEffect(() => {
     setMounted(true);
+    const fetchCategories = async () => {
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+        const res = await fetch(`${apiUrl}/categories?limit=5`);
+        const data = await res.json();
+        setCategories(Array.isArray(data?.categories) ? data.categories : []);
+      } catch (err) {
+        console.error('Failed to fetch categories:', err);
+      }
+    };
+    fetchCategories();
   }, []);
 
   const isDark = mounted && resolvedTheme === 'dark';
@@ -75,15 +87,9 @@ const Footer = () => {
               {t('footer.categories')}
             </h3>
             <ul className={`space-y-4 font-bold transition-all duration-300 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
-              {[
-                { key: 'category.name.meme', href: '/meme-soundboard/1' },
-                { key: 'category.name.games', href: '/games-soundboard/2' },
-                { key: 'category.name.movies', href: '/movies-soundboard/3' },
-                { key: 'category.name.reaction', href: '/reaction-soundboard/4' },
-                { key: 'category.name.tiktok', href: '/tiktok-trends-soundboard/8' }
-              ].map(cat => (
-                <li key={cat.key}>
-                  <Link href={lp(cat.href)} className="hover:text-primary transition-colors">{t(cat.key)}</Link>
+              {categories.map(cat => (
+                <li key={cat._id}>
+                  <Link href={lp(`/categories/${cat.slug}`)} className="hover:text-primary transition-colors">{cat.name}</Link>
                 </li>
               ))}
             </ul>

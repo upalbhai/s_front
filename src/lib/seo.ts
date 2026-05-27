@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 
+const SUPPORTED_LOCALES = ['en', 'es', 'fr', 'pt', 'ru', 'it', 'ja', 'ko', 'de'];
+
 const SITE_NAME = 'Sound Buttons Max';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://soundbuttonsmax.com';
 const DEFAULT_IMAGE = `${SITE_URL}/images/og-home.jpg`;
@@ -19,12 +21,27 @@ export function buildSeoMetadata({
   image = DEFAULT_IMAGE,
   type = 'website',
 }: BuildSeoMetadataArgs): Metadata {
-  const canonicalUrl = `${SITE_URL}${canonicalPath}`;
+  const canonicalUrl = `${SITE_URL}${canonicalPath === '/' ? '' : canonicalPath}`;
+
+  // Generate hreflang mapping for all supported locales
+  const languages: Record<string, string> = {};
+  SUPPORTED_LOCALES.forEach((code) => {
+    if (code === 'en') {
+      languages['en'] = `${SITE_URL}${canonicalPath === '/' ? '' : canonicalPath}`;
+    } else {
+      languages[code] = `${SITE_URL}/${code}${canonicalPath === '/' ? '' : canonicalPath}`;
+    }
+  });
+  // x-default points to english
+  languages['x-default'] = `${SITE_URL}${canonicalPath === '/' ? '' : canonicalPath}`;
 
   return {
     title,
     description,
-    alternates: { canonical: canonicalUrl },
+    alternates: { 
+      canonical: canonicalUrl,
+      languages 
+    },
     openGraph: {
       title,
       description,

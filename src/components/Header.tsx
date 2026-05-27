@@ -37,14 +37,14 @@ const Header = () => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      window.location.href = lp(`/?q=${encodeURIComponent(searchQuery)}`);
+      window.location.href = lp(`/search/${encodeURIComponent(searchQuery)}`);
     }
   };
 
   return (
-    <header className={`sticky top-0 z-50 w-full transition-all duration-300 ${isScrolled
-      ? 'py-3 bg-background/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800'
-      : 'py-5 bg-transparent'
+    <header className={`sticky top-0 z-50 w-full transition-all duration-300 border-b border-slate-200 dark:border-slate-800 ${isScrolled
+      ? 'py-3 bg-background/80 backdrop-blur-xl'
+      : 'py-5 bg-background/80 md:bg-transparent backdrop-blur-xl md:backdrop-blur-none'
       }`}>
       <div className="container mx-auto px-4 flex items-center justify-between gap-4">
         {/* Logo */}

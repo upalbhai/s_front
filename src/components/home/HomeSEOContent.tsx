@@ -2,11 +2,11 @@
 
 import React, { useState } from 'react';
 import { useTranslation } from '@/i18n';
-import { 
-  HelpCircle, 
-  Sparkles, 
-  CheckCircle2, 
-  ListFilter, 
+import {
+  HelpCircle,
+  Sparkles,
+  CheckCircle2,
+  ListFilter,
   UserCheck,
   ChevronDown,
   Info
@@ -80,9 +80,9 @@ export default function HomeSEOContent() {
 
   return (
     <section className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-16 md:py-24 border-t border-slate-200 dark:border-slate-800 space-y-16">
-      
+
       {/* Welcome & Introduction */}
-      <div className="space-y-6 max-w-4xl">
+      <div className="space-y-6 text-center">
         <h2 className="text-3xl md:text-4xl font-black tracking-tight text-foreground">
           {t('seo.home_title')}
         </h2>
@@ -133,11 +133,10 @@ export default function HomeSEOContent() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {useCases.map((uc, i) => (
-            <div 
-              key={i} 
-              className={`p-6 rounded-3xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/30 space-y-4 transition-all duration-300 hover:shadow-lg ${
-                i === 4 ? 'sm:col-span-2 lg:col-span-1' : ''
-              }`}
+            <div
+              key={i}
+              className={`p-6 rounded-3xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/30 space-y-4 transition-all duration-300 hover:shadow-lg ${i === 4 ? 'sm:col-span-2 lg:col-span-1' : ''
+                }`}
             >
               <div className="w-12 h-12 rounded-2xl bg-slate-50 dark:bg-slate-800/80 flex items-center justify-center text-2xl">
                 {uc.icon}
@@ -162,22 +161,19 @@ export default function HomeSEOContent() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {categories.map((cat, i) => {
-            const splitIndex = cat.text.indexOf(' — ') !== -1 
-              ? cat.text.indexOf(' — ') 
+            const splitIndex = cat.text.indexOf(' — ') !== -1
+              ? cat.text.indexOf(' — ')
               : cat.text.indexOf(': ');
-            
+
             const hasSeparator = splitIndex !== -1;
             const prefix = hasSeparator ? cat.text.substring(0, splitIndex) : cat.text;
             const suffix = hasSeparator ? cat.text.substring(splitIndex) : '';
 
             return (
-              <div 
-                key={i} 
-                className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/10 hover:border-slate-300 dark:hover:border-slate-700 transition-colors flex items-start gap-4"
+              <div
+                key={i}
+                className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/10 hover:border-slate-300 dark:hover:border-slate-700 transition-colors"
               >
-                <div className={`mt-0.5 px-2.5 py-1 rounded-lg text-xs font-black uppercase tracking-wider shrink-0 border ${cat.color.split(' ')[0]} ${cat.color.split(' ')[1]} ${cat.color.split(' ')[2]}`}>
-                  Category
-                </div>
                 <p className="text-sm text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
                   <strong className="text-foreground font-black">{prefix}</strong>
                   {suffix}
@@ -190,7 +186,7 @@ export default function HomeSEOContent() {
 
       {/* Different & Value Propositions */}
       <div className="space-y-8">
-        <div className="space-y-2">
+        <div className="space-y-2 text-center">
           <h3 className="text-2xl md:text-3xl font-black tracking-tight text-foreground">
             {t('seo.different_title')}
           </h3>
@@ -201,8 +197,8 @@ export default function HomeSEOContent() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {differences.map((diff, i) => (
-            <div 
-              key={i} 
+            <div
+              key={i}
               className="flex items-start gap-4 p-5 rounded-2xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/20"
             >
               <CheckCircle2 className="text-primary shrink-0 mt-0.5" size={18} />
@@ -227,8 +223,8 @@ export default function HomeSEOContent() {
           {faqs.map((faq, idx) => {
             const isOpen = !!openFaq[idx];
             return (
-              <div 
-                key={idx} 
+              <div
+                key={idx}
                 className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/40 overflow-hidden transition-all"
               >
                 <button
@@ -240,7 +236,7 @@ export default function HomeSEOContent() {
                     <ChevronDown size={18} className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
                   </span>
                 </button>
-                
+
                 {isOpen && (
                   <div className="px-6 pb-6 pt-2 text-slate-500 dark:text-slate-400 font-medium text-sm leading-relaxed border-t border-slate-100 dark:border-slate-800 animate-in fade-in slide-in-from-top-1 duration-200">
                     {faq.a}
