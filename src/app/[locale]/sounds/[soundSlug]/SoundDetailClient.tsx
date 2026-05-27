@@ -7,6 +7,7 @@ import { Pause, Download, ChevronRight, Copy, Send } from 'lucide-react';
 import Link from 'next/link';
 import useAudio from '@/hooks/useAudio';
 import { toast } from 'react-hot-toast';
+import { useLocalePath } from '@/i18n';
 
 const BUTTON_COLORS = [
   { main: '#ff3b30', dark: '#a31a12', shadow: 'rgba(255, 59, 48, 0.3)' }, // Red
@@ -26,6 +27,7 @@ const getFullUrl = (url: string) => {
 
 export default function SoundDetailClient({ sound, relatedSounds }: any) {
   const { currentSound, isPlaying, playSound } = useAudio();
+  const lp = useLocalePath();
   const isThisPlaying = currentSound?._id === sound._id && isPlaying;
 
   useEffect(() => {
@@ -58,11 +60,40 @@ export default function SoundDetailClient({ sound, relatedSounds }: any) {
           title: sound.title,
           url: `${window.location.origin}${soundLink}`
         });
-      } catch (_) {}
+      } catch (_) { }
     } else {
       navigator.clipboard.writeText(`${window.location.origin}${soundLink}`);
       toast.success('Link copied!');
     }
+  };
+
+  const handleDownloadAction = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(getFullUrl(sound.fileUrl));
+      if (!response.ok) throw new Error('Network response was not ok');
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = `${sound.slug}.mp3`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (err) {
+      // Fallback if fetch fails (e.g. CORS)
+      const a = document.createElement('a');
+      a.href = getFullUrl(sound.fileUrl);
+      a.download = `${sound.slug}.mp3`;
+      a.target = '_blank';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+    // Track download stats
+    api.patch(`/sounds/${sound._id}/stats`, { type: 'download' }).catch(() => { });
   };
 
   // Pick a color based on the sound ID
@@ -74,9 +105,9 @@ export default function SoundDetailClient({ sound, relatedSounds }: any) {
     <div className="container mx-auto px-4 py-16">
       {/* Breadcrumbs */}
       <nav className="flex items-center gap-2 text-sm font-medium text-slate-500 dark:text-slate-400 mb-8">
-        <Link href="/" className="hover:text-foreground transition-colors font-bold">Home</Link>
+        <Link href={lp('/')} className="hover:text-foreground transition-colors font-bold">Home</Link>
         <ChevronRight size={14} />
-        <Link href={`/${sound.category?.slug}`} className="hover:text-foreground transition-colors font-bold">{sound.category?.name}</Link>
+        <Link href={lp(`/categories/${sound.category?.slug}`)} className="hover:text-foreground transition-colors font-bold">{sound.category?.name}</Link>
         <ChevronRight size={14} />
         <span className="text-primary font-black">{sound.title}</span>
       </nav>
@@ -84,7 +115,7 @@ export default function SoundDetailClient({ sound, relatedSounds }: any) {
       <div className="space-y-12">
         {/* Main Sound Layout (Two-column Grid) */}
         <div className="p-8 md:p-12 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm grid grid-cols-1 md:grid-cols-[auto_1fr] gap-10 md:gap-16 items-center">
-          
+
           {/* Left: Giant 3D Play Button */}
           <div className="relative flex justify-center select-none w-full md:w-[325px] h-[300px]">
             {/* Pulse / Glow Effect behind the button base */}
@@ -169,13 +200,7 @@ export default function SoundDetailClient({ sound, relatedSounds }: any) {
                   boxShadow: isThisPlaying ? 'none' : `0 12px 24px ${color.shadow}`,
                 }}
               >
-                <div className="absolute top-[20%] flex items-center justify-center w-full h-[60%]">
-                  {isThisPlaying ? (
-                    <Pause size={56} className="drop-shadow-lg text-white" fill="currentColor" />
-                  ) : (
-                    <span className="text-6xl drop-shadow-lg select-none">🔊</span>
-                  )}
-                </div>
+
               </div>
             </div>
           </div>
@@ -245,10 +270,11 @@ export default function SoundDetailClient({ sound, relatedSounds }: any) {
 
               <a
                 href={getFullUrl(sound.fileUrl)}
+                onClick={handleDownloadAction}
                 download={`${sound.slug}.mp3`}
-                className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-sky-500 text-white font-extrabold hover:bg-sky-600 active:scale-95 transition-all shadow-lg shadow-sky-500/20 text-sm cursor-pointer"
+                className="flex items-center gap-2 px-8 py-3.5 rounded-2xl bg-gradient-to-r from-sky-400 to-blue-600 text-white font-black hover:from-sky-500 hover:to-blue-700 active:scale-95 transition-all duration-300 shadow-xl shadow-blue-500/30 text-sm md:text-base cursor-pointer hover:-translate-y-1"
               >
-                <Download size={16} /> Download MP3
+                <Download size={18} /> Download MP3
               </a>
             </div>
           </div>

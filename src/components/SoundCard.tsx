@@ -6,7 +6,7 @@ import Link from 'next/link';
 import api from '../services/api';
 import { toast } from 'react-hot-toast';
 import useAudio from '../hooks/useAudio';
-import { useTranslation } from '@/i18n';
+import { useTranslation, useLocalePath } from '@/i18n';
 
 interface SoundProps {
   sound: {
@@ -35,6 +35,7 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
   const isThisPlaying = currentSound?._id === sound._id && isPlaying;
   const [isFavorited, setIsFavorited] = useState(false);
   const { t } = useTranslation();
+  const lp = useLocalePath();
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -71,7 +72,7 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
     window.dispatchEvent(new Event('favoritesChanged'));
   };
 
-  const soundLink = `/sounds/${sound.slug}`;
+  const soundLink = lp(`/sounds/${sound.slug}`);
 
   return (
     <div className="flex flex-col items-center gap-4 p-4 rounded-3xl transition-all duration-300 hover:bg-slate-100 dark:hover:bg-slate-800/50 group">

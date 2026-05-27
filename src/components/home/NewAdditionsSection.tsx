@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Sparkles, ChevronRight } from 'lucide-react';
 import SoundCard from '@/components/SoundCard';
-import { useTranslation } from '@/i18n';
+import { useTranslation, useLocalePath } from '@/i18n';
 
 interface NewAdditionsSectionProps {
   newSounds: any[];
@@ -11,6 +11,7 @@ interface NewAdditionsSectionProps {
 
 export default function NewAdditionsSection({ newSounds = [] }: NewAdditionsSectionProps) {
   const { t } = useTranslation();
+  const lp = useLocalePath();
   return (
     <section className="max-w-7xl mx-auto px-4 border-t border-slate-200 dark:border-slate-800">
       <div className="flex items-center justify-between mb-10">
@@ -23,7 +24,7 @@ export default function NewAdditionsSection({ newSounds = [] }: NewAdditionsSect
             <h2 className="text-2xl md:text-3xl font-black tracking-tight text-foreground">{t('home.new_additions.title')}</h2>
           </div>
         </div>
-        <Link href="/new" className="flex items-center gap-1 font-bold text-sm text-slate-500 hover:text-foreground transition-colors group">
+        <Link href={lp('/new')} className="flex items-center gap-1 font-bold text-sm text-slate-500 hover:text-foreground transition-colors group">
           {t('home.new_additions.see_all')} <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
         </Link>
       </div>

@@ -34,12 +34,14 @@ interface LanguageContextValue {
   locale: Locale;
   setLocale: (locale: Locale) => void;
   t: (key: string, vars?: Record<string, string>) => string;
+  localePath: (path: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextValue>({
   locale: 'en',
   setLocale: () => {},
   t: (key) => key,
+  localePath: (path) => path,
 });
 
 const STORAGE_KEY = 'sbmax_locale';
@@ -106,8 +108,17 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     return str;
   }, [translations]);
 
+  // Build locale-aware paths: English = no prefix, others = /{locale}/path
+  const localePath = useCallback((path: string): string => {
+    if (locale === 'en') return path;
+    // Ensure path starts with /
+    const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+    if (normalizedPath === '/') return `/${locale}`;
+    return `/${locale}${normalizedPath}`;
+  }, [locale]);
+
   return (
-    <LanguageContext.Provider value={{ locale, setLocale, t }}>
+    <LanguageContext.Provider value={{ locale, setLocale, t, localePath }}>
       {children}
     </LanguageContext.Provider>
   );
@@ -120,4 +131,9 @@ export function useLanguage() {
 export function useTranslation() {
   const { t } = useContext(LanguageContext);
   return { t };
+}
+
+export function useLocalePath() {
+  const { localePath } = useContext(LanguageContext);
+  return localePath;
 }

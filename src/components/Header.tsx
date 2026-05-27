@@ -5,10 +5,11 @@ import { useState, useEffect } from 'react';
 import { Music, Search, Menu, X, ChevronDown } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
-import { useTranslation } from '@/i18n';
+import { useTranslation, useLocalePath } from '@/i18n';
 
 const Header = () => {
   const { t } = useTranslation();
+  const lp = useLocalePath();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -36,7 +37,7 @@ const Header = () => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      window.location.href = `/?q=${encodeURIComponent(searchQuery)}`;
+      window.location.href = lp(`/?q=${encodeURIComponent(searchQuery)}`);
     }
   };
 
@@ -47,7 +48,7 @@ const Header = () => {
       }`}>
       <div className="container mx-auto px-4 flex items-center justify-between gap-4">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group shrink-0">
+        <Link href={lp('/')} className="flex items-center gap-2 group shrink-0">
           <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center transition-transform group-hover:scale-110 shadow-xs border border-slate-200/55 dark:border-slate-800/55">
             <img src="/logo.jpeg" alt="Sound Buttons Max Logo" className="w-full h-full object-cover" />
           </div>
@@ -58,7 +59,7 @@ const Header = () => {
 
         {/* Desktop Nav */}
         <nav className="hidden lg:flex items-center gap-8 font-bold text-sm text-slate-500 dark:text-slate-400">
-          <Link href="/" className="hover:text-foreground transition-colors">{t('nav.home')}</Link>
+          <Link href={lp('/')} className="hover:text-foreground transition-colors">{t('nav.home')}</Link>
           <div className="relative group py-2">
             <button className="flex items-center gap-1 hover:text-foreground transition-colors font-bold text-sm text-slate-500 dark:text-slate-400 focus:outline-none">
               {t('common.categories') || 'Categories'}
@@ -69,7 +70,7 @@ const Header = () => {
                 {categories.map((cat) => (
                   <Link
                     key={cat._id}
-                    href={`/categories/${cat.slug}`}
+                    href={lp(`/categories/${cat.slug}`)}
                     className="px-4 py-2.5 text-sm rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-black dark:hover:text-white transition-colors"
                   >
                     {cat.name}
@@ -77,7 +78,7 @@ const Header = () => {
                 ))}
                 <div className="border-t border-slate-100 dark:border-slate-800 my-1"></div>
                 <Link
-                  href="/categories"
+                  href={lp('/categories')}
                   className="px-4 py-2 text-center text-xs font-bold text-primary hover:bg-primary/5 hover:text-black dark:hover:bg-primary/10 rounded-xl transition-colors block"
                 >
                   View All
@@ -85,9 +86,9 @@ const Header = () => {
               </div>
             </div>
           </div>
-          <Link href="/new" className="hover:text-foreground transition-colors">{t('nav.new')}</Link>
-          <Link href="/trending" className="hover:text-foreground transition-colors">{t('nav.trending')}</Link>
-          <Link href="/blog" className="hover:text-foreground transition-colors">{t('nav.blog')}</Link>
+          <Link href={lp('/new')} className="hover:text-foreground transition-colors">{t('nav.new')}</Link>
+          <Link href={lp('/trending')} className="hover:text-foreground transition-colors">{t('nav.trending')}</Link>
+          <Link href={lp('/blog')} className="hover:text-foreground transition-colors">{t('nav.blog')}</Link>
         </nav>
 
         {/* Search & Actions */}
@@ -132,10 +133,10 @@ const Header = () => {
             </div>
 
             <nav className="flex flex-col gap-6 text-2xl font-black tracking-tight">
-              <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>{t('nav.home')}</Link>
-              <Link href="/new" onClick={() => setIsMobileMenuOpen(false)}>{t('nav.new')}</Link>
-              <Link href="/trending" onClick={() => setIsMobileMenuOpen(false)}>{t('nav.trending')}</Link>
-              <Link href="/blog" onClick={() => setIsMobileMenuOpen(false)}>{t('nav.blog')}</Link>
+              <Link href={lp('/')} onClick={() => setIsMobileMenuOpen(false)}>{t('nav.home')}</Link>
+              <Link href={lp('/new')} onClick={() => setIsMobileMenuOpen(false)}>{t('nav.new')}</Link>
+              <Link href={lp('/trending')} onClick={() => setIsMobileMenuOpen(false)}>{t('nav.trending')}</Link>
+              <Link href={lp('/blog')} onClick={() => setIsMobileMenuOpen(false)}>{t('nav.blog')}</Link>
 
               <div className="mt-4 pt-6 border-t border-slate-200 dark:border-slate-800">
                 <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-4">{t('common.categories')}</p>
@@ -143,7 +144,7 @@ const Header = () => {
                   {categories.map((cat) => (
                     <Link
                       key={cat._id}
-                      href={`/categories/${cat.slug}`}
+                      href={lp(`/categories/${cat.slug}`)}
                       className="text-sm font-bold p-3 rounded-2xl bg-slate-100 dark:bg-slate-800 text-center"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
@@ -151,7 +152,7 @@ const Header = () => {
                     </Link>
                   ))}
                   <Link
-                    href="/categories"
+                    href={lp('/categories')}
                     className="text-sm font-bold p-3 rounded-2xl bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 text-center flex items-center justify-center transition-colors col-span-2 mt-2"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >

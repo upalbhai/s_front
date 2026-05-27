@@ -2,15 +2,17 @@
 
 import Link from 'next/link';
 import { ChevronRight, Calendar, User } from 'lucide-react';
+import { useLocalePath } from '@/i18n';
 
 export default function ArticleClient({ blog }: { blog: any }) {
+  const lp = useLocalePath();
   return (
     <div className="container mx-auto px-4 py-16 max-w-3xl">
       {/* Breadcrumbs */}
       <nav className="flex items-center gap-2 text-sm font-medium text-slate-500 dark:text-slate-400 mb-8">
-        <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
+        <Link href={lp('/')} className="hover:text-foreground transition-colors">Home</Link>
         <ChevronRight size={14} />
-        <Link href="/blog" className="hover:text-foreground transition-colors">Blog</Link>
+        <Link href={lp('/blog')} className="hover:text-foreground transition-colors">Blog</Link>
         <ChevronRight size={14} />
         <span className="text-primary font-bold">{blog.title}</span>
       </nav>

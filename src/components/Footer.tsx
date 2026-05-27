@@ -3,11 +3,12 @@
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
-import { useTranslation } from '@/i18n';
+import { useTranslation, useLocalePath } from '@/i18n';
 
 const Footer = () => {
   const { resolvedTheme } = useTheme();
   const { t } = useTranslation();
+  const lp = useLocalePath();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -62,7 +63,7 @@ const Footer = () => {
             <ul className={`space-y-4 font-bold transition-all duration-300 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
               {quickLinks.map((link) => (
                 <li key={link.key}>
-                  <Link href={link.href} className="hover:text-primary transition-colors">{t(link.key)}</Link>
+                  <Link href={lp(link.href)} className="hover:text-primary transition-colors">{t(link.key)}</Link>
                 </li>
               ))}
             </ul>
@@ -82,7 +83,7 @@ const Footer = () => {
                 { key: 'category.name.tiktok', href: '/tiktok-trends-soundboard/8' }
               ].map(cat => (
                 <li key={cat.key}>
-                  <Link href={cat.href} className="hover:text-primary transition-colors">{t(cat.key)}</Link>
+                  <Link href={lp(cat.href)} className="hover:text-primary transition-colors">{t(cat.key)}</Link>
                 </li>
               ))}
             </ul>
@@ -124,7 +125,7 @@ const Footer = () => {
             {legalLinks.map((link) => (
               <Link
                 key={link.key}
-                href={link.href}
+                href={lp(link.href)}
                 className="hover:text-primary transition-colors"
               >
                 {t(link.key)}

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { LayoutGrid } from 'lucide-react';
-import { useTranslation } from '@/i18n';
+import { useTranslation, useLocalePath } from '@/i18n';
 
 interface CategoryGridSectionProps {
   categories: any[];
@@ -10,6 +10,7 @@ interface CategoryGridSectionProps {
 
 export default function CategoryGridSection({ categories = [] }: CategoryGridSectionProps) {
   const { t } = useTranslation();
+  const lp = useLocalePath();
   return (
     <section className="max-w-7xl mx-auto px-4 border-t border-slate-200 dark:border-slate-800">
       <div className="flex flex-col items-center text-center space-y-4 mb-12">
@@ -28,7 +29,7 @@ export default function CategoryGridSection({ categories = [] }: CategoryGridSec
           const isGoogleIcon = cat.icon && /^[a-z0-9_]+$/.test(cat.icon);
           return (
             <Link
-              href={`/categories/${cat.slug}`}
+              href={lp(`/categories/${cat.slug}`)}
               key={cat._id}
               className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-primary/50 hover:shadow-xl hover:-translate-y-1 transition-all group"
             >
