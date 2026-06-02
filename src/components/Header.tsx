@@ -44,10 +44,11 @@ const Header = () => {
   };
 
   return (
-    <header className={`sticky top-0 z-50 w-full transition-all duration-300 border-b border-slate-200 dark:border-slate-800 ${isScrolled
-      ? 'py-3 bg-background/80 backdrop-blur-xl'
-      : 'py-5 bg-background/80 md:bg-transparent backdrop-blur-xl md:backdrop-blur-none'
-      }`}>
+    <>
+      <header className={`sticky top-0 z-50 w-full transition-all duration-300 border-b border-slate-200 dark:border-slate-800 ${isScrolled
+        ? 'py-3 bg-background/80 backdrop-blur-xl'
+        : 'py-5 bg-background/80 md:bg-transparent backdrop-blur-xl md:backdrop-blur-none'
+        }`}>
       <div className="container mx-auto px-4 flex items-center justify-between gap-4">
         {/* Logo */}
         <Link href={lp('/')} className="flex items-center gap-2 group shrink-0">
@@ -118,10 +119,11 @@ const Header = () => {
           </div>
         </div>
       </div>
+      </header>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-[60] bg-background lg:hidden animate-in fade-in slide-in-from-top duration-300">
+        <div className="fixed inset-0 z-[100] bg-background lg:hidden animate-in fade-in zoom-in-95 duration-200">
           <div className="p-6 flex flex-col h-full">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-2">
@@ -171,7 +173,7 @@ const Header = () => {
           </div>
         </div>
       )}
-    </header>
+    </>
   );
 };
 

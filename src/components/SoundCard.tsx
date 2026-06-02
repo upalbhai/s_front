@@ -75,22 +75,22 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
   const soundLink = lp(`/sounds/${sound.slug}`);
 
   return (
-    <div className="flex flex-col items-center gap-4 p-4 rounded-3xl transition-all duration-300 hover:bg-slate-100 dark:hover:bg-slate-800/50 group">
+    <div className="flex flex-col items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-2xl sm:rounded-3xl transition-all duration-300 hover:bg-slate-100 dark:hover:bg-slate-800/50 group">
 
       {/* ── 3D Button ── */}
       <div
         className="relative cursor-pointer select-none"
-        style={{ width: 130, height: 145 }}
+        style={{ width: 92, height: 102 }}
         onClick={handlePlay}
       >
         {/* Platter bottom rim (darkest, for depth) */}
         <div
           className="absolute rounded-[50%]"
           style={{
-            width: 120,
-            height: 90,
+            width: 84,
+            height: 63,
             bottom: 0,
-            left: 5,
+            left: 4,
             background: '#7a7a7a',
             zIndex: 1,
           }}
@@ -100,10 +100,10 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
         <div
           className="absolute rounded-[50%]"
           style={{
-            width: 120,
-            height: 90,
-            bottom: 12,
-            left: 5,
+            width: 84,
+            height: 63,
+            bottom: 8,
+            left: 4,
             background: '#d0d0d0',
             zIndex: 2,
           }}
@@ -113,10 +113,10 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
         <div
           className="absolute rounded-[50%] transition-all duration-75 ease-out"
           style={{
-            width: 100,
-            height: 75,
-            bottom: isThisPlaying ? 12 : 20,
-            left: 15,
+            width: 70,
+            height: 52,
+            bottom: isThisPlaying ? 8 : 14,
+            left: 11,
             backgroundColor: color.dark,
             zIndex: 3,
           }}
@@ -126,10 +126,10 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
         <div
           className="absolute transition-all duration-75 ease-out"
           style={{
-            width: 100,
-            height: isThisPlaying ? 12 : 20,
-            bottom: isThisPlaying ? 49.5 : 57.5,
-            left: 15,
+            width: 70,
+            height: isThisPlaying ? 8 : 14,
+            bottom: isThisPlaying ? 34 : 40,
+            left: 11,
             backgroundColor: color.dark,
             zIndex: 3,
           }}
@@ -139,10 +139,10 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
         <div
           className="absolute rounded-[50%] transition-all duration-75 ease-out"
           style={{
-            width: 100,
-            height: 75,
-            bottom: isThisPlaying ? 24 : 40,
-            left: 15,
+            width: 70,
+            height: 52,
+            bottom: isThisPlaying ? 16 : 28,
+            left: 11,
             backgroundColor: color.main,
             zIndex: 4,
           }}
@@ -152,14 +152,14 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
       {/* ── Title ── */}
       <div className="text-center w-full min-w-0">
         <Link href={soundLink}>
-          <h3 className="text-[13px] font-bold text-foreground truncate hover:text-primary transition-colors cursor-pointer underline underline-offset-4 decoration-current group-hover:decoration-primary px-1">
+          <h3 className="text-[11px] sm:text-[12px] md:text-[13px] font-bold text-foreground truncate hover:text-primary transition-colors cursor-pointer underline underline-offset-4 decoration-current group-hover:decoration-primary px-1">
             {sound.title}
           </h3>
         </Link>
       </div>
 
       {/* ── Action Icons ── */}
-      <div className="flex items-center gap-6 pt-1">
+      <div className="flex items-center gap-3 sm:gap-4 md:gap-5 pt-1">
         <button
           onClick={handleFavoriteToggle}
           className={`${isFavorited

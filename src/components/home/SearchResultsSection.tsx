@@ -49,7 +49,7 @@ export default function SearchResultsSection({
           <button onClick={handleClear} className="mt-4 text-primary font-bold hover:underline cursor-pointer">{t('home.search.clear')}</button>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 sm:gap-6">
           {searchResults.map((sound: any) => (
             <SoundCard key={sound._id} sound={sound} />
           ))}
