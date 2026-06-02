@@ -6,10 +6,12 @@ import { Music, Search, Menu, X, ChevronDown } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { useTranslation, useLocalePath } from '@/i18n';
+import { useSite } from '@/context/SiteProvider';
 
 const Header = () => {
   const { t } = useTranslation();
   const lp = useLocalePath();
+  const { config } = useSite();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -50,10 +52,10 @@ const Header = () => {
         {/* Logo */}
         <Link href={lp('/')} className="flex items-center gap-2 group shrink-0">
           <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center transition-transform group-hover:scale-110 shadow-xs border border-slate-200/55 dark:border-slate-800/55">
-            <img src="/logo.jpeg" alt="Sound Buttons Max Logo" className="w-full h-full object-cover" />
+            <img src={config.logo} alt={`${config.siteName} Logo`} className="w-full h-full object-cover" />
           </div>
           <span className="hidden lg:inline text-xl font-black tracking-tighter text-foreground whitespace-nowrap">
-            SOUND BUTTONS <span className="text-primary">MAX</span>
+            {config.wordmark.line1} <span className="text-primary">{config.wordmark.accent}</span>
           </span>
         </Link>
 
@@ -124,7 +126,7 @@ const Header = () => {
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center border border-slate-200/55 dark:border-slate-800/55">
-                  <img src="/logo.jpeg" alt="Sound Buttons Max Logo" className="w-full h-full object-cover" />
+                  <img src={config.logo} alt={`${config.siteName} Logo`} className="w-full h-full object-cover" />
                 </div>
               </div>
               <button className="p-2" onClick={() => setIsMobileMenuOpen(false)}>

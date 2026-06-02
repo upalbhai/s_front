@@ -1,62 +1,98 @@
 import { Metadata } from 'next';
+import type { SiteConfig } from '@/config/sites';
 
 const SUPPORTED_LOCALES = ['en', 'es', 'fr', 'pt', 'ru', 'it', 'ja', 'ko', 'de'];
 
-const SITE_NAME = 'Sound Buttons Max';
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://soundbuttonsmax.com';
-const DEFAULT_IMAGE = `${SITE_URL}/images/og-home.jpg`;
-
 type BuildSeoMetadataArgs = {
+  site: SiteConfig;
   title: string;
   description: string;
   canonicalPath: string;
   image?: string;
   type?: 'website' | 'article' | 'music.song';
+  keywords?: string;
 };
 
 export function buildSeoMetadata({
+  site,
   title,
   description,
   canonicalPath,
-  image = DEFAULT_IMAGE,
+  image,
   type = 'website',
+  keywords,
 }: BuildSeoMetadataArgs): Metadata {
-  const canonicalUrl = `${SITE_URL}${canonicalPath === '/' ? '' : canonicalPath}`;
+  const siteUrl = site.siteUrl;
+  const ogImage = image ?? `${siteUrl}${site.ogImage}`;
+  const canonicalUrl = `${siteUrl}${canonicalPath === '/' ? '' : canonicalPath}`;
 
-  // Generate hreflang mapping for all supported locales
   const languages: Record<string, string> = {};
   SUPPORTED_LOCALES.forEach((code) => {
     if (code === 'en') {
-      languages['en'] = `${SITE_URL}${canonicalPath === '/' ? '' : canonicalPath}`;
+      languages['en'] = `${siteUrl}${canonicalPath === '/' ? '' : canonicalPath}`;
     } else {
-      languages[code] = `${SITE_URL}/${code}${canonicalPath === '/' ? '' : canonicalPath}`;
+      languages[code] = `${siteUrl}/${code}${canonicalPath === '/' ? '' : canonicalPath}`;
     }
   });
-  // x-default points to english
-  languages['x-default'] = `${SITE_URL}${canonicalPath === '/' ? '' : canonicalPath}`;
+  languages['x-default'] = `${siteUrl}${canonicalPath === '/' ? '' : canonicalPath}`;
 
   return {
     title,
     description,
-    alternates: { 
+    ...(keywords ? { keywords } : {}),
+    alternates: {
       canonical: canonicalUrl,
-      languages 
+      languages,
+    },
+    authors: [{ name: site.siteName }],
+    publisher: site.siteName,
+    creator: site.siteName,
+    applicationName: site.siteName,
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+    formatDetection: { telephone: false },
+    appleWebApp: {
+      capable: true,
+      title,
+      statusBarStyle: 'default',
     },
     openGraph: {
       title,
       description,
       url: canonicalUrl,
-      siteName: SITE_NAME,
+      siteName: site.siteName,
       type,
-      images: [{ url: image }],
+      locale: 'en_US',
+      images: [{ url: ogImage, alt: title, width: 1200, height: 630 }],
     },
     twitter: {
       card: 'summary_large_image',
+      site: site.twitterHandle,
+      creator: site.twitterHandle,
       title,
       description,
-      images: [image],
+      images: [{ url: ogImage, alt: title, width: 1200, height: 630 }],
+    },
+    other: {
+      'msapplication-TileColor': site.themeColor,
+      HandheldFriendly: 'true',
+      MobileOptimized: 'width',
+      'mobile-web-app-capable': 'yes',
     },
   };
+}
+
+export function buildPageMetadata(args: BuildSeoMetadataArgs): Metadata {
+  return buildSeoMetadata(args);
 }
 
 export function buildNotFoundMetadata(title: string, description: string): Metadata {
@@ -67,4 +103,9 @@ export function buildNotFoundMetadata(title: string, description: string): Metad
   };
 }
 
-export { SITE_URL, DEFAULT_IMAGE };
+export function getSiteOgImage(site: SiteConfig, path?: string): string {
+  if (path) {
+    return `${site.siteUrl}${path}`;
+  }
+  return `${site.siteUrl}${site.ogImage}`;
+}

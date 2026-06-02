@@ -4,11 +4,13 @@ import Link from 'next/link';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import { useTranslation, useLocalePath } from '@/i18n';
+import { useSite } from '@/context/SiteProvider';
 
 const Footer = () => {
   const { resolvedTheme } = useTheme();
   const { t } = useTranslation();
   const lp = useLocalePath();
+  const { config } = useSite();
   const [mounted, setMounted] = useState(false);
   const [categories, setCategories] = useState<any[]>([]);
 
@@ -57,13 +59,13 @@ const Footer = () => {
           {/* Brand Column */}
           <div className="space-y-6">
             <h2 className={`text-2xl font-black tracking-tighter ${isDark ? 'text-white' : 'text-zinc-900'}`}>
-              SOUND BUTTONS <span className="text-primary">MAX</span>
+              {config.wordmark.line1} <span className="text-primary">{config.wordmark.accent}</span>
             </h2>
             <p className={`font-medium leading-relaxed transition-all duration-300 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
               {t('footer.tagline')}
             </p>
             <div className={`space-y-2 text-sm font-bold transition-all duration-300 ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
-              <p>contact@soundbuttonsmax.com</p>
+              <p>{config.contactEmail}</p>
             </div>
           </div>
 

@@ -1,14 +1,19 @@
 import api from '@/services/api';
 import { Metadata } from 'next';
 import { buildSeoMetadata } from '@/lib/seo';
+import { getRequestSite } from '@/lib/site';
 import BlogListClient from './BlogListClient';
 
-export const metadata: Metadata = buildSeoMetadata({
-  title: 'Blog | Sound Buttons Max',
-  description: 'Guides, tips, and meme culture articles from Sound Buttons Max.',
-  canonicalPath: '/blog',
-  type: 'article',
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const site = await getRequestSite();
+  return buildSeoMetadata({
+    site,
+    title: `Blog | ${site.siteName}`,
+    description: `Guides, tips, and meme culture articles from ${site.siteName}.`,
+    canonicalPath: '/blog',
+    type: 'article',
+  });
+}
 
 export default async function BlogListPage() {
   try {
