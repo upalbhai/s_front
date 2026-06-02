@@ -47,6 +47,12 @@ export default async function RootLayout({
       suppressHydrationWarning
       className={cn('font-sans', geist.variable)}
       data-site={site.id}
+      style={
+        {
+          '--primary': site.primaryColor,
+          '--primary-hover': site.primaryHoverColor,
+        } as React.CSSProperties
+      }
     >
       <head>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />

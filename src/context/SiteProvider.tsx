@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useEffect } from 'react';
+import React, { createContext, useContext } from 'react';
 import { getSiteConfig, type SiteConfig, type SiteId } from '@/config/sites';
 
 type SiteContextValue = {
@@ -18,12 +18,6 @@ export function SiteProvider({
   children: React.ReactNode;
 }) {
   const config = getSiteConfig(siteId);
-
-  useEffect(() => {
-    const root = document.documentElement;
-    root.style.setProperty('--primary', config.primaryColor);
-    root.style.setProperty('--primary-hover', config.primaryHoverColor);
-  }, [config.primaryColor, config.primaryHoverColor]);
 
   return (
     <SiteContext.Provider value={{ siteId, config }}>

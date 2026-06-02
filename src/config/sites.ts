@@ -29,7 +29,7 @@ const SITES: Record<SiteId, SiteConfig> = {
     siteName: 'Sound Buttons Max',
     wordmark: { line1: 'SOUND BUTTONS', accent: 'MAX' },
     siteUrl: 'https://soundbuttonsmax.net',
-    logo: '/sites/soundbuttons/logo.svg',
+    logo: '/sites/soundbuttons/logo.jpeg',
     ogImage: '/sites/soundbuttons/og-home.svg',
     themeColor: '#2563eb',
     primaryColor: '#2563eb',
