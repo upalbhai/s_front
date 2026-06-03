@@ -108,7 +108,7 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
     api.patch(`/sounds/${sound._id}/stats`, { type: 'download' }).catch(() => { });
   };
 
-  const soundLink = lp(`/sounds/${sound.slug}`);
+  const soundLink = lp(`/sound/${sound.slug}`);
 
   return (
     <div className="flex flex-col items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-2xl sm:rounded-3xl transition-all duration-300 hover:bg-slate-100 dark:hover:bg-slate-800/50 group">

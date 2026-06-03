@@ -58,7 +58,7 @@ export default function HeroSection({
         .then(() => {
           setActivePlayingId(soundId);
           if (soundId.match(/^[0-9a-fA-F]{24}$/)) {
-            api.patch(`/sounds/${soundId}/stats`, { type: 'play' }).catch(() => { });
+            api.patch(`/sound/${soundId}/stats`, { type: 'play' }).catch(() => { });
           }
         })
         .catch(err => {

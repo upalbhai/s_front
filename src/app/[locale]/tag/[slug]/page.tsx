@@ -62,7 +62,7 @@ export default async function TagPage({ params }: { params: Promise<{ slug: stri
       itemListElement: (soundsData.sounds || []).slice(0, 10).map((sound: any, index: number) => ({
         '@type': 'ListItem',
         position: index + 1,
-        url: `${site.siteUrl}/sounds/${sound.slug}`,
+        url: `${site.siteUrl}/sound/${sound.slug}`,
         name: sound.title,
       })),
     },
