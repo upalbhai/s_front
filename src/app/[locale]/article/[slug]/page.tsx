@@ -40,6 +40,10 @@ export async function generateMetadata({
       canonicalPath: `/blog/${slug}`,
       image: ogImageUrl,
       type: 'article',
+      keywords: `soundboard, sound effects, ${postTitle}, audio clips, meme sounds, sound buttons, blog`,
+      publishedTime,
+      modifiedTime,
+      authorName,
     });
 
     return {
@@ -47,9 +51,6 @@ export async function generateMetadata({
       openGraph: {
         ...meta.openGraph,
         type: 'article' as const,
-        publishedTime,
-        modifiedTime,
-        authors: [authorName],
         section: `${site.siteName} Blog`,
       },
     };

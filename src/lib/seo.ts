@@ -11,6 +11,11 @@ type BuildSeoMetadataArgs = {
   image?: string;
   type?: 'website' | 'article' | 'music.song';
   keywords?: string;
+  publishedTime?: string;
+  modifiedTime?: string;
+  authorName?: string;
+  tags?: string[];
+  audioUrl?: string;
 };
 
 export function buildSeoMetadata({
@@ -21,6 +26,11 @@ export function buildSeoMetadata({
   image,
   type = 'website',
   keywords,
+  publishedTime,
+  modifiedTime,
+  authorName,
+  tags,
+  audioUrl,
 }: BuildSeoMetadataArgs): Metadata {
   const siteUrl = site.siteUrl;
   const ogImage = image ?? `${siteUrl}${site.ogImage}`;
@@ -47,6 +57,7 @@ export function buildSeoMetadata({
     authors: [{ name: site.siteName }],
     publisher: site.siteName,
     creator: site.siteName,
+    generator: site.siteName,
     applicationName: site.siteName,
     robots: {
       index: true,
@@ -73,6 +84,15 @@ export function buildSeoMetadata({
       type,
       locale: 'en_US',
       images: [{ url: ogImage, alt: title, width: 1200, height: 630 }],
+      ...(type === 'article' ? {
+        publishedTime,
+        modifiedTime,
+        authors: authorName ? [authorName] : undefined,
+        tags,
+      } : {}),
+      ...(type === 'music.song' && audioUrl ? {
+        audio: [{ url: audioUrl, secureUrl: audioUrl, type: 'audio/mpeg' }]
+      } : {}),
     },
     twitter: {
       card: 'summary_large_image',
@@ -84,9 +104,15 @@ export function buildSeoMetadata({
     },
     other: {
       'msapplication-TileColor': site.themeColor,
+      'msapplication-config': '/browserconfig.xml',
       HandheldFriendly: 'true',
       MobileOptimized: 'width',
       'mobile-web-app-capable': 'yes',
+      copyright: `© ${new Date().getFullYear()} ${site.siteName}`,
+      language: 'en',
+      distribution: 'global',
+      coverage: 'worldwide',
+      target: 'all',
     },
   };
 }

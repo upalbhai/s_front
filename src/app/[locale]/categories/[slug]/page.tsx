@@ -28,6 +28,7 @@ export async function generateMetadata({
       site,
       title: site.meta.categoryDetail.titleTemplate.replace('{category name}', categoryName),
       description: site.meta.categoryDetail.descriptionTemplate.replace('{category name}', categoryName),
+      keywords: site.meta.categoryDetail.keywordsTemplate,
       canonicalPath: `/categories/${slug}`,
       image: `${site.siteUrl}/categories/${slug}/opengraph-image.png`,
     });

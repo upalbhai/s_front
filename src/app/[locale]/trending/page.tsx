@@ -9,6 +9,7 @@ export async function generateMetadata(): Promise<Metadata> {
     site,
     title: site.meta.trending.title,
     description: site.meta.trending.description,
+    keywords: site.meta.trending.keywords,
     canonicalPath: '/trending',
     image: `${site.siteUrl}/trending/opengraph-image.png`,
   });

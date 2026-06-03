@@ -28,22 +28,16 @@ export async function generateMetadata({
         : `${backendUrl}${sound.fileUrl}`
       : '';
 
-    const meta = buildSeoMetadata({
+    return buildSeoMetadata({
       site,
       title: `${soundName} Sound Effect Button | ${site.siteName}`,
       description: `Play and download ${soundName} sound effect buttons instantly on ${site.siteName}. Perfect for memes, pranks, gaming and hilarious fun reactions.`,
       canonicalPath: `/sounds/${soundSlug}`,
       image: `${site.siteUrl}/sounds/${soundSlug}/opengraph-image.png`,
       type: 'music.song',
+      audioUrl: mp3Url,
+      keywords: site.meta.soundDetail.keywordsTemplate,
     });
-
-    return {
-      ...meta,
-      other: {
-        ...(meta.other ?? {}),
-        'og:audio': mp3Url,
-      },
-    };
   } catch {
     return buildNotFoundMetadata(
       `Sound Not Found | ${site.siteName}`,

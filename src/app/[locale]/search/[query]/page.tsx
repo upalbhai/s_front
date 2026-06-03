@@ -13,17 +13,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const decoded = decodeURIComponent(query);
   const site = await getRequestSite();
 
-  const meta = buildSeoMetadata({
+  return buildSeoMetadata({
     site,
     title: site.meta.search.titleTemplate.replace('{sound name}', decoded),
     description: site.meta.search.descriptionTemplate.replace('{search name}', decoded),
     canonicalPath: `/search/${query}`,
+    keywords: 'sound buttons, soundboard, sound effects, meme soundboard',
   });
-
-  return {
-    ...meta,
-    robots: { index: false, follow: true },
-  };
 }
 
 export default async function SearchPage({ params }: Props) {
