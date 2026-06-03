@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from '@/i18n';
 import {
   HelpCircle,
@@ -8,17 +8,11 @@ import {
   CheckCircle2,
   ListFilter,
   UserCheck,
-  ChevronDown,
   Info
 } from 'lucide-react';
 
 export default function HomeSEOContent() {
   const { t } = useTranslation();
-  const [openFaq, setOpenFaq] = useState<Record<number, boolean>>({});
-
-  const toggleFaq = (index: number) => {
-    setOpenFaq(prev => ({ ...prev, [index]: !prev[index] }));
-  };
 
   const useCases = [
     {
@@ -221,27 +215,17 @@ export default function HomeSEOContent() {
 
         <div className="max-w-4xl mx-auto space-y-4">
           {faqs.map((faq, idx) => {
-            const isOpen = !!openFaq[idx];
             return (
               <div
                 key={idx}
-                className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/40 overflow-hidden transition-all"
+                className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/40 p-6 transition-all"
               >
-                <button
-                  onClick={() => toggleFaq(idx)}
-                  className="w-full px-6 py-5 flex items-center justify-between text-left font-black text-base text-foreground hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors"
-                >
-                  <span>{faq.q}</span>
-                  <span className="text-slate-400">
-                    <ChevronDown size={18} className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
-                  </span>
-                </button>
-
-                {isOpen && (
-                  <div className="px-6 pb-6 pt-2 text-slate-500 dark:text-slate-400 font-medium text-sm leading-relaxed border-t border-slate-100 dark:border-slate-800 animate-in fade-in slide-in-from-top-1 duration-200">
-                    {faq.a}
-                  </div>
-                )}
+                <h3 className="font-black text-base text-foreground mb-3">
+                  {faq.q}
+                </h3>
+                <div className="text-slate-500 dark:text-slate-400 font-medium text-sm leading-relaxed">
+                  {faq.a}
+                </div>
               </div>
             );
           })}

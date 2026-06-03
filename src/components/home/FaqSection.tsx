@@ -38,8 +38,8 @@ export default function FaqSection() {
       <div className="space-y-4">
         {FAQ_ITEMS.map((item, idx) => {
           return (
-            <div 
-              key={idx} 
+            <div
+              key={idx}
               className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/40 p-6 transition-all"
             >
               <h3 className="font-black text-base text-foreground mb-3">
