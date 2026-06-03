@@ -87,21 +87,21 @@ export default function HeroSection({
     : defaultItems;
 
   return (
-    <section className="relative overflow-hidden p-10">
+    <section className="relative overflow-hidden py-6 px-4 md:p-10">
       {/* Subtle dynamic background glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[600px] bg-gradient-to-b from-primary/10 via-transparent to-transparent blur-3xl -z-10 pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 relative">
-        <div className="flex flex-col items-center text-center space-y-8">
+      <div className="max-w-7xl mx-auto relative">
+        <div className="flex flex-col items-center text-center space-y-6 md:space-y-8">
 
           {/* Context & Call to action */}
-          <div className="space-y-6 flex flex-col items-center">
+          <div className="space-y-4 md:space-y-6 flex flex-col items-center">
             {/* <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/25 text-xs font-black uppercase tracking-widest">
               <Sparkles size={14} />
               <span>{resolvedBadge}</span>
             </div> */}
 
-            <h1 className="text-3xl md:text-5xl font-black tracking-tight leading-[1.05] text-foreground max-w-4xl mx-auto">
+            <h1 className="text-2xl sm:text-3xl md:text-5xl font-black tracking-tight leading-[1.05] text-foreground max-w-4xl mx-auto">
               {resolvedTitle}
             </h1>
 

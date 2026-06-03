@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Heart, Copy, Send } from 'lucide-react';
+import { Heart, Download, Send } from 'lucide-react';
 import Link from 'next/link';
 import api from '../services/api';
 import { toast } from 'react-hot-toast';
@@ -29,6 +29,13 @@ const BUTTON_COLORS = [
   { main: '#007aff', dark: '#0055b3', shadow: 'rgba(0, 122, 255, 0.3)' },
   { main: '#34c759', dark: '#248a3d', shadow: 'rgba(52, 199, 89, 0.3)' },
 ];
+
+const getFullUrl = (url: string) => {
+  if (!url) return '';
+  if (url.startsWith('http')) return url;
+  const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5001';
+  return `${baseUrl}${url}`;
+};
 
 const SoundCard: React.FC<SoundProps> = ({ sound }) => {
   const { currentSound, isPlaying, playSound } = useAudio();
@@ -70,6 +77,35 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
       : [...favs, sound._id];
     localStorage.setItem('favorites', JSON.stringify(updated));
     window.dispatchEvent(new Event('favoritesChanged'));
+  };
+
+  const handleDownload = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      const response = await fetch(getFullUrl(sound.fileUrl));
+      if (!response.ok) throw new Error('Network response was not ok');
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = `${sound.slug}.mp3`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (err) {
+      const a = document.createElement('a');
+      a.href = getFullUrl(sound.fileUrl);
+      a.download = `${sound.slug}.mp3`;
+      a.target = '_blank';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+    // Track stats
+    api.patch(`/sounds/${sound._id}/stats`, { type: 'download' }).catch(() => { });
   };
 
   const soundLink = lp(`/sounds/${sound.slug}`);
@@ -173,15 +209,10 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
 
         <button
           className="text-slate-500 dark:text-slate-400 hover:text-foreground hover:scale-110 transition-transform active:scale-95"
-          title={t('sound.copy_tooltip')}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            navigator.clipboard.writeText(`${window.location.origin}${soundLink}`);
-            toast.success(t('sound.link_copied'));
-          }}
+          title="Download"
+          onClick={handleDownload}
         >
-          <Copy size={16} strokeWidth={2} />
+          <Download size={16} strokeWidth={2} />
         </button>
 
         <button

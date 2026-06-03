@@ -8,6 +8,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const site = await getRequestSite();
   const SITE_URL = site.siteUrl;
 
+  // Fallback routes in case backend fetch fails
   const routes = [
     '',
     '/blog',
@@ -26,27 +27,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   try {
-    const catRes = await api.get('/categories?limit=500');
-    const categories = Array.isArray(catRes.data.categories) ? catRes.data.categories : [];
+    // Determine backend URL by removing API prefix
+    const backendUrl = api.defaults.baseURL?.replace('/api/v1', '') || 'http://localhost:5000';
+    const sitemapUrl = `${backendUrl}/uploads/sitemaps/sitemap-${site.id}.json`;
 
-    const categoryRoutes = categories.map((cat: any) => ({
-      url: `${SITE_URL}${cat.canonicalUrl || `/categories/${cat.slug}`}`,
-      lastModified: new Date(cat.updatedAt),
-      changeFrequency: 'weekly' as const,
-      priority: cat.priority || 0.8,
-    }));
+    const res = await fetch(sitemapUrl, { next: { revalidate: 0 } });
+    if (!res.ok) {
+      throw new Error(`Failed to fetch sitemap json from backend: ${res.statusText}`);
+    }
 
-    const soundRes = await api.get('/sounds?limit=5000');
-    const sounds = Array.isArray(soundRes.data.sounds) ? soundRes.data.sounds : [];
-
-    const soundRoutes = sounds.map((sound: any) => ({
-      url: `${SITE_URL}${sound.canonicalUrl || `/sounds/${sound.slug}`}`,
-      lastModified: new Date(sound.updatedAt),
-      changeFrequency: 'monthly' as const,
-      priority: 0.6,
-    }));
-
-    return [...routes, ...categoryRoutes, ...soundRoutes];
+    const sitemapData = await res.json();
+    return sitemapData;
   } catch (error) {
     console.error('Error generating sitemap:', error);
     return routes;
