@@ -26,8 +26,8 @@ export async function generateMetadata({
 
     return buildSeoMetadata({
       site,
-      title: `${categoryName} Soundboard: Sound Buttons Unblocked | ${site.siteName}`,
-      description: `Discover thousands of ${categoryName} soundboard collections with the sound buttons and meme soundboard. Play instantly & download on ${site.siteName}.`,
+      title: site.meta.categoryDetail.titleTemplate.replace('{category name}', categoryName),
+      description: site.meta.categoryDetail.descriptionTemplate.replace('{category name}', categoryName),
       canonicalPath: `/categories/${slug}`,
       image: `${site.siteUrl}/categories/${slug}/opengraph-image.png`,
     });
@@ -106,6 +106,7 @@ export default async function LocaleCategoryPage({
         totalSounds={soundsData.total}
         categoryId={category._id}
         categoryName={category.name}
+        h1Title={site.meta.categoryDetail.h1Template.replace('{category name}', category.name)}
       />
 
       <section className="glass-card mt-24 p-8 md:p-12">

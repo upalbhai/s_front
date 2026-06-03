@@ -14,6 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 }
 
-export default function NewSoundsPage() {
-  return <NewClient />;
+export default async function NewSoundsPage() {
+  const site = await getRequestSite();
+  return <NewClient h1Title={site.meta.new.h1} shortDescription={site.meta.new.shortDescription} />;
 }

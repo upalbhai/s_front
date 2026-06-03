@@ -8,7 +8,7 @@ import { Search } from 'lucide-react';
 import HeroSection from '@/components/home/HeroSection';
 import { useTranslation } from '@/i18n';
 
-export default function NewClient() {
+export default function NewClient({ h1Title, shortDescription }: any) {
   const { t } = useTranslation();
   const limit = 40;
   const [sounds, setSounds] = useState<any[]>([]);
@@ -69,7 +69,8 @@ export default function NewClient() {
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           isLoading={loading}
-          title={t('new.title')}
+          title={h1Title || t('new.title')}
+          subtitle={shortDescription || undefined}
           badge={t('new.badge')}
           placeholder={t('new.placeholder')}
         />

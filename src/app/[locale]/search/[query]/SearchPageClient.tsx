@@ -11,9 +11,10 @@ interface SearchPageClientProps {
   query: string;
   initialResults: any[];
   total: number;
+  h1Title?: string;
 }
 
-export default function SearchPageClient({ query, initialResults, total }: SearchPageClientProps) {
+export default function SearchPageClient({ query, initialResults, total, h1Title }: SearchPageClientProps) {
   const { t } = useTranslation();
   const lp = useLocalePath();
   const limit = 40;
@@ -64,7 +65,7 @@ export default function SearchPageClient({ query, initialResults, total }: Searc
         <div className="flex items-center gap-3 mb-12">
           <div className="w-1.5 h-8 bg-primary rounded-full" />
           <h1 className="text-3xl md:text-4xl font-black tracking-tight text-foreground">
-            {t('home.search.results_for', { query }) || `Search results for "${query}"`}
+            {h1Title || t('home.search.results_for', { query }) || `Search results for "${query}"`}
           </h1>
           <span className="ml-2 text-sm font-bold text-slate-500 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full">
             {totalResults}

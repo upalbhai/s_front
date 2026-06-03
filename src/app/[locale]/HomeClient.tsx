@@ -22,7 +22,8 @@ export default function HomeClient({
   newSounds = [],
   categories = [],
   searchResults = [],
-  searchQuery
+  searchQuery,
+  h1Title
 }: any) {
   const [query, setQuery] = useState(searchQuery || '');
   const debouncedQuery = useDebounce(query, 300);
@@ -121,6 +122,7 @@ export default function HomeClient({
         onSearchChange={setQuery}
         isLoading={isLoading && debouncedQuery === query}
         trendingSounds={homeData.trendingSounds}
+        title={h1Title}
       />
 
       {/* Horizontal scrolling tags section */}

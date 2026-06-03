@@ -14,6 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 }
 
-export default function TrendingSoundsPage() {
-  return <TrendingClient />;
+export default async function TrendingSoundsPage() {
+  const site = await getRequestSite();
+  return <TrendingClient h1Title={site.meta.trending.h1} shortDescription={site.meta.trending.shortDescription} />;
 }

@@ -2,10 +2,12 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { FolderOpen, LayoutDashboard, LogOut, Music, Shield, Sparkles } from 'lucide-react';
+import { FolderOpen, LayoutDashboard, LogOut, Music, Shield, Sparkles, RefreshCcw } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useTheme } from 'next-themes';
 import { useState, useEffect } from 'react';
+import api from '@/services/api';
+import { toast } from 'react-hot-toast';
 
 export default function AdminLayout({
   children,
@@ -16,6 +18,7 @@ export default function AdminLayout({
   const router = useRouter();
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [generatingSitemap, setGeneratingSitemap] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -39,6 +42,18 @@ export default function AdminLayout({
 
     router.push('/admin/login');
     router.refresh();
+  };
+
+  const handleGenerateSitemap = async () => {
+    try {
+      setGeneratingSitemap(true);
+      await api.post('/sitemaps/generate');
+      toast.success('Sitemap generation triggered successfully!');
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || 'Error triggering sitemap generation');
+    } finally {
+      setGeneratingSitemap(false);
+    }
   };
 
   if (isLoginPage) {
@@ -105,6 +120,19 @@ export default function AdminLayout({
               </Link>
             );
           })}
+          
+          <button
+            onClick={handleGenerateSitemap}
+            disabled={generatingSitemap}
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 border text-left mt-2 ${
+              isDark
+                ? 'text-zinc-400 hover:text-white hover:bg-zinc-900 border-transparent font-bold'
+                : 'text-zinc-600 hover:text-black hover:bg-zinc-100 border-transparent font-bold'
+            } ${generatingSitemap ? 'opacity-50 cursor-not-allowed' : ''}`}
+          >
+            <RefreshCcw size={18} className={generatingSitemap ? 'animate-spin' : ''} />
+            <span className="text-sm">{generatingSitemap ? 'Generating Sitemaps...' : 'Generate Sitemaps'}</span>
+          </button>
         </nav>
 
         <div className={`mt-auto flex items-center justify-between gap-3 pt-6 border-t ${

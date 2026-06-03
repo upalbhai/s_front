@@ -25,7 +25,7 @@ const getFullUrl = (url: string) => {
   return `${baseUrl}${url}`;
 };
 
-export default function SoundDetailClient({ sound, relatedSounds }: any) {
+export default function SoundDetailClient({ sound, relatedSounds, h1Title, uiDescription }: any) {
   const { currentSound, isPlaying, playSound } = useAudio();
   const lp = useLocalePath();
   const isThisPlaying = currentSound?._id === sound._id && isPlaying;
@@ -208,7 +208,7 @@ export default function SoundDetailClient({ sound, relatedSounds }: any) {
           {/* Right: Sound Details */}
           <div className="flex flex-col items-center md:items-start text-center md:text-left">
             <h1 className="text-3xl md:text-5xl font-black text-foreground underline decoration-2 underline-offset-8 decoration-foreground/30 leading-tight">
-              {sound.title}
+              {h1Title || sound.title}
             </h1>
 
             {/* Category and tag pills */}
@@ -286,7 +286,7 @@ export default function SoundDetailClient({ sound, relatedSounds }: any) {
           <div className="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
             <h2 className="text-xl font-black text-foreground mb-4">About the {sound.title} Sound</h2>
             <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
-              {sound.description || `The ${sound.title} sound button is one of the most popular clips in the ${sound.category?.name} category.`}
+              {sound.description || uiDescription || `The ${sound.title} sound button is one of the most popular clips in the ${sound.category?.name} category.`}
             </p>
           </div>
 

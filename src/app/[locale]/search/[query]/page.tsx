@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import api from '@/services/api';
 import SearchPageClient from './SearchPageClient';
+import { getRequestSite } from '@/lib/site';
+import { buildSeoMetadata } from '@/lib/seo';
 
 type Props = {
   params: Promise<{ query: string; locale: string }>;
@@ -9,10 +11,17 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { query } = await params;
   const decoded = decodeURIComponent(query);
+  const site = await getRequestSite();
+
+  const meta = buildSeoMetadata({
+    site,
+    title: site.meta.search.titleTemplate.replace('{sound name}', decoded),
+    description: site.meta.search.descriptionTemplate.replace('{search name}', decoded),
+    canonicalPath: `/search/${query}`,
+  });
 
   return {
-    title: `"${decoded}" - Search Results | SoundboardMax`,
-    description: `Search results for "${decoded}" on SoundboardMax. Find meme soundboard buttons, sound effects, and audio clips matching "${decoded}".`,
+    ...meta,
     robots: { index: false, follow: true },
   };
 }
@@ -32,11 +41,14 @@ export default async function SearchPage({ params }: Props) {
     console.error('Error fetching search results:', error);
   }
 
+  const site = await getRequestSite();
+
   return (
     <SearchPageClient
       query={decoded}
       initialResults={initialResults}
       total={total}
+      h1Title={site.meta.search.h1Template.replace('{sound name}', decoded)}
     />
   );
 }

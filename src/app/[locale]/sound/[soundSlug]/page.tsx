@@ -117,7 +117,13 @@ export default async function LocaleSoundDetailPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <SoundDetailClient sound={sound} relatedSounds={relatedSounds} slug={soundSlug} />
+      <SoundDetailClient
+        sound={sound}
+        relatedSounds={relatedSounds}
+        slug={soundSlug}
+        h1Title={site.meta.soundDetail.h1Template.replace('{sound name}', sound.title)}
+        uiDescription={site.meta.soundDetail.descriptionTemplate.replace('{sound name}', sound.title)}
+      />
     </>
   );
 }

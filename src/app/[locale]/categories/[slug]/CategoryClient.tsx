@@ -9,7 +9,7 @@ import useDebounce from '@/hooks/useDebounce';
 import HeroSection from '@/components/home/HeroSection';
 import { useTranslation } from '@/i18n';
 
-export default function CategoryClient({ initialSounds, totalSounds, categoryId, categoryName }: any) {
+export default function CategoryClient({ initialSounds, totalSounds, categoryId, categoryName, h1Title }: any) {
   const { t } = useTranslation();
   const limit = 40;
   const [sounds, setSounds] = useState(initialSounds || []);
@@ -69,7 +69,7 @@ export default function CategoryClient({ initialSounds, totalSounds, categoryId,
         searchQuery={search}
         onSearchChange={setSearch}
         isLoading={loading}
-        title={t('category.title', { name: categoryName })}
+        title={h1Title || t('category.title', { name: categoryName })}
         subtitle={t('category.subtitle', { name: categoryName })}
         badge={t('category.badge')}
         placeholder={t('category.placeholder', { name: categoryName })}
