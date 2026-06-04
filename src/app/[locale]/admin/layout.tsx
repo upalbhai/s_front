@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { FolderOpen, LayoutDashboard, LogOut, Music, Shield, Sparkles } from 'lucide-react';
+import { FolderOpen, LayoutDashboard, LogOut, Menu, Music, Shield, Sparkles, X } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useTheme } from 'next-themes';
 import { useState, useEffect } from 'react';
@@ -16,10 +16,15 @@ export default function AdminLayout({
   const router = useRouter();
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [pathname]);
 
   const isDark = mounted && resolvedTheme === 'dark';
   const userName = 'Admin';
@@ -53,17 +58,57 @@ export default function AdminLayout({
     );
   }
 
+  const sidebarClassName = `fixed lg:sticky top-0 left-0 z-50 lg:z-auto h-screen w-[280px] max-w-[85vw] shrink-0 p-6 border-r flex flex-col gap-8 shadow-sm transition-all duration-300 ${
+    sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+  } ${
+    isDark
+      ? 'border-zinc-800 bg-zinc-950 text-white'
+      : 'border-zinc-200 bg-white text-zinc-900'
+  }`;
+
   return (
-    <div className={`min-h-screen grid grid-cols-1 lg:grid-cols-[280px_1fr] transition-colors duration-300 ${
+    <div className={`min-h-screen flex transition-colors duration-300 ${
       isDark ? 'bg-zinc-950 text-zinc-100' : 'bg-zinc-50 text-zinc-900'
     }`}>
+      {/* Mobile backdrop */}
+      <div
+        aria-hidden={!sidebarOpen}
+        className={`fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${
+          sidebarOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}
+        onClick={() => setSidebarOpen(false)}
+      />
+
       {/* Sidebar */}
-      <aside className={`sticky top-0 h-screen p-6 border-r flex flex-col gap-8 shadow-sm transition-colors duration-300 ${
-        isDark 
-          ? 'border-zinc-800 bg-zinc-950 text-white' 
-          : 'border-zinc-200 bg-white text-zinc-900'
-      }`}>
-        <div className="flex items-center gap-4">
+      <aside className={sidebarClassName}>
+        <div className="flex items-center justify-between gap-3 lg:hidden">
+          <div className="flex items-center gap-4 min-w-0">
+            <div className={`w-10 h-10 grid place-items-center rounded-xl border transition-colors duration-300 ${
+              isDark ? 'bg-zinc-900 border-zinc-800 text-white' : 'bg-zinc-100 border-zinc-200 text-black'
+            }`}>
+              <Sparkles size={18} />
+            </div>
+            <div className="min-w-0">
+              <div className="text-sm font-black tracking-tight truncate uppercase">Sound Buttons</div>
+              <div className={`mt-0.5 text-[10px] uppercase tracking-widest font-black ${
+                isDark ? 'text-zinc-500' : 'text-zinc-400'
+              }`}>Control center</div>
+            </div>
+          </div>
+          <button
+            className={`w-10 h-10 rounded-xl border grid place-items-center transition-all shrink-0 ${
+              isDark
+                ? 'border-zinc-800 bg-zinc-900 text-zinc-400 hover:text-white'
+                : 'border-zinc-200 bg-zinc-50 text-zinc-500 hover:text-zinc-900'
+            }`}
+            onClick={() => setSidebarOpen(false)}
+            type="button"
+            aria-label="Close menu"
+          >
+            <X size={18} />
+          </button>
+        </div>
+        <div className="hidden lg:flex items-center gap-4">
           <div className={`w-10 h-10 grid place-items-center rounded-xl border transition-colors duration-300 ${
             isDark ? 'bg-zinc-900 border-zinc-800 text-white' : 'bg-zinc-100 border-zinc-200 text-black'
           }`}>
@@ -138,17 +183,31 @@ export default function AdminLayout({
       </aside>
 
       {/* Main Content */}
-      <div className="min-w-0 flex flex-col">
-        <header className={`flex items-center justify-between gap-4 px-8 py-6 border-b sticky top-0 z-20 backdrop-blur-md transition-colors duration-300 ${
+      <div className="min-w-0 flex-1 flex flex-col min-h-screen">
+        <header className={`flex items-center justify-between gap-4 px-4 sm:px-8 py-6 border-b sticky top-0 z-30 backdrop-blur-md transition-colors duration-300 ${
           isDark 
             ? 'bg-zinc-950/70 border-zinc-800 text-white' 
             : 'bg-white/70 border-zinc-200 text-zinc-900 shadow-sm'
         }`}>
-          <div>
-            <div className={`text-[10px] uppercase tracking-widest font-black ${
-              isDark ? 'text-zinc-500' : 'text-zinc-400'
-            }`}>Management</div>
-            <h1 className="mt-1 text-3xl font-black tracking-tighter text-foreground uppercase">{activeSection}</h1>
+          <div className="flex items-center gap-3 min-w-0">
+            <button
+              className={`lg:hidden w-10 h-10 rounded-xl border grid place-items-center transition-all shrink-0 ${
+                isDark
+                  ? 'border-zinc-800 bg-zinc-900 text-zinc-400 hover:text-white'
+                  : 'border-zinc-200 bg-zinc-50 text-zinc-500 hover:text-zinc-900'
+              }`}
+              onClick={() => setSidebarOpen(true)}
+              type="button"
+              aria-label="Open menu"
+            >
+              <Menu size={18} />
+            </button>
+            <div className="min-w-0">
+              <div className={`text-[10px] uppercase tracking-widest font-black ${
+                isDark ? 'text-zinc-500' : 'text-zinc-400'
+              }`}>Management</div>
+              <h1 className="mt-1 text-2xl sm:text-3xl font-black tracking-tighter text-foreground uppercase truncate">{activeSection}</h1>
+            </div>
           </div>
           <div className={`hidden sm:block px-5 py-2 rounded-full border text-[10px] font-black uppercase tracking-widest transition-colors duration-300 ${
             isDark ? 'border-zinc-800 bg-zinc-900/50 text-zinc-500' : 'border-zinc-200 bg-zinc-100 text-zinc-400'
@@ -156,7 +215,7 @@ export default function AdminLayout({
             v1.0 Admin
           </div>
         </header>
-        <main className="p-8 flex-1 overflow-y-auto">
+        <main className="p-4 sm:p-8 flex-1 overflow-y-auto w-full">
           {children}
         </main>
       </div>
