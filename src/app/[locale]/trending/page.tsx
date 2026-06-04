@@ -9,11 +9,13 @@ export async function generateMetadata(): Promise<Metadata> {
     site,
     title: site.meta.trending.title,
     description: site.meta.trending.description,
+    keywords: site.meta.trending.keywords,
     canonicalPath: '/trending',
     image: `${site.siteUrl}/trending/opengraph-image.png`,
   });
 }
 
-export default function TrendingSoundsPage() {
-  return <TrendingClient />;
+export default async function TrendingSoundsPage() {
+  const site = await getRequestSite();
+  return <TrendingClient h1Title={site.meta.trending.h1} shortDescription={site.meta.trending.shortDescription} />;
 }

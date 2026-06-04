@@ -28,22 +28,16 @@ export async function generateMetadata({
         : `${backendUrl}${sound.fileUrl}`
       : '';
 
-    const meta = buildSeoMetadata({
+    return buildSeoMetadata({
       site,
       title: `${soundName} Sound Effect Button | ${site.siteName}`,
       description: `Play and download ${soundName} sound effect buttons instantly on ${site.siteName}. Perfect for memes, pranks, gaming and hilarious fun reactions.`,
-      canonicalPath: `/sounds/${soundSlug}`,
-      image: `${site.siteUrl}/sounds/${soundSlug}/opengraph-image.png`,
+      canonicalPath: `/sound/${soundSlug}`,
+      image: `${site.siteUrl}/sound/${soundSlug}/opengraph-image.png`,
       type: 'music.song',
+      audioUrl: mp3Url,
+      keywords: site.meta.soundDetail.keywordsTemplate,
     });
-
-    return {
-      ...meta,
-      other: {
-        ...(meta.other ?? {}),
-        'og:audio': mp3Url,
-      },
-    };
   } catch {
     return buildNotFoundMetadata(
       `Sound Not Found | ${site.siteName}`,
@@ -117,7 +111,13 @@ export default async function LocaleSoundDetailPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <SoundDetailClient sound={sound} relatedSounds={relatedSounds} slug={soundSlug} />
+      <SoundDetailClient
+        sound={sound}
+        relatedSounds={relatedSounds}
+        slug={soundSlug}
+        h1Title={site.meta.soundDetail.h1Template.replace('{sound name}', sound.title)}
+        uiDescription={site.meta.soundDetail.descriptionTemplate.replace('{sound name}', sound.title)}
+      />
     </>
   );
 }

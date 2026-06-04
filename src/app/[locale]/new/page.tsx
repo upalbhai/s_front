@@ -9,11 +9,13 @@ export async function generateMetadata(): Promise<Metadata> {
     site,
     title: site.meta.new.title,
     description: site.meta.new.description,
+    keywords: site.meta.new.keywords,
     canonicalPath: '/new',
     image: `${site.siteUrl}/new/opengraph-image.png`,
   });
 }
 
-export default function NewSoundsPage() {
-  return <NewClient />;
+export default async function NewSoundsPage() {
+  const site = await getRequestSite();
+  return <NewClient h1Title={site.meta.new.h1} shortDescription={site.meta.new.shortDescription} />;
 }

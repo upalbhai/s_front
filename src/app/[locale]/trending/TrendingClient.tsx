@@ -8,7 +8,7 @@ import { Search } from 'lucide-react';
 import HeroSection from '@/components/home/HeroSection';
 import { useTranslation } from '@/i18n';
 
-export default function TrendingClient() {
+export default function TrendingClient({ h1Title, shortDescription }: any) {
   const { t } = useTranslation();
   const limit = 40;
   const [sounds, setSounds] = useState<any[]>([]);
@@ -69,7 +69,8 @@ export default function TrendingClient() {
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           isLoading={loading}
-          title={t('trending.title')}
+          title={h1Title || t('trending.title')}
+          subtitle={shortDescription || undefined}
           badge={t('trending.badge')}
           placeholder={t('trending.placeholder')}
         />

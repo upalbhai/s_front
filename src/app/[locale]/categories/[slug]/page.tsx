@@ -26,8 +26,9 @@ export async function generateMetadata({
 
     return buildSeoMetadata({
       site,
-      title: `${categoryName} Soundboard: Sound Buttons Unblocked | ${site.siteName}`,
-      description: `Discover thousands of ${categoryName} soundboard collections with the sound buttons and meme soundboard. Play instantly & download on ${site.siteName}.`,
+      title: site.meta.categoryDetail.titleTemplate.replace('{category name}', categoryName),
+      description: site.meta.categoryDetail.descriptionTemplate.replace('{category name}', categoryName),
+      keywords: site.meta.categoryDetail.keywordsTemplate,
       canonicalPath: `/categories/${slug}`,
       image: `${site.siteUrl}/categories/${slug}/opengraph-image.png`,
     });
@@ -80,7 +81,7 @@ export default async function LocaleCategoryPage({
       itemListElement: soundsData.sounds.slice(0, 10).map((sound: any, index: number) => ({
         '@type': 'ListItem',
         position: index + 1,
-        url: `${site.siteUrl}/sounds/${sound.slug}`,
+        url: `${site.siteUrl}/sound/${sound.slug}`,
         name: sound.title,
       })),
     },
@@ -106,6 +107,7 @@ export default async function LocaleCategoryPage({
         totalSounds={soundsData.total}
         categoryId={category._id}
         categoryName={category.name}
+        h1Title={site.meta.categoryDetail.h1Template.replace('{category name}', category.name)}
       />
 
       <section className="glass-card mt-24 p-8 md:p-12">

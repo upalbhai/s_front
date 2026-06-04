@@ -25,7 +25,7 @@ const BUTTON_COLORS = [
   { main: '#ff3b30', dark: '#a31a12', shadow: 'rgba(255, 59, 48, 0.3)' },
   { main: '#ffcc00', dark: '#b28f00', shadow: 'rgba(255, 204, 0, 0.3)' },
   { main: '#af52de', dark: '#7a399b', shadow: 'rgba(175, 82, 222, 0.3)' },
-  { main: '#555555', dark: '#222222', shadow: 'rgba(85, 85, 85, 0.3)' },
+  { main: '#ff9500', dark: '#b36800', shadow: 'rgba(255, 149, 0, 0.3)' }, // Orange
   { main: '#007aff', dark: '#0055b3', shadow: 'rgba(0, 122, 255, 0.3)' },
   { main: '#34c759', dark: '#248a3d', shadow: 'rgba(52, 199, 89, 0.3)' },
 ];
@@ -108,7 +108,7 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
     api.patch(`/sounds/${sound._id}/stats`, { type: 'download' }).catch(() => { });
   };
 
-  const soundLink = lp(`/sounds/${sound.slug}`);
+  const soundLink = lp(`/sound/${sound.slug}`);
 
   return (
     <div className="flex flex-col items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-2xl sm:rounded-3xl transition-all duration-300 hover:bg-slate-100 dark:hover:bg-slate-800/50 group">

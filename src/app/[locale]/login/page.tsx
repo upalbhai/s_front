@@ -35,7 +35,7 @@ export default function LoginPage() {
     <div className="container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '85vh' }}>
       <div className="glass-card" style={{ padding: '3rem', width: '100%', maxWidth: '450px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', background: 'linear-gradient(to right, var(--primary), var(--secondary))' }}></div>
-        
+
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
           <h1 className="text-gradient" style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '0.5rem' }}>Welcome Back</h1>
           <p style={{ color: 'var(--text-muted)' }}>Login to manage your soundboard</p>
@@ -74,9 +74,9 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <button 
-            type="submit" 
-            className="btn-primary" 
+          <button
+            type="submit"
+            className="btn-primary"
             style={{ width: '100%', justifyContent: 'center', padding: '1rem' }}
             disabled={loading}
           >
@@ -84,10 +84,6 @@ export default function LoginPage() {
             {!loading && <ArrowRight size={18} />}
           </button>
         </form>
-
-        <div style={{ marginTop: '2rem', textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-          <p>Seeded Admin: admin@example.com / adminpassword123</p>
-        </div>
       </div>
     </div>
   );

@@ -1,8 +1,10 @@
 import api from '@/services/api';
 import HomeClient from './HomeClient';
+import { getRequestSite } from '@/lib/site';
 
 export default async function HomePage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
   const { q } = await searchParams;
+  const site = await getRequestSite();
 
   let trendingSounds = [];
   let newSounds = [];
@@ -35,6 +37,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
       categories={categories}
       searchResults={searchResults}
       searchQuery={q}
+      h1Title={site.meta.home.h1 || site.meta.home.title}
     />
   );
 }
