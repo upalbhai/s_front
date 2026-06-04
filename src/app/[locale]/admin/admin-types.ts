@@ -28,6 +28,7 @@ export interface AdminSound {
   isPublished?: boolean;
   playCount?: number;
   downloadCount?: number;
+  siteIds?: string[];
 }
 
 export function getStoredAdminUser(): AdminUser | null {

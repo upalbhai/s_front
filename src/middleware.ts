@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { resolveSiteId } from '@/config/sites';
-
-const SUPPORTED_LOCALES = ['en', 'es', 'fr', 'pt', 'ru', 'it', 'ja', 'ko', 'de'];
-const DEFAULT_LOCALE = 'en';
+import { resolveSiteId, getSiteConfig } from '@/config/sites';
 
 function applySiteHeaders(response: NextResponse, siteId: string): NextResponse {
   response.headers.set('x-site-id', siteId);
@@ -10,10 +7,11 @@ function applySiteHeaders(response: NextResponse, siteId: string): NextResponse 
   return response;
 }
 
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const host = request.headers.get('host') ?? '';
   const siteId = resolveSiteId(host);
+  const siteConfig = getSiteConfig(siteId);
 
   // Skip middleware for:
   // - Static files (public folder)
@@ -31,28 +29,40 @@ export function proxy(request: NextRequest) {
 
   // Check if pathname already has a locale prefix
   const pathArray = pathname.split('/').filter(Boolean);
-  const firstSegment = pathArray[0];
-  const hasLocalePrefix = SUPPORTED_LOCALES.includes(firstSegment);
+  const firstSegment = pathArray[0] as import('@/i18n').Locale;
+  
+  // Is it a valid locale prefix globally?
+  const isGlobalLocale = ['en', 'es', 'fr', 'pt', 'ru', 'it', 'ja', 'ko', 'de'].includes(firstSegment);
+  const hasValidSiteLocale = siteConfig.supportedLocales.includes(firstSegment);
 
-  // If there is no locale prefix, rewrite to default locale (en)
-  if (!hasLocalePrefix) {
-    const newPathname = `/${DEFAULT_LOCALE}${pathname}`;
+  // If there is no locale prefix, rewrite to default locale
+  if (!isGlobalLocale) {
+    const newPathname = `/${siteConfig.defaultLocale}${pathname}`;
     return applySiteHeaders(
       NextResponse.rewrite(new URL(newPathname, request.url)),
       siteId,
     );
   }
 
-  // If English (default locale) has a prefix in the URL, redirect to remove it
-  if (firstSegment === DEFAULT_LOCALE) {
-    const newPathname = pathname.slice(3) || '/'; // Remove '/en'
+  // If the user tries to visit a locale not supported by the site, redirect to default locale
+  if (!hasValidSiteLocale) {
+    const newPathname = pathname.replace(`/${firstSegment}`, '');
+    return applySiteHeaders(
+      NextResponse.redirect(new URL(newPathname || '/', request.url)),
+      siteId,
+    );
+  }
+
+  // If default locale has a prefix in the URL, redirect to remove it
+  if (firstSegment === siteConfig.defaultLocale) {
+    const newPathname = pathname.slice(siteConfig.defaultLocale.length + 1) || '/';
     return applySiteHeaders(
       NextResponse.redirect(new URL(newPathname, request.url)),
       siteId,
     );
   }
 
-  // Allow other locales to continue naturally
+  // Allow other supported locales to continue naturally
   return applySiteHeaders(NextResponse.next(), siteId);
 }
 

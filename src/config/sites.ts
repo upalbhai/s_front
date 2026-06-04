@@ -1,8 +1,10 @@
-export type SiteId = 'soundbuttons' | 'soundboard';
+export type SiteId = 'soundbuttons' | 'soundboard' | 'botonesdesonidos';
 
 export type SiteConfig = {
   id: SiteId;
   domains: string[];
+  supportedLocales: import('@/i18n').Locale[];
+  defaultLocale: import('@/i18n').Locale;
   siteName: string;
   wordmark: { line1: string; accent: string };
   siteUrl: string;
@@ -29,6 +31,8 @@ const SITES: Record<SiteId, SiteConfig> = {
   soundbuttons: {
     id: 'soundbuttons',
     domains: ['soundbuttonsmax.net', 'www.soundbuttonsmax.net', 'soundbuttonsmax.com', 'www.soundbuttonsmax.com'],
+    supportedLocales: ['en', 'es', 'fr', 'pt', 'ru', 'it', 'ja', 'ko', 'de'],
+    defaultLocale: 'en',
     siteName: 'Sound Buttons Max',
     wordmark: { line1: 'SOUND BUTTONS', accent: 'MAX' },
     siteUrl: 'https://soundbuttonsmax.net',
@@ -87,6 +91,8 @@ const SITES: Record<SiteId, SiteConfig> = {
   soundboard: {
     id: 'soundboard',
     domains: ['soundboardmax.net', 'www.soundboardmax.net'],
+    supportedLocales: ['en', 'es', 'fr', 'pt', 'ru', 'it', 'ja', 'ko', 'de'],
+    defaultLocale: 'en',
     siteName: 'SoundboardMax',
     wordmark: { line1: 'SOUNDBOARD', accent: 'MAX' },
     siteUrl: 'https://soundboardmax.net',
@@ -138,6 +144,64 @@ const SITES: Record<SiteId, SiteConfig> = {
       search: {
         titleTemplate: '{sound name} Soundboard | SoundboardMax',
         descriptionTemplate: 'Play and download {search name} sound effect buttons for free! Instant play, high-quality MP3 downloads. Perfect for memes, TikTok, Discord, and content creation.',
+        h1Template: '{sound name} Soundboard',
+      },
+    },
+  },
+  botonesdesonidos: {
+    id: 'botonesdesonidos',
+    domains: ['botonesdesonidos.com', 'www.botonesdesonidos.com'],
+    supportedLocales: ['es'],
+    defaultLocale: 'es',
+    siteName: 'Botones de Sonidos',
+    wordmark: { line1: 'BOTONES DE', accent: 'SONIDOS' },
+    siteUrl: 'https://botonesdesonidos.com',
+    logo: '/sites/botonesdesonidos/logo.svg',
+    ogImage: '/sites/botonesdesonidos/og-home.svg',
+    themeColor: '#10b981',
+    primaryColor: '#10b981',
+    primaryHoverColor: '#059669',
+    contactEmail: 'contacto@botonesdesonidos.com',
+    dmcaEmail: 'dmca@botonesdesonidos.com',
+    twitterHandle: '@botonesdesonidos',
+    meta: {
+      home: {
+        title: 'Botones de Sonidos: Free Meme Soundboard Unblocked',
+        description: 'Play 100,000+ free meme sound buttons instantly.',
+        keywords: 'sound buttons, meme sound buttons',
+        h1: 'Botones de Sonidos: Free Meme Soundboard Unblocked',
+      },
+      trending: {
+        title: 'Trending Sound Buttons: Popular Meme Soundboard',
+        description: 'Explore trending sound buttons.',
+        h1: 'Trending Meme Soundboard: Sound Buttons',
+        shortDescription: 'Check out the latest trending meme soundboard and sound buttons collection.',
+        keywords: 'trending sounds',
+      },
+      new: {
+        title: 'New Sound Buttons: Latest Meme Soundboard',
+        description: 'Discover new meme soundboard buttons.',
+        h1: 'New Meme Soundboard: Sound Buttons',
+        shortDescription: 'Explore newly added meme soundboard.',
+        keywords: 'new soundboard sounds',
+      },
+      categories: {
+        title: 'Soundboard Categories - Botones de Sonidos',
+        description: 'Browse meme soundboard categories.',
+      },
+      categoryDetail: {
+        titleTemplate: '{category name}: Sound Buttons Unblocked',
+        descriptionTemplate: 'Discover thousands of {category name} collections.',
+        h1Template: '{category name}',
+        keywordsTemplate: 'soundboard categories',
+      },
+      soundDetail: {
+        h1Template: '{sound name} Sound Buttons',
+        descriptionTemplate: 'Play and download the {sound name} sound effect button instantly!',
+      },
+      search: {
+        titleTemplate: '{sound name} Soundboard | Botones de Sonidos',
+        descriptionTemplate: 'Play and download {search name} sound effect buttons for free!',
         h1Template: '{sound name} Soundboard',
       },
     },

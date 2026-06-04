@@ -30,7 +30,27 @@ export default function LanguageSwitcher() {
   }
 
   const isDark = theme === 'dark';
-  const current = SUPPORTED_LOCALES.find((l) => l.code === locale) ?? SUPPORTED_LOCALES[0];
+  
+  const siteConfig = import('@/config/sites').then(mod => mod.getSiteConfig(typeof document !== 'undefined' ? document.documentElement.dataset.site || '' : ''));
+  const [supportedLocales, setSupportedLocales] = useState<typeof SUPPORTED_LOCALES>([]);
+
+  useEffect(() => {
+    siteConfig.then(config => {
+      setSupportedLocales(SUPPORTED_LOCALES.filter(l => config.supportedLocales.includes(l.code)));
+    });
+  }, []);
+
+  if (!mounted || supportedLocales.length === 0) {
+    return (
+      <div className="h-10 w-16 bg-slate-100 dark:bg-slate-800/40 animate-pulse rounded-full" />
+    );
+  }
+
+  if (supportedLocales.length <= 1) {
+    return null;
+  }
+
+  const current = supportedLocales.find((l) => l.code === locale) ?? supportedLocales[0];
 
   // Helper to get the route path without locale prefix
   const getPathWithoutLocale = (path: string): string => {
@@ -77,7 +97,7 @@ export default function LanguageSwitcher() {
             : 'bg-white border-slate-200 text-slate-700 shadow-black/10'
           }`}
       >
-        {SUPPORTED_LOCALES.map((lang) => (
+        {supportedLocales.map((lang) => (
           <SelectItem
             key={lang.code}
             value={lang.code}

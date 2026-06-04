@@ -10,8 +10,9 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string; soundSlug: string }>;
 }): Promise<Metadata> {
-  const { soundSlug } = await params;
+  const { locale, soundSlug } = await params;
   const site = await getRequestSite();
+  const t = await import('@/i18n/server').then(m => m.getTranslations(site.id, locale as any));
 
   try {
     const res = await api.get(`/sounds/${soundSlug}`);
@@ -28,15 +29,27 @@ export async function generateMetadata({
         : `${backendUrl}${sound.fileUrl}`
       : '';
 
+    const titleTemplate = t('meta.soundDetail.titleTemplate') !== 'meta.soundDetail.titleTemplate' 
+      ? t('meta.soundDetail.titleTemplate') 
+      : `{sound name} Sound Effect Button | ${site.siteName}`;
+      
+    const descriptionTemplate = t('meta.soundDetail.descriptionTemplate') !== 'meta.soundDetail.descriptionTemplate'
+      ? t('meta.soundDetail.descriptionTemplate')
+      : site.meta.soundDetail.descriptionTemplate;
+
+    const keywords = t('meta.soundDetail.keywordsTemplate') !== 'meta.soundDetail.keywordsTemplate'
+      ? t('meta.soundDetail.keywordsTemplate')
+      : site.meta.soundDetail.keywordsTemplate;
+
     return buildSeoMetadata({
       site,
-      title: `${soundName} Sound Effect Button | ${site.siteName}`,
-      description: `Play and download ${soundName} sound effect buttons instantly on ${site.siteName}. Perfect for memes, pranks, gaming and hilarious fun reactions.`,
+      title: titleTemplate.replace('{sound name}', soundName),
+      description: descriptionTemplate.replace('{sound name}', soundName),
       canonicalPath: `/sound/${soundSlug}`,
       image: `${site.siteUrl}/sound/${soundSlug}/opengraph-image.png`,
       type: 'music.song',
       audioUrl: mp3Url,
-      keywords: site.meta.soundDetail.keywordsTemplate,
+      keywords: keywords,
     });
   } catch {
     return buildNotFoundMetadata(
@@ -51,8 +64,9 @@ export default async function LocaleSoundDetailPage({
 }: {
   params: Promise<{ locale: string; soundSlug: string }>;
 }) {
-  const { soundSlug } = await params;
+  const { locale, soundSlug } = await params;
   const site = await getRequestSite();
+  const t = await import('@/i18n/server').then(m => m.getTranslations(site.id, locale as any));
 
   let sound: any = null;
   let relatedSounds: any[] = [];
@@ -115,8 +129,8 @@ export default async function LocaleSoundDetailPage({
         sound={sound}
         relatedSounds={relatedSounds}
         slug={soundSlug}
-        h1Title={site.meta.soundDetail.h1Template.replace('{sound name}', sound.title)}
-        uiDescription={site.meta.soundDetail.descriptionTemplate.replace('{sound name}', sound.title)}
+        h1Title={(t('meta.soundDetail.h1Template') !== 'meta.soundDetail.h1Template' ? t('meta.soundDetail.h1Template') : site.meta.soundDetail.h1Template).replace('{sound name}', sound.title)}
+        uiDescription={(t('meta.soundDetail.descriptionTemplate') !== 'meta.soundDetail.descriptionTemplate' ? t('meta.soundDetail.descriptionTemplate') : site.meta.soundDetail.descriptionTemplate).replace('{sound name}', sound.title)}
       />
     </>
   );
