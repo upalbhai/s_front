@@ -1,10 +1,10 @@
 'use client';
 
 import React, { createContext, useContext } from 'react';
-import { getSiteConfig, type SiteConfig, type SiteId } from '@/config/sites';
+import { getSiteConfig, type SiteConfig } from '@/config/sites';
 
 type SiteContextValue = {
-  siteId: SiteId;
+  siteId: string;
   config: SiteConfig;
 };
 
@@ -12,13 +12,13 @@ const SiteContext = createContext<SiteContextValue | null>(null);
 
 export function SiteProvider({
   siteId,
+  config,
   children,
 }: {
-  siteId: SiteId;
+  siteId: string;
+  config: SiteConfig;
   children: React.ReactNode;
 }) {
-  const config = getSiteConfig(siteId);
-
   return (
     <SiteContext.Provider value={{ siteId, config }}>
       {children}

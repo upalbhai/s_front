@@ -1,16 +1,16 @@
 import { cookies, headers } from 'next/headers';
-import { getSiteConfig, resolveSiteId, type SiteConfig, type SiteId } from '@/config/sites';
-
-const VALID_SITE_IDS: SiteId[] = ['soundbuttons', 'soundboard'];
+import { getSiteConfig, resolveSiteId, type SiteConfig } from '@/config/sites';
 
 export async function getRequestSite(): Promise<SiteConfig> {
   const cookieStore = await cookies();
   const siteFromCookie = cookieStore.get('site-id')?.value;
 
-  if (siteFromCookie && VALID_SITE_IDS.includes(siteFromCookie as SiteId)) {
-    return getSiteConfig(siteFromCookie);
+  if (siteFromCookie) {
+    const siteConfig = await getSiteConfig(siteFromCookie);
+    if (siteConfig) return siteConfig;
   }
 
   const host = (await headers()).get('host') ?? '';
-  return getSiteConfig(resolveSiteId(host));
+  const siteId = await resolveSiteId(host);
+  return await getSiteConfig(siteId);
 }

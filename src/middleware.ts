@@ -7,11 +7,11 @@ function applySiteHeaders(response: NextResponse, siteId: string): NextResponse 
   return response;
 }
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const host = request.headers.get('host') ?? '';
-  const siteId = resolveSiteId(host);
-  const siteConfig = getSiteConfig(siteId);
+  const siteId = await resolveSiteId(host);
+  const siteConfig = await getSiteConfig(siteId);
 
   // Skip middleware for:
   // - Static files (public folder)

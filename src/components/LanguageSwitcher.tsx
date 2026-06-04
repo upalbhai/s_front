@@ -31,12 +31,18 @@ export default function LanguageSwitcher() {
 
   const isDark = theme === 'dark';
   
-  const siteConfig = import('@/config/sites').then(mod => mod.getSiteConfig(typeof document !== 'undefined' ? document.documentElement.dataset.site || '' : ''));
   const [supportedLocales, setSupportedLocales] = useState<typeof SUPPORTED_LOCALES>([]);
 
   useEffect(() => {
-    siteConfig.then(config => {
-      setSupportedLocales(SUPPORTED_LOCALES.filter(l => config.supportedLocales.includes(l.code)));
+    import('@/config/sites').then(mod => {
+      const siteId = typeof document !== 'undefined' ? document.documentElement.dataset.site || '' : '';
+      mod.getSiteConfig(siteId).then(config => {
+        if (config) {
+          setSupportedLocales(SUPPORTED_LOCALES.filter(l => config.supportedLocales.includes(l.code)));
+        } else {
+          setSupportedLocales([]);
+        }
+      });
     });
   }, []);
 

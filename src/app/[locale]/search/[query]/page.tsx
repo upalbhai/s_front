@@ -3,27 +3,41 @@ import api from '@/services/api';
 import SearchPageClient from './SearchPageClient';
 import { getRequestSite } from '@/lib/site';
 import { buildSeoMetadata } from '@/lib/seo';
+import { getTranslations } from '@/i18n/server';
+import type { Locale } from '@/i18n';
 
 type Props = {
   params: Promise<{ query: string; locale: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { query } = await params;
+  const { query, locale } = await params;
   const decoded = decodeURIComponent(query);
   const site = await getRequestSite();
+  const t = await getTranslations(site.id, locale as Locale);
+
+  const titleFallback = site.meta.search.titleTemplate.replace('{sound name}', decoded);
+  const descFallback = site.meta.search.descriptionTemplate.replace('{search name}', decoded);
+
+  const titleTemplate = t('meta.search.titleTemplate') !== 'meta.search.titleTemplate'
+    ? t('meta.search.titleTemplate')
+    : site.meta.search.titleTemplate;
+
+  const descTemplate = t('meta.search.descriptionTemplate') !== 'meta.search.descriptionTemplate'
+    ? t('meta.search.descriptionTemplate')
+    : site.meta.search.descriptionTemplate;
 
   return buildSeoMetadata({
     site,
-    title: site.meta.search.titleTemplate.replace('{sound name}', decoded),
-    description: site.meta.search.descriptionTemplate.replace('{search name}', decoded),
+    title: titleTemplate.replace('{sound name}', decoded),
+    description: descTemplate.replace('{search name}', decoded),
     canonicalPath: `/search/${query}`,
     keywords: 'sound buttons, soundboard, sound effects, meme soundboard',
   });
 }
 
 export default async function SearchPage({ params }: Props) {
-  const { query } = await params;
+  const { query, locale } = await params;
   const decoded = decodeURIComponent(query);
 
   let initialResults: any[] = [];
@@ -38,13 +52,18 @@ export default async function SearchPage({ params }: Props) {
   }
 
   const site = await getRequestSite();
+  const t = await getTranslations(site.id, locale as Locale);
+
+  const h1TitleTemplate = t('meta.search.h1Template') !== 'meta.search.h1Template'
+    ? t('meta.search.h1Template')
+    : site.meta.search.h1Template;
 
   return (
     <SearchPageClient
       query={decoded}
       initialResults={initialResults}
       total={total}
-      h1Title={site.meta.search.h1Template.replace('{sound name}', decoded)}
+      h1Title={h1TitleTemplate.replace('{sound name}', decoded)}
     />
   );
 }

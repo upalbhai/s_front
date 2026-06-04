@@ -1,11 +1,10 @@
-import type { SiteId } from '@/config/sites';
 import type { Locale } from './index';
 
 // We import the default fallback explicitly
 import soundbuttonsEn from './locales/soundbuttons/en.json';
 
-export async function getTranslations(siteId: SiteId, loc: Locale) {
-  let translations: Record<string, string>;
+export async function getTranslations(siteId: string, loc: Locale) {
+  let translations: Record<string, string> | null = null;
 
   try {
     const mod = await import(`./locales/${siteId}/${loc}.json`);
@@ -35,7 +34,7 @@ export async function getTranslations(siteId: SiteId, loc: Locale) {
 
   // Return a translation function `t`
   return function t(key: string, vars?: Record<string, string>): string {
-    let str = translations[key] ?? (soundbuttonsEn as Record<string, string>)[key] ?? key;
+    let str = translations![key] ?? (soundbuttonsEn as Record<string, string>)[key] ?? key;
     if (vars) {
       Object.entries(vars).forEach(([k, v]) => {
         str = str.replace(new RegExp(`\\{${k}\\}`, 'g'), v);

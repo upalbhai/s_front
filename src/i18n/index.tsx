@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import type { SiteId } from '@/config/sites';
+// No SiteId import
 import soundbuttonsEn from './locales/soundbuttons/en.json';
 
 export type Locale = 'en' | 'es' | 'fr' | 'pt' | 'ru' | 'it' | 'ja' | 'ko' | 'de';
@@ -18,7 +18,7 @@ export const SUPPORTED_LOCALES: { code: Locale; name: string; flag: string }[] =
   { code: 'de', name: 'Deutsch',    flag: '🇩🇪' },
 ];
 
-async function loadLocaleFile(siteId: SiteId, loc: Locale): Promise<Record<string, string>> {
+async function loadLocaleFile(siteId: string, loc: Locale): Promise<Record<string, string>> {
   try {
     const mod = await import(`./locales/${siteId}/${loc}.json`);
     return mod.default || mod;
@@ -64,7 +64,7 @@ export function LanguageProvider({
   siteId,
   children,
 }: {
-  siteId: SiteId;
+  siteId: string;
   children: React.ReactNode;
 }) {
   const [locale, setLocaleState] = useState<Locale>('en');

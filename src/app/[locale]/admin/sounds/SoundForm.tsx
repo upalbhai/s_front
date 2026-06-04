@@ -50,13 +50,22 @@ function toValues(sound?: AdminSound | null): SoundFormValues {
   };
 }
 
-import { getAllSites } from '@/config/sites';
+import { useQuery } from '@tanstack/react-query';
+import api from '@/services/api';
 
 export default function SoundForm({ categories, initialSound, submitLabel, onSubmit, onCancel, saving }: SoundFormProps) {
   const [values, setValues] = useState<SoundFormValues>(() => toValues(initialSound));
   const [soundFile, setSoundFile] = useState<File | null>(null);
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+
+  const { data: sites = [] } = useQuery({
+    queryKey: ['admin-sites-list'],
+    queryFn: async () => {
+      const res = await api.get('/sites/admin');
+      return res.data as { id: string; siteName: string }[];
+    }
+  });
 
   useEffect(() => {
     setMounted(true);
@@ -201,7 +210,7 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
             Select which sites this sound should appear on. If none are selected, it will appear on ALL sites.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {getAllSites().map(site => {
+            {sites.map(site => {
               const isChecked = values.siteIds.includes(site.id);
               return (
                 <label key={site.id} className="flex items-center gap-3 cursor-pointer">

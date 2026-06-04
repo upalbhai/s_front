@@ -4,12 +4,18 @@ import { Metadata } from 'next';
 import { getRequestSite } from '@/lib/site';
 import { buildSeoMetadata } from '@/lib/seo';
 
-export async function generateMetadata(): Promise<Metadata> {
+import { getTranslations } from '@/i18n/server';
+import type { Locale } from '@/i18n';
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
   const site = await getRequestSite();
+  const t = await getTranslations(site.id, locale as Locale);
+
   return buildSeoMetadata({
     site,
-    title: site.meta.categories.title,
-    description: site.meta.categories.description,
+    title: t('meta.categories.title') !== 'meta.categories.title' ? t('meta.categories.title') : site.meta.categories.title,
+    description: t('meta.categories.description') !== 'meta.categories.description' ? t('meta.categories.description') : site.meta.categories.description,
     canonicalPath: '/categories',
   });
 }

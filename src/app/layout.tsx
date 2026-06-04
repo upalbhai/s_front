@@ -16,6 +16,7 @@ const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 
 export async function generateMetadata(): Promise<Metadata> {
   const site = await getRequestSite();
+  
   return buildSeoMetadata({
     site,
     title: site.meta.home.title,
@@ -27,6 +28,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export async function generateViewport(): Promise<Viewport> {
   const site = await getRequestSite();
+  
   return {
     themeColor: site.themeColor,
     width: 'device-width',
@@ -61,7 +63,7 @@ export default async function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <QueryProvider>
             <AudioProvider>
-              <SiteProvider siteId={site.id}>
+              <SiteProvider siteId={site.id} config={site}>
                 <LanguageProvider siteId={site.id}>
                   <AppChrome>{children}</AppChrome>
                   <Toaster

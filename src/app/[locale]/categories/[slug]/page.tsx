@@ -7,13 +7,17 @@ import CategoryClient from './CategoryClient';
 import { getRequestSite } from '@/lib/site';
 import { buildSeoMetadata, buildNotFoundMetadata } from '@/lib/seo';
 
+import { getTranslations } from '@/i18n/server';
+import type { Locale } from '@/i18n';
+
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { locale, slug } = await params;
   const site = await getRequestSite();
+  const t = await getTranslations(site.id, locale as Locale);
 
   try {
     const res = await api.get(`/categories/${slug}`);
@@ -24,11 +28,22 @@ export async function generateMetadata({
 
     const categoryName = category.name;
 
+    const titleFallback = site.meta.categoryDetail.titleTemplate.replace('{category name}', categoryName);
+    const descFallback = site.meta.categoryDetail.descriptionTemplate.replace('{category name}', categoryName);
+
+    const titleTemplate = t('meta.categoryDetail.titleTemplate') !== 'meta.categoryDetail.titleTemplate' 
+      ? t('meta.categoryDetail.titleTemplate') 
+      : site.meta.categoryDetail.titleTemplate;
+      
+    const descTemplate = t('meta.categoryDetail.descriptionTemplate') !== 'meta.categoryDetail.descriptionTemplate'
+      ? t('meta.categoryDetail.descriptionTemplate')
+      : site.meta.categoryDetail.descriptionTemplate;
+
     return buildSeoMetadata({
       site,
-      title: site.meta.categoryDetail.titleTemplate.replace('{category name}', categoryName),
-      description: site.meta.categoryDetail.descriptionTemplate.replace('{category name}', categoryName),
-      keywords: site.meta.categoryDetail.keywordsTemplate,
+      title: titleTemplate.replace('{category name}', categoryName),
+      description: descTemplate.replace('{category name}', categoryName),
+      keywords: t('meta.categoryDetail.keywordsTemplate') !== 'meta.categoryDetail.keywordsTemplate' ? t('meta.categoryDetail.keywordsTemplate') : site.meta.categoryDetail.keywordsTemplate,
       canonicalPath: `/categories/${slug}`,
       image: `${site.siteUrl}/categories/${slug}/opengraph-image.png`,
     });
@@ -45,8 +60,9 @@ export default async function LocaleCategoryPage({
 }: {
   params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { slug } = await params;
+  const { locale, slug } = await params;
   const site = await getRequestSite();
+  const t = await getTranslations(site.id, locale as Locale);
 
   let category: any = null;
   let soundsData: any = { sounds: [], total: 0 };
@@ -107,7 +123,9 @@ export default async function LocaleCategoryPage({
         totalSounds={soundsData.total}
         categoryId={category._id}
         categoryName={category.name}
-        h1Title={site.meta.categoryDetail.h1Template.replace('{category name}', category.name)}
+        h1Title={t('meta.categoryDetail.h1Template') !== 'meta.categoryDetail.h1Template' 
+          ? t('meta.categoryDetail.h1Template').replace('{category name}', category.name) 
+          : site.meta.categoryDetail.h1Template.replace('{category name}', category.name)}
       />
 
       <section className="glass-card mt-24 p-8 md:p-12">
