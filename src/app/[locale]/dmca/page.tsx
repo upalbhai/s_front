@@ -1,28 +1,128 @@
+import { Metadata } from 'next';
 import { getRequestSite } from '@/lib/site';
+import { buildSeoMetadata } from '@/lib/seo';
+import { getTranslations } from '@/i18n/server';
+import type { Locale } from '@/i18n';
 
-export default async function DMCAPage() {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
   const site = await getRequestSite();
+  const t = await getTranslations(site.id, locale as Locale);
+
+  const title = t('dmca.meta.title', { siteName: site.siteName }) !== 'dmca.meta.title'
+    ? t('dmca.meta.title', { siteName: site.siteName })
+    : `DMCA Copyright Policy – ${site.siteName}`;
+
+  const description = t('dmca.meta.description', { siteName: site.siteName }) !== 'dmca.meta.description'
+    ? t('dmca.meta.description', { siteName: site.siteName })
+    : `${site.siteName} DMCA copyright policy.`;
+
+  return buildSeoMetadata({
+    site,
+    title,
+    description,
+    canonicalPath: '/dmca',
+  });
+}
+
+export default async function DMCAPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const site = await getRequestSite();
+  const t = await getTranslations(site.id, locale as Locale);
+
+  const email = site.id === 'soundboard'
+    ? 'soundboardmax.net@gmail.com'
+    : (site.contactEmail || 'contact@soundbuttonsmax.com');
 
   return (
-    <div className="container" style={{ padding: '4rem 0', maxWidth: '800px' }}>
-      <h1 style={{ fontSize: '3rem', marginBottom: '1rem' }}>DMCA Policy</h1>
-      <p style={{ color: 'var(--text-muted)', marginBottom: '3rem' }}>Last Updated: April 2026</p>
-
-      <div className="glass-card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-        <p style={{ color: 'var(--text-muted)' }}>
-          {site.siteName} respects the intellectual property rights of others. If you believe that any
-          content on our site infringes your copyright, please follow our takedown procedure.
+    <div className="container mx-auto px-4 py-12 md:py-20 max-w-4xl">
+      <div className="text-center mb-12">
+        <h1 className="text-4xl md:text-5xl font-black tracking-tight text-foreground mb-4">
+          {t('dmca.title')}
+        </h1>
+        <p className="text-slate-500 dark:text-slate-400 font-bold">
+          {t('dmca.last_updated')}
         </p>
-        <section>
-          <h2>Submit a Takedown Request</h2>
-          <p style={{ color: 'var(--text-muted)', marginTop: '1rem' }}>
-            Please email {site.dmcaEmail} with the following information:
+      </div>
+
+      <div className="p-6 md:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 space-y-8">
+        <section className="space-y-3">
+          <h2 className="text-xl font-black text-foreground">{t('dmca.section1.title')}</h2>
+          <p className="text-sm md:text-base text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
+            {t('dmca.section1.text', { siteName: site.siteName })}
           </p>
-          <ul style={{ color: 'var(--text-muted)', marginLeft: '1.5rem', marginTop: '1rem' }}>
-            <li>Link to the infringing content</li>
-            <li>Description of your copyrighted work</li>
-            <li>Your contact information</li>
-          </ul>
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="text-xl font-black text-foreground">{t('dmca.section2.title')}</h2>
+          <p className="text-sm md:text-base text-slate-600 dark:text-slate-400 font-medium leading-relaxed whitespace-pre-line">
+            {t('dmca.section2.text')}
+          </p>
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="text-xl font-black text-foreground">{t('dmca.section3.title')}</h2>
+          <p className="text-sm md:text-base text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
+            {t('dmca.section3.text', { email }).split(email)[0]}
+            <a href={`mailto:${email}?subject=DMCA%20Copyright%20Infringement%20Notice`} className="text-primary font-bold hover:underline">
+              {email}
+            </a>
+            {t('dmca.section3.text', { email }).split(email)[1]}
+          </p>
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="text-xl font-black text-foreground">{t('dmca.section4.title')}</h2>
+          <p className="text-sm md:text-base text-slate-600 dark:text-slate-400 font-medium leading-relaxed whitespace-pre-line">
+            {t('dmca.section4.text')}
+          </p>
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="text-xl font-black text-foreground">{t('dmca.section5.title')}</h2>
+          <p className="text-sm md:text-base text-slate-600 dark:text-slate-400 font-medium leading-relaxed whitespace-pre-line">
+            {t('dmca.section5.text')}
+          </p>
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="text-xl font-black text-foreground">{t('dmca.section6.title')}</h2>
+          <p className="text-sm md:text-base text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
+            {t('dmca.section6.text')}
+          </p>
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="text-xl font-black text-foreground">{t('dmca.section7.title')}</h2>
+          <p className="text-sm md:text-base text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
+            {t('dmca.section7.text')}
+          </p>
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="text-xl font-black text-foreground">{t('dmca.section8.title')}</h2>
+          <p className="text-sm md:text-base text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
+            {t('dmca.section8.text')}
+          </p>
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="text-xl font-black text-foreground">{t('dmca.section9.title')}</h2>
+          <p className="text-sm md:text-base text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
+            {t('dmca.section9.text', { email }).split(email)[0]}
+            <a href={`mailto:${email}`} className="text-primary font-bold hover:underline">
+              {email}
+            </a>
+            {t('dmca.section9.text', { email }).split(email)[1]}
+          </p>
         </section>
       </div>
     </div>

@@ -5,17 +5,12 @@ import { useQuery } from '@tanstack/react-query';
 import api from '@/services/api';
 import useDebounce from '@/hooks/useDebounce';
 import HeroSection from '@/components/home/HeroSection';
-import StatsSection from '@/components/home/StatsSection';
 import SearchResultsSection from '@/components/home/SearchResultsSection';
 import TrendingSoundsSection from '@/components/home/TrendingSoundsSection';
-import CategoryGridSection from '@/components/home/CategoryGridSection';
-import NewAdditionsSection from '@/components/home/NewAdditionsSection';
-import FeaturesSection from '@/components/home/FeaturesSection';
-import TestimonialsSection from '@/components/home/TestimonialsSection';
-import FaqSection from '@/components/home/FaqSection';
-import EditorialSeoSection from '@/components/home/EditorialSeoSection';
+import { useSite } from '@/context/SiteProvider';
+import { useTranslation } from '@/i18n';
+
 import HomeSEOContent from '@/components/home/HomeSEOContent';
-import TagsScrollSection from '@/components/home/TagsScrollSection';
 
 export default function HomeClient({
   trendingSounds = [],
@@ -25,8 +20,20 @@ export default function HomeClient({
   searchQuery,
   h1Title
 }: any) {
+  const { siteId, config } = useSite();
+  const { t } = useTranslation();
   const [query, setQuery] = useState(searchQuery || '');
   const debouncedQuery = useDebounce(query, 300);
+
+  const isSoundboardMax = siteId === 'soundboard' || siteId === 'soundboardmax' || config?.siteName?.toLowerCase() === 'soundboardmax';
+
+  const displayTitle = isSoundboardMax
+    ? t('hero.title')
+    : h1Title;
+
+  const displaySubtitle = isSoundboardMax
+    ? t('hero.subtitle')
+    : undefined;
 
   // States for tabbed sound selection
   const [activeTab, setActiveTab] = useState('trending');
@@ -122,7 +129,8 @@ export default function HomeClient({
         onSearchChange={setQuery}
         isLoading={isLoading && debouncedQuery === query}
         trendingSounds={homeData.trendingSounds}
-        title={h1Title}
+        title={displayTitle}
+        subtitle={displaySubtitle}
       />
 
       {/* Horizontal scrolling tags section */}
