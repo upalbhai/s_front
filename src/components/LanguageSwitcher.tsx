@@ -36,13 +36,13 @@ export default function LanguageSwitcher() {
   useEffect(() => {
     import('@/config/sites').then(mod => {
       const siteId = typeof document !== 'undefined' ? document.documentElement.dataset.site || '' : '';
-      mod.getSiteConfig(siteId).then(config => {
-        if (config) {
-          setSupportedLocales(SUPPORTED_LOCALES.filter(l => config.supportedLocales.includes(l.code)));
-        } else {
-          setSupportedLocales([]);
-        }
-      });
+      const config = mod.getSiteConfig(siteId) as any;
+      if (config) {
+        const supported = config.supportedLocales || ['en', 'es', 'fr', 'pt', 'ru', 'it', 'ja', 'ko', 'de'];
+        setSupportedLocales(SUPPORTED_LOCALES.filter(l => supported.includes(l.code)));
+      } else {
+        setSupportedLocales([]);
+      }
     });
   }, []);
 

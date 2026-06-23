@@ -20,10 +20,8 @@ export default function AdminSiteEditorPage({ params }: { params: Promise<{ id: 
   const queryClient = useQueryClient();
 
   const [formData, setFormData] = useState<Partial<SiteConfig>>({
-    id: '',
+    id: undefined,
     domains: [],
-    supportedLocales: ['en'],
-    defaultLocale: 'en',
     siteName: '',
     wordmark: { line1: '', accent: '' },
     siteUrl: '',

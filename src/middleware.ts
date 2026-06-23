@@ -33,11 +33,13 @@ export async function middleware(request: NextRequest) {
   
   // Is it a valid locale prefix globally?
   const isGlobalLocale = ['en', 'es', 'fr', 'pt', 'ru', 'it', 'ja', 'ko', 'de'].includes(firstSegment);
-  const hasValidSiteLocale = siteConfig.supportedLocales.includes(firstSegment);
+  const supportedLocales = (siteConfig as any).supportedLocales || ['en', 'es', 'fr', 'pt', 'ru', 'it', 'ja', 'ko', 'de'];
+  const defaultLocale = (siteConfig as any).defaultLocale || 'en';
+  const hasValidSiteLocale = supportedLocales.includes(firstSegment);
 
   // If there is no locale prefix, rewrite to default locale
   if (!isGlobalLocale) {
-    const newPathname = `/${siteConfig.defaultLocale}${pathname}`;
+    const newPathname = `/${defaultLocale}${pathname}`;
     return applySiteHeaders(
       NextResponse.rewrite(new URL(newPathname, request.url)),
       siteId,
@@ -54,8 +56,8 @@ export async function middleware(request: NextRequest) {
   }
 
   // If default locale has a prefix in the URL, redirect to remove it
-  if (firstSegment === siteConfig.defaultLocale) {
-    const newPathname = pathname.slice(siteConfig.defaultLocale.length + 1) || '/';
+  if (firstSegment === defaultLocale) {
+    const newPathname = pathname.slice(defaultLocale.length + 1) || '/';
     return applySiteHeaders(
       NextResponse.redirect(new URL(newPathname, request.url)),
       siteId,

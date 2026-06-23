@@ -167,9 +167,9 @@ export default function AdminSitesPage() {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex gap-1 flex-wrap">
-                        {site.supportedLocales?.map(l => (
+                        {(site as any).supportedLocales?.map((l: string) => (
                           <span key={l} className="px-2 py-1 rounded-md text-[10px] font-black uppercase bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-                            {l} {l === site.defaultLocale && '(Def)'}
+                            {l} {l === (site as any).defaultLocale && '(Def)'}
                           </span>
                         ))}
                       </div>
