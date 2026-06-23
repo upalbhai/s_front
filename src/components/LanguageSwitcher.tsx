@@ -18,20 +18,11 @@ export default function LanguageSwitcher() {
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
 
-  // Avoid hydration mismatch
+  const [supportedLocales, setSupportedLocales] = useState<typeof SUPPORTED_LOCALES>([]);
+
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  if (!mounted) {
-    return (
-      <div className="h-10 w-16 bg-slate-100 dark:bg-slate-800/40 animate-pulse rounded-full" />
-    );
-  }
-
-  const isDark = theme === 'dark';
-  
-  const [supportedLocales, setSupportedLocales] = useState<typeof SUPPORTED_LOCALES>([]);
 
   useEffect(() => {
     import('@/config/sites').then(mod => {
@@ -45,6 +36,14 @@ export default function LanguageSwitcher() {
       }
     });
   }, []);
+
+  if (!mounted) {
+    return (
+      <div className="h-10 w-16 bg-slate-100 dark:bg-slate-800/40 animate-pulse rounded-full" />
+    );
+  }
+
+  const isDark = theme === 'dark';
 
   if (!mounted || supportedLocales.length === 0) {
     return (
