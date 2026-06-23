@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import api from '@/services/api';
 import SearchPageClient from './SearchPageClient';
-import { getRequestSite } from '@/lib/site';
+import { getRequestSite } from '@/config/sites';
 import { buildSeoMetadata } from '@/lib/seo';
 import { getTranslations } from '@/i18n/server';
 import type { Locale } from '@/i18n';

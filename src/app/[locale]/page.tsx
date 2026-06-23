@@ -1,6 +1,6 @@
 import api from '@/services/api';
 import HomeClient from './HomeClient';
-import { getRequestSite } from '@/lib/site';
+import { getRequestSite } from '@/config/sites';
 import { getTranslations } from '@/i18n/server';
 import { buildSeoMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';

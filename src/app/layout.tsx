@@ -8,7 +8,7 @@ import { LanguageProvider } from '@/i18n';
 import { SiteProvider } from '@/context/SiteProvider';
 import { Geist } from 'next/font/google';
 import { cn } from '@/lib/utils';
-import { getRequestSite } from '@/lib/site';
+import { getRequestSite } from '@/config/sites';
 import { buildSeoMetadata } from '@/lib/seo';
 import { Toaster } from 'react-hot-toast';
 

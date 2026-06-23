@@ -1,7 +1,7 @@
 import api from '@/services/api';
 import { Metadata } from 'next';
 import { buildSeoMetadata } from '@/lib/seo';
-import { getRequestSite } from '@/lib/site';
+import { getRequestSite } from '@/config/sites';
 import BlogListClient from './BlogListClient';
 
 export async function generateMetadata(): Promise<Metadata> {

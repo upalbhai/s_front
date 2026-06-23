@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { getRequestSite } from '@/lib/site';
+import { getRequestSite } from '@/config/sites';
 import { buildSeoMetadata } from '@/lib/seo';
 import DMCAClient from './DMCAClient';
 import { SiteId } from '@/config/sites';

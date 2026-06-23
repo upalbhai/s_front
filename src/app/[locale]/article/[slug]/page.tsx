@@ -1,7 +1,7 @@
 import api from '@/services/api';
 import { Metadata } from 'next';
 import ArticleClient from './ArticleClient';
-import { getRequestSite } from '@/lib/site';
+import { getRequestSite } from '@/config/sites';
 import { buildSeoMetadata, buildNotFoundMetadata } from '@/lib/seo';
 
 export async function generateMetadata({

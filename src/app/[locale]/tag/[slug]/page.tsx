@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 import Script from 'next/script';
 import TagClient from './TagClient';
-import { getRequestSite } from '@/lib/site';
+import { getRequestSite } from '@/config/sites';
 import { buildSeoMetadata, buildNotFoundMetadata } from '@/lib/seo';
 
 export async function generateMetadata({

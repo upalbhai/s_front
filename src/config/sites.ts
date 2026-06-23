@@ -173,3 +173,19 @@ export function getSiteConfig(siteId: string): SiteConfig {
 export function getAllSites(): SiteConfig[] {
   return Object.values(SITES);
 }
+
+export async function getRequestSite(): Promise<SiteConfig> {
+  const { cookies, headers } = await import('next/headers');
+  const cookieStore = await cookies();
+  const siteFromCookie = cookieStore.get('site-id')?.value;
+
+  if (siteFromCookie) {
+    const siteConfig = getSiteConfig(siteFromCookie);
+    if (siteConfig) return siteConfig;
+  }
+
+  const host = (await headers()).get('host') ?? '';
+  const siteId = resolveSiteId(host);
+  return getSiteConfig(siteId);
+}
+

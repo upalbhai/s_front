@@ -37,9 +37,7 @@ export default function AdminLayout({
     ? 'Sounds'
     : pathname.startsWith('/admin/categories')
       ? 'Categories'
-      : pathname.startsWith('/admin/sites')
-        ? 'Sites'
-        : 'Dashboard';
+      : 'Dashboard';
 
   const handleLogout = () => {
     if (typeof window !== 'undefined') {
@@ -144,7 +142,6 @@ export default function AdminLayout({
             { href: '/admin', icon: LayoutDashboard, label: 'Dashboard', active: pathname === '/admin' },
             { href: '/admin/sounds', icon: Music, label: 'Sounds', active: pathname.startsWith('/admin/sounds') },
             { href: '/admin/categories', icon: FolderOpen, label: 'Categories', active: pathname.startsWith('/admin/categories') },
-            { href: '/admin/sites', icon: Sparkles, label: 'Sites', active: pathname.startsWith('/admin/sites') },
             { href: '/', icon: Shield, label: 'Open site' },
           ].map((item) => {
             const activeStyle = isDark

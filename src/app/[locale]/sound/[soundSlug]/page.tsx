@@ -2,7 +2,7 @@ import api from '@/services/api';
 import { Metadata } from 'next';
 import Script from 'next/script';
 import SoundDetailClient from './SoundDetailClient';
-import { getRequestSite } from '@/lib/site';
+import { getRequestSite } from '@/config/sites';
 import { buildSeoMetadata, buildNotFoundMetadata } from '@/lib/seo';
 
 export async function generateMetadata({

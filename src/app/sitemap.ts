@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
 import api from '@/services/api';
-import { getRequestSite } from '@/lib/site';
+import { getRequestSite } from '@/config/sites';
 
 export const dynamic = 'force-dynamic';
 
