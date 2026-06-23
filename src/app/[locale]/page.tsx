@@ -37,8 +37,8 @@ export default async function HomePage({ params, searchParams }: { params: Promi
 
   try {
     const [trendingRes, newRes, categoriesRes] = await Promise.all([
-      api.get('/sounds?sort=trending&limit=12'),
-      api.get('/sounds?limit=12'),
+      api.get('/sounds?sort=trending&limit=16'),
+      api.get('/sounds?limit=16'),
       api.get('/categories'),
     ]);
 

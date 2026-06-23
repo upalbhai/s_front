@@ -97,10 +97,11 @@ export default function HomeClient({
 
     setLoading(true);
     try {
-      const res = await api.get(`/sounds?sort=${tab}&page=${pageNum}&limit=12`);
+      const limit = 16;
+      const res = await api.get(`/sounds?sort=${tab}&page=${pageNum}&limit=${limit}`);
       const incoming = res.data.sounds || [];
       setTabSounds((prev) => (append ? [...prev, ...incoming] : incoming));
-      setHasMore(res.data.hasNextPage || incoming.length === 12);
+      setHasMore(res.data.hasNextPage || incoming.length === limit);
       setPage(pageNum);
     } catch (error) {
       console.error('Error fetching tab sounds:', error);

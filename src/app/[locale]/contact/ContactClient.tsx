@@ -2,154 +2,172 @@
 
 import { useState } from 'react';
 import api from '@/services/api';
-import { Mail, Send, HelpCircle, AlertCircle, Clock, FileText } from 'lucide-react';
-import { useSite } from '@/context/SiteProvider';
+import { Mail, ShieldCheck, Clock, Send, AlertTriangle } from 'lucide-react';
 import { useTranslation } from '@/i18n';
 
-export default function ContactClient() {
-  const { config, siteId } = useSite();
+interface ContactClientProps {
+  siteName: string;
+  email: string;
+}
+
+export default function ContactClient({ siteName, email }: ContactClientProps) {
   const { t } = useTranslation();
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
   const [status, setStatus] = useState('');
-
-  const email = siteId === 'soundboard'
-    ? 'soundboardmax.net@gmail.com'
-    : (config.contactEmail || 'contact@soundbuttonsmax.com');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setStatus('');
     try {
       await api.post('/contact', formData);
       setStatus('success');
       setFormData({ name: '', email: '', subject: '', message: '' });
-    } catch {
+    } catch (err) {
+      console.error(err);
       setStatus('error');
+    } finally {
+      setLoading(false);
     }
   };
 
+  const helpTopics = [
+    t('contact.help_with.item1'),
+    t('contact.help_with.item2'),
+    t('contact.help_with.item3'),
+    t('contact.help_with.item4'),
+    t('contact.help_with.item5'),
+    t('contact.help_with.item6'),
+  ].filter(Boolean);
+
   return (
-    <div className="container mx-auto px-4 py-12 md:py-20 max-w-6xl">
-      <div className="text-center mb-12">
+    <div className="max-w-6xl mx-auto px-4 md:px-8 py-12 md:py-20 animate-in fade-in slide-in-from-bottom-5 duration-700">
+      {/* Title */}
+      <div className="text-center mb-16">
         <h1 className="text-4xl md:text-5xl font-black tracking-tight text-foreground mb-4">
-          {t('contact.title')}
+          <span className="text-gradient">{t('contact.title')}</span>
         </h1>
-        <p className="text-lg text-slate-500 dark:text-slate-400 font-medium max-w-2xl mx-auto">
-          {t('contact.intro', { siteName: config.siteName })}
+        <p className="text-lg text-slate-500 dark:text-slate-400 max-w-xl mx-auto font-medium">
+          {t('contact.get_in_touch.desc', { siteName })}
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12">
-        {/* Info Column */}
+      <div className="grid lg:grid-cols-12 gap-8 lg:gap-12">
+        {/* Contact Info & Help Topics */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="p-6 md:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-              <Mail size={24} />
+          {/* Email Card */}
+          <div className="glass-card flex gap-4 p-6 items-start relative overflow-hidden group">
+            <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
+              <Mail size={22} />
             </div>
-            <h2 className="text-2xl font-black text-foreground">{t('contact.email.title')}</h2>
-            <p className="text-sm md:text-base text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
-              {t('contact.email.text', { email }).split(email)[0]}
-              <a href={`mailto:${email}`} className="text-primary font-bold hover:underline">
+            <div>
+              <h3 className="text-lg font-black text-foreground mb-1">
+                {t('contact.email_us.title')}
+              </h3>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mb-3">
+                {t('contact.email_us.desc')}
+              </p>
+              <a
+                href={`mailto:${email}`}
+                className="text-sm font-black text-primary hover:underline break-all"
+              >
                 {email}
               </a>
-              {t('contact.email.text', { email }).split(email)[1]}
-            </p>
-          </div>
-
-          <div className="p-6 md:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-              <HelpCircle size={24} />
-            </div>
-            <h2 className="text-2xl font-black text-foreground">{t('contact.help.title')}</h2>
-            <div className="grid grid-cols-1 gap-3">
-              {[1, 2, 3, 4, 5, 6].map((num) => (
-                <div key={num} className="flex items-center gap-3 p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/30">
-                  <span className="flex-shrink-0 text-primary">✓</span>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 font-bold">
-                    {t(`contact.help.item${num}`)}
-                  </p>
-                </div>
-              ))}
             </div>
           </div>
 
-          <div className="p-6 md:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-              <Clock size={24} />
+          {/* Response Time Card */}
+          <div className="glass-card flex gap-4 p-6 items-start relative overflow-hidden group">
+            <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
+              <Clock size={22} />
             </div>
-            <h2 className="text-2xl font-black text-foreground">{t('contact.response.title')}</h2>
-            <p className="text-sm md:text-base text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
-              {t('contact.response.text')}
-            </p>
+            <div>
+              <h3 className="text-lg font-black text-foreground mb-1">
+                {t('contact.response_time.title')}
+              </h3>
+              <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                {t('contact.response_time.desc')}
+              </p>
+            </div>
           </div>
 
-          <div className="p-6 md:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-              <FileText size={24} />
+          {/* DMCA Card */}
+          <div className="glass-card flex gap-4 p-6 items-start relative overflow-hidden group">
+            <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
+              <ShieldCheck size={22} />
             </div>
-            <h2 className="text-2xl font-black text-foreground">{t('contact.dmca.title')}</h2>
-            <p className="text-sm md:text-base text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
-              {t('contact.dmca.text', { email }).split(email)[0]}
-              <a href={`mailto:${email}?subject=DMCA`} className="text-primary font-bold hover:underline">
-                {email}
-              </a>
-              {t('contact.dmca.text', { email }).split(email)[1]}
-            </p>
+            <div>
+              <h3 className="text-lg font-black text-foreground mb-1">
+                {t('contact.dmca.title')}
+              </h3>
+              <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                {t('contact.dmca.desc', { email })}
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Form Column */}
+        {/* Form Panel */}
         <div className="lg:col-span-7">
-          <div className="p-6 md:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 h-full">
-            <h2 className="text-2xl md:text-3xl font-black tracking-tight text-foreground mb-6">
-              {t('contact.form.title')}
-            </h2>
-
+          <div className="glass-card p-8 md:p-10">
             {status === 'success' ? (
-              <div className="text-center py-12 space-y-6">
-                <div className="w-16 h-16 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto">
-                  <Send size={32} />
+              <div className="text-center py-12 animate-in zoom-in duration-300">
+                <div className="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-450 flex items-center justify-center mx-auto mb-6">
+                  <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
                 </div>
-                <div className="space-y-2">
-                  <h3 className="text-2xl font-black text-foreground">{t('contact.form.success_title')}</h3>
-                  <p className="text-slate-500 dark:text-slate-400 font-medium">{t('contact.form.success_desc')}</p>
-                </div>
+                <h2 className="text-2xl font-black text-foreground mb-3">
+                  {t('contact.form.success_title')}
+                </h2>
+                <p className="text-slate-500 dark:text-slate-400 font-medium mb-8">
+                  {t('contact.form.success_desc')}
+                </p>
                 <button
                   onClick={() => setStatus('')}
-                  className="px-6 py-3 bg-primary hover:bg-primary-hover text-white font-bold rounded-2xl transition-colors"
+                  className="px-6 py-2.5 bg-primary hover:bg-primary-hover text-primary-foreground font-black text-xs uppercase tracking-wider rounded-xl transition-all active:scale-95 cursor-pointer shadow-md"
                 >
                   {t('contact.form.send_another')}
                 </button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-2">
-                  <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">
-                    {t('contact.form.name')}
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-4 py-3.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/80 rounded-2xl outline-none focus:ring-2 focus:ring-primary/20 text-foreground font-medium transition-all"
-                  />
+                <h2 className="text-2xl font-black text-foreground mb-2">
+                  {t('contact.form.title')}
+                </h2>
+
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                      {t('contact.form.name')}
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      placeholder="Your name"
+                      className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-xl text-sm font-semibold focus:outline-hidden focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-foreground"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                      {t('contact.form.email')}
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      placeholder="name@example.com"
+                      className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-xl text-sm font-semibold focus:outline-hidden focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-foreground"
+                    />
+                  </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">
-                    {t('contact.form.email')}
-                  </label>
-                  <input
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-4 py-3.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/80 rounded-2xl outline-none focus:ring-2 focus:ring-primary/20 text-foreground font-medium transition-all"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">
+                  <label className="text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">
                     {t('contact.form.subject')}
                   </label>
                   <input
@@ -157,34 +175,43 @@ export default function ContactClient() {
                     required
                     value={formData.subject}
                     onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                    className="w-full px-4 py-3.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/80 rounded-2xl outline-none focus:ring-2 focus:ring-primary/20 text-foreground font-medium transition-all"
+                    placeholder="How can we help you?"
+                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-xl text-sm font-semibold focus:outline-hidden focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-foreground"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="block text-sm font-bold text-slate-700 dark:text-slate-300">
+                  <label className="text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">
                     {t('contact.form.message')}
                   </label>
                   <textarea
                     required
-                    rows={6}
+                    rows={5}
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full px-4 py-3.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/80 rounded-2xl outline-none focus:ring-2 focus:ring-primary/20 text-foreground font-medium transition-all resize-none"
-                  ></textarea>
+                    placeholder="Enter your message here..."
+                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 rounded-xl text-sm font-semibold focus:outline-hidden focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all min-h-[120px] text-foreground"
+                  />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full py-4 bg-primary hover:bg-primary-hover text-white font-bold rounded-2xl transition-colors flex items-center justify-center gap-2"
+                  disabled={loading}
+                  className="w-full flex items-center justify-center gap-2 px-8 py-3.5 bg-primary hover:bg-primary-hover text-primary-foreground font-black text-sm uppercase tracking-widest rounded-xl shadow-lg transition-all active:scale-95 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  <Send size={18} />
-                  {t('contact.form.send')}
+                  {loading ? (
+                    <div className="w-5 h-5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                  ) : (
+                    <>
+                      <Send size={16} />
+                      {t('contact.form.send')}
+                    </>
+                  )}
                 </button>
 
                 {status === 'error' && (
-                  <div className="flex items-center gap-2 text-rose-500 font-medium text-sm p-4 bg-rose-500/10 rounded-2xl">
-                    <AlertCircle size={18} />
+                  <div className="flex items-center gap-2 text-rose-500 text-sm font-semibold mt-4">
+                    <AlertTriangle size={16} />
                     <span>{t('contact.form.error')}</span>
                   </div>
                 )}

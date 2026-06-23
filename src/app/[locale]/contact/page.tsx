@@ -1,9 +1,22 @@
 import { Metadata } from 'next';
 import { getRequestSite } from '@/lib/site';
 import { buildSeoMetadata } from '@/lib/seo';
-import { getTranslations } from '@/i18n/server';
-import type { Locale } from '@/i18n';
 import ContactClient from './ContactClient';
+import { SiteId } from '@/config/sites';
+
+async function getTranslations(siteId: SiteId, locale: string) {
+  try {
+    const mod = await import(`@/i18n/locales/${siteId}/${locale}.json`);
+    return mod.default || mod;
+  } catch {
+    try {
+      const mod = await import(`@/i18n/locales/${siteId}/en.json`);
+      return mod.default || mod;
+    } catch {
+      return {};
+    }
+  }
+}
 
 export async function generateMetadata({
   params,
@@ -12,15 +25,13 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const site = await getRequestSite();
-  const t = await getTranslations(site.id, locale as Locale);
+  const translations = await getTranslations(site.id, locale);
 
-  const title = t('contact.meta.title', { siteName: site.siteName }) !== 'contact.meta.title'
-    ? t('contact.meta.title', { siteName: site.siteName })
-    : `Contact - ${site.siteName} – Questions, Feedback & Support`;
+  let title = translations['contact.meta.title'] || 'Contact {siteName} – Questions, Feedback & Support';
+  let description = translations['contact.meta.description'] || 'Get in touch with the {siteName} team. Send us your questions, feedback, partnership ideas, or support requests.';
 
-  const description = t('contact.meta.description', { siteName: site.siteName }) !== 'contact.meta.description'
-    ? t('contact.meta.description', { siteName: site.siteName })
-    : `Get in touch with the ${site.siteName} team. Send us your questions, feedback, partnership ideas, or support requests.`;
+  title = title.replace(/{siteName}/g, site.siteName);
+  description = description.replace(/{siteName}/g, site.siteName);
 
   return buildSeoMetadata({
     site,
@@ -31,5 +42,6 @@ export async function generateMetadata({
 }
 
 export default async function ContactPage() {
-  return <ContactClient />;
+  const site = await getRequestSite();
+  return <ContactClient siteName={site.siteName} email={site.contactEmail} />;
 }

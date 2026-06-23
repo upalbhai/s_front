@@ -1,23 +1,54 @@
-export default function DisclaimerPage() {
-  return (
-    <div className="container" style={{ padding: '4rem 0', maxWidth: '800px' }}>
-      <h1 style={{ fontSize: '3rem', marginBottom: '1rem' }}>Disclaimer</h1>
-      <p style={{ color: 'var(--text-muted)', marginBottom: '3rem' }}>Last Updated: April 2026</p>
+import { Metadata } from 'next';
+import { getRequestSite } from '@/lib/site';
+import { buildSeoMetadata } from '@/lib/seo';
+import DisclaimerClient from './DisclaimerClient';
+import { SiteId } from '@/config/sites';
 
-      <div className="glass-card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-        <section>
-          <h2>General Disclaimer</h2>
-          <p style={{ color: 'var(--text-muted)', marginTop: '1rem' }}>
-            The content provided on Sound Buttons Max is for informational and entertainment purposes only. We do not guarantee the accuracy or reliability of any content.
-          </p>
-        </section>
-        <section>
-          <h2>External Links</h2>
-          <p style={{ color: 'var(--text-muted)', marginTop: '1rem' }}>
-            Our site may contain links to external websites. We are not responsible for the content or privacy practices of these sites.
-          </p>
-        </section>
-      </div>
-    </div>
+async function getTranslations(siteId: SiteId, locale: string) {
+  try {
+    const mod = await import(`@/i18n/locales/${siteId}/${locale}.json`);
+    return mod.default || mod;
+  } catch {
+    try {
+      const mod = await import(`@/i18n/locales/${siteId}/en.json`);
+      return mod.default || mod;
+    } catch {
+      return {};
+    }
+  }
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const site = await getRequestSite();
+  const translations = await getTranslations(site.id, locale);
+
+  let title = translations['disclaimer.meta.title'] || 'Disclaimer – {siteName}';
+  let description = translations['disclaimer.meta.description'] || 'Read {siteName}’s disclaimer regarding the use of our website, sound content, and services. Understand limitations of liability and user responsibilities.';
+
+  title = title.replace(/{siteName}/g, site.siteName);
+  description = description.replace(/{siteName}/g, site.siteName);
+
+  return buildSeoMetadata({
+    site,
+    title,
+    description,
+    canonicalPath: '/disclaimer',
+  });
+}
+
+export default async function DisclaimerPage() {
+  const site = await getRequestSite();
+  const domain = site.domains[0] || 'soundboardmax.net';
+  return (
+    <DisclaimerClient
+      siteName={site.siteName}
+      domain={domain}
+      email={site.contactEmail}
+    />
   );
 }
