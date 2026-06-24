@@ -41,11 +41,30 @@ export default function HomeClient({
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [currentLimit, setCurrentLimit] = useState(24);
+
+  const getLimit = useCallback(() => {
+    if (typeof window === 'undefined') return 24;
+    const width = window.innerWidth;
+    if (width >= 1024) return 16; // lg: 8 cols (2 rows)
+    if (width >= 768) return 12; // md: 6 cols (2 rows)
+    if (width >= 640) return 12; // sm: 4 cols (3 rows)
+    return 12; // xs: 3 cols (4 rows)
+  }, []);
 
   // Sync state if initial searchQuery changes (e.g. page mount)
   useEffect(() => {
     setQuery(searchQuery || '');
   }, [searchQuery]);
+
+  // Adjust initial items based on screen size on mount
+  useEffect(() => {
+    const limit = getLimit();
+    setCurrentLimit(limit);
+    if (trendingSounds.length > limit) {
+      setTabSounds(trendingSounds.slice(0, limit));
+    }
+  }, [getLimit, trendingSounds]);
 
   // Sync debounced query to URL search param in browser history dynamically without reload
   useEffect(() => {
@@ -89,7 +108,15 @@ export default function HomeClient({
   const fetchTabSounds = useCallback(async (tab: string, pageNum: number, append: boolean) => {
     // Optimistically use SSR/initial data for trending tab page 1 on first load
     if (tab === 'trending' && pageNum === 1 && trendingSounds.length > 0 && !append) {
-      setTabSounds(trendingSounds);
+      setTabSounds(trendingSounds.slice(0, getLimit()));
+      setHasMore(true);
+      setPage(1);
+      return;
+    }
+
+    // Optimistically use SSR/initial data for new tab page 1
+    if (tab === 'new' && pageNum === 1 && newSounds.length > 0 && !append) {
+      setTabSounds(newSounds.slice(0, getLimit()));
       setHasMore(true);
       setPage(1);
       return;
@@ -97,7 +124,7 @@ export default function HomeClient({
 
     setLoading(true);
     try {
-      const limit = 16;
+      const limit = getLimit();
       const res = await api.get(`/sounds?sort=${tab}&page=${pageNum}&limit=${limit}`);
       const incoming = res.data.sounds || [];
       setTabSounds((prev) => (append ? [...prev, ...incoming] : incoming));
@@ -108,7 +135,7 @@ export default function HomeClient({
     } finally {
       setLoading(false);
     }
-  }, [trendingSounds]);
+  }, [trendingSounds, newSounds]);
 
   // Fetch new tab data whenever tab changes
   useEffect(() => {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import React from 'react';
 import api from '@/services/api';
 import SoundCard from '@/components/SoundCard';
 import { Pause, Download, ChevronRight, Copy, Send } from 'lucide-react';
@@ -30,11 +30,6 @@ export default function SoundDetailClient({ sound, relatedSounds, h1Title, uiDes
   const lp = useLocalePath();
   const isThisPlaying = currentSound?._id === sound._id && isPlaying;
 
-  useEffect(() => {
-    if (sound?._id) {
-      api.patch(`/sounds/${sound._id}/stats`, { type: 'view' }).catch(() => { });
-    }
-  }, [sound?._id]);
 
   const handlePlayClick = () => {
     playSound(sound);

@@ -5,6 +5,7 @@ import { buildSeoMetadata } from '@/lib/seo';
 
 import { getTranslations } from '@/i18n/server';
 import type { Locale } from '@/i18n';
+import api from '@/services/api';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -34,5 +35,15 @@ export default async function TrendingSoundsPage({ params }: { params: Promise<{
     ? t('meta.trending.shortDescription')
     : site.meta.trending.shortDescription;
 
-  return <TrendingClient h1Title={h1Title} shortDescription={shortDesc} />;
+  let initialSounds = [];
+  let initialTotal = 0;
+  try {
+    const res = await api.get('/sounds?sort=trending&page=1&limit=40');
+    initialSounds = res.data.sounds || [];
+    initialTotal = res.data.total || 0;
+  } catch (error) {
+    console.error('Error fetching initial trending sounds:', error);
+  }
+
+  return <TrendingClient h1Title={h1Title} shortDescription={shortDesc} initialSounds={initialSounds} initialTotal={initialTotal} />;
 }

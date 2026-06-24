@@ -8,31 +8,18 @@ import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { useTranslation, useLocalePath } from '@/i18n';
 import { useSite } from '@/context/SiteProvider';
 
-const Header = () => {
+const Header = ({ categories = [] }: { categories?: any[] }) => {
   const { t } = useTranslation();
   const lp = useLocalePath();
   const { config } = useSite();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [categories, setCategories] = useState<any[]>([]);
-
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
-    const fetchCategories = async () => {
-      try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
-        const res = await fetch(`${apiUrl}/categories?limit=5`);
-        const data = await res.json();
-        setCategories(Array.isArray(data?.categories) ? data.categories : []);
-      } catch (err) {
-        console.error('Failed to fetch categories:', err);
-      }
-    };
     window.addEventListener('scroll', handleScroll);
-    fetchCategories();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 

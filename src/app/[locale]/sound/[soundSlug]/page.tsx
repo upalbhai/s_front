@@ -29,10 +29,10 @@ export async function generateMetadata({
         : `${backendUrl}${sound.fileUrl}`
       : '';
 
-    const titleTemplate = t('meta.soundDetail.titleTemplate') !== 'meta.soundDetail.titleTemplate' 
-      ? t('meta.soundDetail.titleTemplate') 
+    const titleTemplate = t('meta.soundDetail.titleTemplate') !== 'meta.soundDetail.titleTemplate'
+      ? t('meta.soundDetail.titleTemplate')
       : `{sound name} Sound Effect Button | ${site.siteName}`;
-      
+
     const descriptionTemplate = t('meta.soundDetail.descriptionTemplate') !== 'meta.soundDetail.descriptionTemplate'
       ? t('meta.soundDetail.descriptionTemplate')
       : site.meta.soundDetail.descriptionTemplate;
@@ -75,8 +75,12 @@ export default async function LocaleSoundDetailPage({
     const soundRes = await api.get(`/sounds/${soundSlug}`);
     sound = soundRes.data;
 
+    if (sound && sound._id) {
+      api.patch(`/sounds/${sound._id}/stats`, { type: 'view' }).catch(() => { });
+    }
+
     if (sound && sound.category?._id) {
-      const relatedRes = await api.get(`/sounds?category=${sound.category._id}&limit=12`);
+      const relatedRes = await api.get(`/sounds?category=${sound.category._id}&limit=16`);
       relatedSounds = relatedRes.data.sounds.filter((s: any) => s._id !== sound._id);
     }
   } catch (error) {

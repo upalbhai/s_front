@@ -8,14 +8,14 @@ import { Search } from 'lucide-react';
 import HeroSection from '@/components/home/HeroSection';
 import { useTranslation } from '@/i18n';
 
-export default function TrendingClient({ h1Title, shortDescription }: any) {
+export default function TrendingClient({ h1Title, shortDescription, initialSounds = [], initialTotal = 0 }: any) {
   const { t } = useTranslation();
   const limit = 40;
-  const [sounds, setSounds] = useState<any[]>([]);
-  const [total, setTotal] = useState(0);
+  const [sounds, setSounds] = useState<any[]>(initialSounds);
+  const [total, setTotal] = useState(initialTotal);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [initialized, setInitialized] = useState(false);
+  const [initialized, setInitialized] = useState(initialSounds.length > 0);
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
 
@@ -47,8 +47,11 @@ export default function TrendingClient({ h1Title, shortDescription }: any) {
 
   // When debounced query changes, refetch page 1
   useEffect(() => {
+    if (!debouncedQuery && initialSounds.length > 0 && sounds === initialSounds && page === 1) {
+      return;
+    }
     fetchPage(1, false, debouncedQuery);
-  }, [debouncedQuery, fetchPage]);
+  }, [debouncedQuery, fetchPage, initialSounds, sounds, page]);
 
   const loadMore = useCallback(() => {
     if (loading || !hasMore) return;

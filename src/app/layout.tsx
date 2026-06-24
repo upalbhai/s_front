@@ -16,7 +16,7 @@ const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 
 export async function generateMetadata(): Promise<Metadata> {
   const site = await getRequestSite();
-  
+
   return buildSeoMetadata({
     site,
     title: site.meta.home.title,
@@ -28,7 +28,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export async function generateViewport(): Promise<Viewport> {
   const site = await getRequestSite();
-  
+
   return {
     themeColor: site.themeColor,
     width: 'device-width',
@@ -42,6 +42,17 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const site = await getRequestSite();
+
+  let categories = [];
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+    const res = await fetch(`${apiUrl}/categories?limit=5`, { next: { revalidate: 3600 } });
+    const data = await res.json();
+    categories = Array.isArray(data?.categories) ? data.categories : [];
+  } catch (err) {
+    console.error('Failed to fetch categories:', err);
+  }
+
 
   return (
     <html
@@ -65,7 +76,7 @@ export default async function RootLayout({
             <AudioProvider>
               <SiteProvider siteId={site.id} config={site}>
                 <LanguageProvider siteId={site.id}>
-                  <AppChrome>{children}</AppChrome>
+                  <AppChrome categories={categories}>{children}</AppChrome>
                   <Toaster
                     position="bottom-right"
                     toastOptions={{

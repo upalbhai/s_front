@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
-export default function AppChrome({ children }: { children: React.ReactNode }) {
+export default function AppChrome({ children, categories = [] }: { children: React.ReactNode, categories?: any[] }) {
   const pathname = usePathname();
   const isAdminRoute = pathname.startsWith('/admin');
 
@@ -14,9 +14,9 @@ export default function AppChrome({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <Header />
+      <Header categories={categories} />
       <main className="min-h-[80vh]">{children}</main>
-      <Footer />
+      <Footer categories={categories} />
     </>
   );
 }

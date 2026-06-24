@@ -5,6 +5,7 @@ import { buildSeoMetadata } from '@/lib/seo';
 
 import { getTranslations } from '@/i18n/server';
 import type { Locale } from '@/i18n';
+import api from '@/services/api';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -34,5 +35,15 @@ export default async function NewSoundsPage({ params }: { params: Promise<{ loca
     ? t('meta.new.shortDescription')
     : site.meta.new.shortDescription;
 
-  return <NewClient h1Title={h1Title} shortDescription={shortDesc} />;
+  let initialSounds = [];
+  let initialTotal = 0;
+  try {
+    const res = await api.get('/sounds?page=1&limit=40');
+    initialSounds = res.data.sounds || [];
+    initialTotal = res.data.total || 0;
+  } catch (error) {
+    console.error('Error fetching initial new sounds:', error);
+  }
+
+  return <NewClient h1Title={h1Title} shortDescription={shortDesc} initialSounds={initialSounds} initialTotal={initialTotal} />;
 }

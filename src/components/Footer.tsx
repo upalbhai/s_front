@@ -6,27 +6,15 @@ import { useEffect, useState } from 'react';
 import { useTranslation, useLocalePath } from '@/i18n';
 import { useSite } from '@/context/SiteProvider';
 
-const Footer = () => {
+const Footer = ({ categories = [] }: { categories?: any[] }) => {
   const { resolvedTheme } = useTheme();
   const { t } = useTranslation();
   const lp = useLocalePath();
   const { config } = useSite();
   const [mounted, setMounted] = useState(false);
-  const [categories, setCategories] = useState<any[]>([]);
 
   useEffect(() => {
     setMounted(true);
-    const fetchCategories = async () => {
-      try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
-        const res = await fetch(`${apiUrl}/categories?limit=5`);
-        const data = await res.json();
-        setCategories(Array.isArray(data?.categories) ? data.categories : []);
-      } catch (err) {
-        console.error('Failed to fetch categories:', err);
-      }
-    };
-    fetchCategories();
   }, []);
 
   const isDark = mounted && resolvedTheme === 'dark';
@@ -49,11 +37,10 @@ const Footer = () => {
   ];
 
   return (
-    <footer className={`mt-16 border-t pt-20 pb-10 transition-all duration-300 ${
-      isDark
-        ? 'bg-zinc-950 border-zinc-800'
-        : 'bg-white border-zinc-200'
-    }`}>
+    <footer className={`mt-16 border-t pt-20 pb-10 transition-all duration-300 ${isDark
+      ? 'bg-zinc-950 border-zinc-800'
+      : 'bg-white border-zinc-200'
+      }`}>
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           {/* Brand Column */}
@@ -109,11 +96,10 @@ const Footer = () => {
               <input
                 type="email"
                 placeholder={t('footer.email_placeholder')}
-                className={`w-full px-4 py-3 rounded-xl border outline-none focus:ring-2 focus:ring-primary/20 transition-all font-bold text-sm ${
-                  isDark
-                    ? 'bg-zinc-900 border-zinc-800 text-white'
-                    : 'bg-zinc-100 border-zinc-200 text-zinc-900'
-                }`}
+                className={`w-full px-4 py-3 rounded-xl border outline-none focus:ring-2 focus:ring-primary/20 transition-all font-bold text-sm ${isDark
+                  ? 'bg-zinc-900 border-zinc-800 text-white'
+                  : 'bg-zinc-100 border-zinc-200 text-zinc-900'
+                  }`}
               />
               <button
                 type="submit"
