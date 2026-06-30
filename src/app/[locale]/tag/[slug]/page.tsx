@@ -10,9 +10,9 @@ import { buildSeoMetadata, buildNotFoundMetadata } from '@/lib/seo';
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string; locale: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug, locale } = await params;
   const site = await getRequestSite();
 
   try {
@@ -24,6 +24,7 @@ export async function generateMetadata({
       title: `${tagName} Soundboard: Free ${tagName} Sound Buttons | ${site.siteName}`,
       description: `Discover thousands of ${tagName} soundboard collections with the sound buttons and meme soundboard. Play instantly & download on ${site.siteName}.`,
       canonicalPath: `/tag/${slug}`,
+      locale,
       image: `${site.siteUrl}/tag/${slug}/opengraph-image.png`,
     });
   } catch {

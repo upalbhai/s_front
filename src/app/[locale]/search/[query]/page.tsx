@@ -32,6 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: titleTemplate.replace('{sound name}', decoded),
     description: descTemplate.replace('{search name}', decoded),
     canonicalPath: `/search/${query}`,
+    locale,
     keywords: 'sound buttons, soundboard, sound effects, meme soundboard',
   });
 }

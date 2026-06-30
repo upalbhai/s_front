@@ -18,6 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     description: t('meta.new.description') !== 'meta.new.description' ? t('meta.new.description') : site.meta.new.description,
     keywords: t('meta.new.keywords') !== 'meta.new.keywords' ? t('meta.new.keywords') : site.meta.new.keywords,
     canonicalPath: '/new',
+    locale,
     image: `${site.siteUrl}/new/opengraph-image.png`,
   });
 }

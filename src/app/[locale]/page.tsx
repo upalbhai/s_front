@@ -20,6 +20,7 @@ export async function generateMetadata({
     title: t('meta.home.title') !== 'meta.home.title' ? t('meta.home.title') : site.meta.home.title,
     description: t('meta.home.description') !== 'meta.home.description' ? t('meta.home.description') : site.meta.home.description,
     canonicalPath: '/',
+    locale,
     keywords: t('meta.home.keywords') !== 'meta.home.keywords' ? t('meta.home.keywords') : site.meta.home.keywords,
   });
 }

@@ -7,9 +7,9 @@ import { buildSeoMetadata, buildNotFoundMetadata } from '@/lib/seo';
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string; locale: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug, locale } = await params;
   const site = await getRequestSite();
 
   try {
@@ -38,6 +38,7 @@ export async function generateMetadata({
         blog.excerpt ||
         `Read the latest guides, tips, and meme culture articles from ${site.siteName}.`,
       canonicalPath: `/blog/${slug}`,
+      locale,
       image: ogImageUrl,
       type: 'article',
       keywords: `soundboard, sound effects, ${postTitle}, audio clips, meme sounds, sound buttons, blog`,

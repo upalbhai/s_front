@@ -38,6 +38,7 @@ export async function generateMetadata({
     title,
     description,
     canonicalPath: '/dmca',
+    locale,
   });
 }
 

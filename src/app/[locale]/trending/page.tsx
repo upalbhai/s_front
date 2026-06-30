@@ -18,6 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     description: t('meta.trending.description') !== 'meta.trending.description' ? t('meta.trending.description') : site.meta.trending.description,
     keywords: t('meta.trending.keywords') !== 'meta.trending.keywords' ? t('meta.trending.keywords') : site.meta.trending.keywords,
     canonicalPath: '/trending',
+    locale,
     image: `${site.siteUrl}/trending/opengraph-image.png`,
   });
 }

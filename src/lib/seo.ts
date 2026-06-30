@@ -8,6 +8,7 @@ type BuildSeoMetadataArgs = {
   title: string;
   description: string;
   canonicalPath: string;
+  locale?: string;
   image?: string;
   type?: 'website' | 'article' | 'music.song';
   keywords?: string;
@@ -23,6 +24,7 @@ export function buildSeoMetadata({
   title,
   description,
   canonicalPath,
+  locale,
   image,
   type = 'website',
   keywords,
@@ -34,7 +36,9 @@ export function buildSeoMetadata({
 }: BuildSeoMetadataArgs): Metadata {
   const siteUrl = site.siteUrl;
   const ogImage = image ?? `${siteUrl}${site.ogImage}`;
-  const canonicalUrl = `${siteUrl}${canonicalPath === '/' ? '' : canonicalPath}`;
+  
+  const prefix = (!locale || locale === 'en') ? '' : `/${locale}`;
+  const canonicalUrl = `${siteUrl}${prefix}${canonicalPath === '/' ? '' : canonicalPath}`;
 
   const languages: Record<string, string> = {};
   SUPPORTED_LOCALES.forEach((code) => {

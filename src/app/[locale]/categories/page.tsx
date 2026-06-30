@@ -17,6 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     title: t('meta.categories.title') !== 'meta.categories.title' ? t('meta.categories.title') : site.meta.categories.title,
     description: t('meta.categories.description') !== 'meta.categories.description' ? t('meta.categories.description') : site.meta.categories.description,
     canonicalPath: '/categories',
+    locale,
   });
 }
 

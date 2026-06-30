@@ -4,13 +4,15 @@ import { buildSeoMetadata } from '@/lib/seo';
 import { getRequestSite } from '@/config/sites';
 import BlogListClient from './BlogListClient';
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
   const site = await getRequestSite();
   return buildSeoMetadata({
     site,
     title: `Blog | ${site.siteName}`,
     description: `Guides, tips, and meme culture articles from ${site.siteName}.`,
     canonicalPath: '/blog',
+    locale,
     type: 'article',
   });
 }

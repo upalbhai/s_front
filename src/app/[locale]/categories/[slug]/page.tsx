@@ -45,6 +45,7 @@ export async function generateMetadata({
       description: descTemplate.replace('{category name}', categoryName),
       keywords: t('meta.categoryDetail.keywordsTemplate') !== 'meta.categoryDetail.keywordsTemplate' ? t('meta.categoryDetail.keywordsTemplate') : site.meta.categoryDetail.keywordsTemplate,
       canonicalPath: `/categories/${slug}`,
+      locale,
       image: `${site.siteUrl}/categories/${slug}/opengraph-image.png`,
     });
   } catch {

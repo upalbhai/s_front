@@ -46,6 +46,7 @@ export async function generateMetadata({
       title: titleTemplate.replace('{sound name}', soundName),
       description: descriptionTemplate.replace('{sound name}', soundName),
       canonicalPath: `/sound/${soundSlug}`,
+      locale,
       image: `${site.siteUrl}/sound/${soundSlug}/opengraph-image.png`,
       type: 'music.song',
       audioUrl: mp3Url,
