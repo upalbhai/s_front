@@ -36,76 +36,76 @@ const Header = ({ categories = [] }: { categories?: any[] }) => {
         ? 'py-3 bg-background/80 backdrop-blur-xl'
         : 'py-5 bg-background/80 md:bg-transparent backdrop-blur-xl md:backdrop-blur-none'
         }`}>
-      <div className="container mx-auto px-4 flex items-center justify-between gap-4">
-        {/* Logo */}
-        <Link href={lp('/')} className="flex items-center gap-2 group shrink-0">
-          <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center transition-transform group-hover:scale-110 shadow-xs border border-slate-200/55 dark:border-slate-800/55">
-            <img src={config.logo} alt={`${config.siteName} Logo`} className="w-full h-full object-cover" />
-          </div>
-          <span className="hidden lg:inline text-xl font-black tracking-tighter text-foreground whitespace-nowrap">
-            {config.wordmark.line1} <span className="text-primary">{config.wordmark.accent}</span>
-          </span>
-        </Link>
+        <div className="container mx-auto px-4 flex items-center justify-between gap-4">
+          {/* Logo */}
+          <Link href={lp('/')} className="flex items-center gap-2 group shrink-0">
+            <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center transition-transform group-hover:scale-110 shadow-xs border border-slate-200/55 dark:border-slate-800/55">
+              <img src={config.logo} alt={`${config.siteName} Logo`} className="w-full h-full object-cover" />
+            </div>
+            <span className="hidden lg:inline text-xl font-black tracking-tighter text-foreground whitespace-nowrap">
+              {config.wordmark.line1} <span className="text-primary">{config.wordmark.accent}</span>
+            </span>
+          </Link>
 
-        {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-8 font-bold text-sm text-slate-500 dark:text-slate-400">
-          <Link href={lp('/')} className="hover:text-foreground transition-colors">{t('nav.home')}</Link>
-          <div className="relative group py-2">
-            <button className="flex items-center gap-1 hover:text-foreground transition-colors font-bold text-sm text-slate-500 dark:text-slate-400 focus:outline-none">
-              {t('common.categories') || 'Categories'}
-              <ChevronDown size={14} className="transition-transform group-hover:rotate-180" />
-            </button>
-            <div className="absolute top-full left-0 mt-1 w-56 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 p-2 z-50">
-              <div className="flex flex-col gap-1">
-                {categories.map((cat) => (
+          {/* Desktop Nav */}
+          <nav className="hidden lg:flex items-center gap-8 font-bold text-sm text-slate-500 dark:text-slate-400">
+            <Link href={lp('/')} className="hover:text-foreground transition-colors">{t('nav.home')}</Link>
+            <div className="relative group py-2">
+              <button className="flex items-center gap-1 hover:text-foreground transition-colors font-bold text-sm text-slate-500 dark:text-slate-400 focus:outline-none">
+                {t('common.categories') || 'Categories'}
+                <ChevronDown size={14} className="transition-transform group-hover:rotate-180" />
+              </button>
+              <div className="absolute top-full left-0 mt-1 w-56 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 p-2 z-50">
+                <div className="flex flex-col gap-1">
+                  {categories.map((cat) => (
+                    <Link
+                      key={cat._id}
+                      href={lp(`/categories/${cat.slug}`)}
+                      className="px-4 py-2.5 text-sm rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-700 hover:text-black dark:hover:text-white transition-colors"
+                    >
+                      {cat.name}
+                    </Link>
+                  ))}
+                  <div className="border-t border-slate-100 dark:border-slate-800 my-1"></div>
                   <Link
-                    key={cat._id}
-                    href={lp(`/categories/${cat.slug}`)}
-                    className="px-4 py-2.5 text-sm rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-black dark:hover:text-white transition-colors"
+                    href={lp('/categories')}
+                    className="px-4 py-2 text-center text-xs font-bold text-primary hover:bg-primary/5 hover:text-black dark:hover:bg-primary/10 rounded-xl transition-colors block"
                   >
-                    {cat.name}
+                    View All
                   </Link>
-                ))}
-                <div className="border-t border-slate-100 dark:border-slate-800 my-1"></div>
-                <Link
-                  href={lp('/categories')}
-                  className="px-4 py-2 text-center text-xs font-bold text-primary hover:bg-primary/5 hover:text-black dark:hover:bg-primary/10 rounded-xl transition-colors block"
-                >
-                  View All
-                </Link>
+                </div>
               </div>
             </div>
-          </div>
-          <Link href={lp('/new')} className="hover:text-foreground transition-colors">{t('nav.new')}</Link>
-          <Link href={lp('/trending')} className="hover:text-foreground transition-colors">{t('nav.trending')}</Link>
-          <Link href={lp('/blog')} className="hover:text-foreground transition-colors">{t('nav.blog')}</Link>
-        </nav>
+            <Link href={lp('/new')} className="hover:text-foreground transition-colors">{t('nav.new')}</Link>
+            <Link href={lp('/trending')} className="hover:text-foreground transition-colors">{t('nav.trending')}</Link>
+            <Link href={lp('/blog')} className="hover:text-foreground transition-colors">{t('nav.blog')}</Link>
+          </nav>
 
-        {/* Search & Actions */}
-        <div className="flex items-center gap-3">
-          <form onSubmit={handleSearch} className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 w-full max-w-[220px] focus-within:ring-2 focus-within:ring-primary/20 transition-all">
-            <Search size={16} className="text-slate-400 shrink-0" />
-            <input
-              type="text"
-              placeholder={t('nav.search_placeholder')}
-              className="bg-transparent border-none outline-none text-sm w-full text-foreground placeholder:text-slate-400"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </form>
+          {/* Search & Actions */}
+          <div className="flex items-center gap-3">
+            <form onSubmit={handleSearch} className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 w-full max-w-[220px] focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+              <Search size={16} className="text-slate-400 shrink-0" />
+              <input
+                type="text"
+                placeholder={t('nav.search_placeholder')}
+                className="bg-transparent border-none outline-none text-sm w-full text-foreground placeholder:text-slate-400"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </form>
 
-          <div className="flex items-center gap-2 border-l border-slate-200 dark:border-slate-800 pl-3">
-            <LanguageSwitcher />
-            <ThemeToggle />
-            <button
-              className="lg:hidden p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-foreground transition-colors"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            >
-              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            <div className="flex items-center gap-2 border-l border-slate-200 dark:border-slate-800 pl-3">
+              <LanguageSwitcher />
+              <ThemeToggle />
+              <button
+                className="lg:hidden p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-foreground transition-colors"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              >
+                {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
       </header>
 
       {/* Mobile Menu Overlay */}

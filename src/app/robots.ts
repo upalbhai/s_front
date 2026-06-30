@@ -17,6 +17,9 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
         disallow: '/admin/',
       }
     ],
-    sitemap: `${site.siteUrl}/sitemap.xml`,
+    sitemap: [
+      `${site.siteUrl}/sitemap.xml`,
+      `${site.siteUrl}/sitemap_index.xml`,
+    ],
   };
 }

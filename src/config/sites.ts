@@ -102,10 +102,10 @@ const SITES: Record<SiteId, SiteConfig> = {
       home: {
         title: 'SoundboardMax: 100K+ Meme Soundboard Unblocked and Sound Buttons',
         description:
-          'Explore thousands of meme soundboard including sound buttons, soundboard unblocked, prank sounds, meme buttons, and sound effects on soundboardmax.net.',
+          'Explore thousands of funny sound buttons, meme soundboard and viral sound effects completely free. Create your own custom Soundboard buttons on any device including smartphone, desktop or tablet.',
         keywords:
           'soundboard, meme soundboard, meme soundboard unblocked, unblocked soundboard, sound buttons, meme sounds, viral meme sounds, funny meme sounds, meme sound effects, free soundboard, free sound effects, viral sounds, unblocked sound buttons, audio effects, online soundboard, soundboard online, prank sounds, funny soundboard',
-        h1: 'SoundBoardMax.net: Play Viral Meme Soundboard and Sound Buttons Unblocked',
+        h1: 'Play Viral Meme Soundboard and Sound Buttons Unblocked',
       },
       trending: {
         title: 'Trending Meme Soundboard: Popular Sound Buttons',
