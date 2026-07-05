@@ -115,7 +115,7 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
 
       {/* ── 3D Button ── */}
       <div
-        className="relative cursor-pointer select-none"
+        className="relative cursor-pointer select-none active:scale-[0.97] transition-transform duration-75"
         style={{ width: 92, height: 102 }}
         onClick={handlePlay}
       >
@@ -147,11 +147,11 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
 
         {/* Button cylinder bottom curve (darker shade of button color) */}
         <div
-          className="absolute rounded-[50%] transition-all duration-75 ease-out"
+          className="absolute rounded-[50%] transition-all duration-100 ease-out"
           style={{
             width: 70,
             height: 52,
-            bottom: isThisPlaying ? 8 : 14,
+            bottom: isThisPlaying ? 10 : 14,
             left: 11,
             backgroundColor: color.dark,
             zIndex: 3,
@@ -160,11 +160,11 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
 
         {/* Button cylinder vertical wall connecting bottom and top cap */}
         <div
-          className="absolute transition-all duration-75 ease-out"
+          className="absolute transition-all duration-100 ease-out"
           style={{
             width: 70,
-            height: isThisPlaying ? 8 : 14,
-            bottom: isThisPlaying ? 34 : 40,
+            height: isThisPlaying ? 10 : 14,
+            bottom: isThisPlaying ? 36 : 40,
             left: 11,
             backgroundColor: color.dark,
             zIndex: 3,
@@ -173,13 +173,16 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
 
         {/* Button top cap (main color) — moves down when playing */}
         <div
-          className="absolute rounded-[50%] transition-all duration-75 ease-out"
+          className="absolute rounded-[50%] transition-all duration-100 ease-out"
           style={{
             width: 70,
             height: 52,
-            bottom: isThisPlaying ? 16 : 28,
+            bottom: isThisPlaying ? 20 : 28,
             left: 11,
             backgroundColor: color.main,
+            boxShadow: isThisPlaying
+              ? 'inset 0 -2px 4px rgba(0,0,0,0.15)'
+              : 'inset 0 -4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.08)',
             zIndex: 4,
           }}
         />

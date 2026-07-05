@@ -26,9 +26,10 @@ const getFullUrl = (url: string) => {
 };
 
 export default function SoundDetailClient({ sound, relatedSounds, h1Title, uiDescription }: any) {
-  const { currentSound, isPlaying, playSound } = useAudio();
+  const { currentSound, isPlaying, isLoading, playSound } = useAudio();
   const lp = useLocalePath();
   const isThisPlaying = currentSound?._id === sound._id && isPlaying;
+  const isThisLoading = currentSound?._id === sound._id && isLoading;
 
 
   const handlePlayClick = () => {
@@ -38,8 +39,7 @@ export default function SoundDetailClient({ sound, relatedSounds, h1Title, uiDes
   const handleCopyLink = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    const categorySlug = sound.category?.slug || 'uncategorized';
-    const soundLink = `/${categorySlug}/${sound.slug}`;
+    const soundLink = lp(`/sound/${sound.slug}`);
     navigator.clipboard.writeText(`${window.location.origin}${soundLink}`);
     toast.success('Link copied!');
   };
@@ -47,8 +47,7 @@ export default function SoundDetailClient({ sound, relatedSounds, h1Title, uiDes
   const handleShare = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    const categorySlug = sound.category?.slug || 'uncategorized';
-    const soundLink = `/${categorySlug}/${sound.slug}`;
+    const soundLink = lp(`/sound/${sound.slug}`);
     if (navigator.share) {
       try {
         await navigator.share({
@@ -195,7 +194,9 @@ export default function SoundDetailClient({ sound, relatedSounds, h1Title, uiDes
                   boxShadow: isThisPlaying ? 'none' : `0 12px 24px ${color.shadow}`,
                 }}
               >
-
+                {isThisLoading && (
+                  <div className="w-16 h-16 border-4 border-white/30 border-t-white rounded-full animate-spin" />
+                )}
               </div>
             </div>
           </div>

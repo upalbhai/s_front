@@ -72,7 +72,7 @@ export default function LanguageSwitcher() {
   const handleLanguageChange = (newLocale: Locale) => {
     setLocale(newLocale);
     const pathWithoutLocale = getPathWithoutLocale(pathname);
-    
+
     // Use full navigation so the middleware processes the locale prefix correctly
     if (newLocale === 'en') {
       window.location.href = pathWithoutLocale;
@@ -109,7 +109,7 @@ export default function LanguageSwitcher() {
             className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-bold transition-colors cursor-pointer
               ${lang.code === locale
                 ? (isDark ? 'bg-white/10 text-white' : 'bg-slate-950/10 text-slate-950')
-                : (isDark ? 'text-slate-300 hover:bg-slate-800' : 'text-slate-700 hover:bg-slate-100')
+                : (isDark ? 'text-white hover:bg-slate-800' : 'text-slate-700 hover:bg-slate-100')
               }`}
           >
             <span className="text-base leading-none w-5 shrink-0">{lang.flag}</span>

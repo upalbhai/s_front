@@ -13,7 +13,7 @@ export default function NewAdditionsSection({ newSounds = [] }: NewAdditionsSect
   const { t } = useTranslation();
   const lp = useLocalePath();
   return (
-    <section className="max-w-7xl mx-auto px-4 border-t border-slate-200 dark:border-slate-800">
+    <section className="max-w-7xl mx-auto px-4 py-8 md:py-12 border-t border-slate-200 dark:border-slate-800">
       <div className="flex items-center justify-between mb-10">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800/50 flex items-center justify-center text-foreground">
@@ -21,7 +21,7 @@ export default function NewAdditionsSection({ newSounds = [] }: NewAdditionsSect
           </div>
           <div>
             <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">{t('home.new_additions.badge')}</p>
-            <h2 className="text-2xl md:text-3xl font-black tracking-tight text-foreground">{t('home.new_additions.title')}</h2>
+            <h2 className="text-2xl md:text-3xl font-black tracking-tight text-foreground">New Soundboards</h2>
           </div>
         </div>
         <Link href={lp('/new')} className="flex items-center gap-1 font-bold text-sm text-slate-500 hover:text-foreground transition-colors group">

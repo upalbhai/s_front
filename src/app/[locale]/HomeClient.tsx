@@ -7,6 +7,7 @@ import useDebounce from '@/hooks/useDebounce';
 import HeroSection from '@/components/home/HeroSection';
 import SearchResultsSection from '@/components/home/SearchResultsSection';
 import TrendingSoundsSection from '@/components/home/TrendingSoundsSection';
+import NewAdditionsSection from '@/components/home/NewAdditionsSection';
 import { useSite } from '@/context/SiteProvider';
 import { useTranslation } from '@/i18n';
 
@@ -184,8 +185,9 @@ export default function HomeClient({
         onLoadMore={handleLoadMoreTabSounds}
       />
 
+      <NewAdditionsSection newSounds={newSounds} />
+
       {/* <CategoryGridSection categories={homeData.categories} /> */}
-      {/* <NewAdditionsSection newSounds={homeData.newSounds} /> */}
       {/* <FeaturesSection /> */}
       {/* <TestimonialsSection /> */}
       {/* <FaqSection /> */}

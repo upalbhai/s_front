@@ -17,6 +17,7 @@ export interface Sound {
 interface AudioContextProps {
   currentSound: Sound | null;
   isPlaying: boolean;
+  isLoading: boolean;
   currentTime: number;
   duration: number;
   playSound: (sound: Sound) => void;
@@ -53,6 +54,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const [currentSound, setCurrentSound] = useState<Sound | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -64,6 +66,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (currentSound?._id === sound._id) {
       togglePlay();
     } else {
+      setIsLoading(true);
       setCurrentSound(sound);
       setIsPlaying(true);
       setCurrentTime(0);
@@ -78,6 +81,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       } catch (err) {
         console.error('Audio playback failed:', err);
         setIsPlaying(false);
+        setIsLoading(false);
       }
     }
   };
@@ -113,6 +117,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
     setCurrentSound(null);
     setIsPlaying(false);
+    setIsLoading(false);
     setCurrentTime(0);
     setDuration(0);
   };
@@ -146,13 +151,17 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, [isPlaying, currentSound]);
 
   return (
-    <AudioContext.Provider value={{ currentSound, isPlaying, currentTime, duration, playSound, pauseSound, togglePlay, closePlayer }}>
+    <AudioContext.Provider value={{ currentSound, isPlaying, isLoading, currentTime, duration, playSound, pauseSound, togglePlay, closePlayer }}>
       {children}
       <audio
         ref={audioRef}
         onTimeUpdate={handleTimeUpdate}
         onDurationChange={handleDurationChange}
         onEnded={handleEnded}
+        onWaiting={() => setIsLoading(true)}
+        onPlaying={() => setIsLoading(false)}
+        onCanPlay={() => setIsLoading(false)}
+        onLoadStart={() => setIsLoading(true)}
         preload="none"
       />
 
@@ -206,7 +215,9 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                 onClick={togglePlay}
                 className="w-9 h-9 rounded-xl bg-sky-500 hover:bg-sky-600 text-white flex items-center justify-center transition-all active:scale-95 cursor-pointer shadow-md shadow-sky-500/20"
               >
-                {isPlaying ? (
+                {isLoading ? (
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : isPlaying ? (
                   <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
                     <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
                   </svg>
