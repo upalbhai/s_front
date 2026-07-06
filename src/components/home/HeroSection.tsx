@@ -101,7 +101,7 @@ export default function HeroSection({
               <span>{resolvedBadge}</span>
             </div> */}
 
-            <h1 className="text-2xl sm:text-3xl md:text-5xl font-black tracking-tight leading-[1.05] text-foreground max-w-4xl mx-auto">
+            <h1 className="text-3xl  font-black tracking-tight leading-[1.05] text-foreground max-w-4xl mx-auto">
               {resolvedTitle}
             </h1>
 

@@ -12,6 +12,8 @@ export default function AdminHomePage() {
   const { ready } = useAdminSession();
   const [sounds, setSounds] = useState<AdminSound[]>([]);
   const [categories, setCategories] = useState<AdminCategory[]>([]);
+  const [totalSounds, setTotalSounds] = useState(0);
+  const [totalCategories, setTotalCategories] = useState(0);
   const [loading, setLoading] = useState(true);
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -31,7 +33,10 @@ export default function AdminHomePage() {
         ]);
 
         setSounds(Array.isArray(soundsResponse.data.sounds) ? soundsResponse.data.sounds : []);
+        setTotalSounds(soundsResponse.data.total || 0);
+
         setCategories(Array.isArray(categoriesResponse.data.categories) ? categoriesResponse.data.categories : []);
+        setTotalCategories(categoriesResponse.data.total || 0);
       } catch (error) {
         console.error('Failed to load admin overview', error);
       } finally {
@@ -43,7 +48,6 @@ export default function AdminHomePage() {
   }, [ready]);
 
   const isDark = mounted && resolvedTheme === 'dark';
-  const liveSounds = sounds.filter((sound) => sound.isPublished !== false).length;
 
   if (!ready) {
     return (
@@ -103,9 +107,9 @@ export default function AdminHomePage() {
       {/* Metrics Grid */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[
-          { icon: Music, label: 'Sounds', value: sounds.length, color: 'text-sky-500', bg: 'bg-sky-500/10' },
-          { icon: FolderOpen, label: 'Categories', value: categories.length, color: 'text-indigo-500', bg: 'bg-indigo-500/10' },
-          { icon: ArrowRight, label: 'Live sounds', value: liveSounds, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+          { icon: Music, label: 'Sounds', value: totalSounds, color: 'text-sky-500', bg: 'bg-sky-500/10' },
+          { icon: FolderOpen, label: 'Categories', value: totalCategories, color: 'text-indigo-500', bg: 'bg-indigo-500/10' },
+          { icon: ArrowRight, label: 'Live sounds', value: totalSounds, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
         ].map((metric) => (
           <article 
             key={metric.label} 

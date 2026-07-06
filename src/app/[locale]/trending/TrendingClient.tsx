@@ -1,9 +1,8 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import api from '@/services/api';
 import SoundCard from '@/components/SoundCard';
-import useInfiniteScroll from '@/hooks/useInfiniteScroll';
 import { Search } from 'lucide-react';
 import HeroSection from '@/components/home/HeroSection';
 import { useTranslation } from '@/i18n';
@@ -45,24 +44,21 @@ export default function TrendingClient({ h1Title, shortDescription, initialSound
     }
   }, []);
 
+  const isFirstRender = useRef(true);
+
   // When debounced query changes, refetch page 1
   useEffect(() => {
-    if (!debouncedQuery && initialSounds.length > 0 && sounds === initialSounds && page === 1) {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
       return;
     }
     fetchPage(1, false, debouncedQuery);
-  }, [debouncedQuery, fetchPage, initialSounds, sounds, page]);
+  }, [debouncedQuery, fetchPage]);
 
   const loadMore = useCallback(() => {
     if (loading || !hasMore) return;
     fetchPage(page + 1, true, debouncedQuery);
   }, [fetchPage, hasMore, loading, page, debouncedQuery]);
-
-  const sentinelRef = useInfiniteScroll({
-    hasMore,
-    isLoading: loading,
-    onLoadMore: loadMore,
-  });
 
   return (
     <div className="bg-background text-foreground animate-in fade-in duration-500 min-h-screen">
@@ -105,21 +101,23 @@ export default function TrendingClient({ h1Title, shortDescription, initialSound
           )
         )}
 
-        {/* Infinite Scroll / Loading State Indicator */}
-        <div ref={sentinelRef} className="h-4" />
-
-        {loading && (
-          <div className="flex flex-col items-center justify-center mt-16 gap-3">
-            <div className="w-8 h-8 rounded-full border-4 border-slate-200 dark:border-slate-800 border-t-primary dark:border-t-primary animate-spin" />
-            <span className="text-xs font-black text-foreground/80 uppercase tracking-widest animate-pulse">{t('common.loading')}</span>
-          </div>
-        )}
-
-        {!loading && initialized && hasMore && (
+        {/* Load More Button */}
+        {hasMore && initialized && (
           <div className="flex justify-center mt-12">
-            <span className="text-xs font-bold text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-slate-900 px-4 py-2 rounded-full border border-slate-200/40 dark:border-slate-800/40 shadow-sm">
-              {t('trending.scroll_more')}
-            </span>
+            <button
+              onClick={loadMore}
+              disabled={loading}
+              className="px-8 py-3 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors disabled:opacity-50 flex items-center justify-center min-w-[200px]"
+            >
+              {loading ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 rounded-full border-2 border-slate-400 dark:border-slate-500 border-t-transparent dark:border-t-transparent animate-spin" />
+                  <span>{t('common.loading')}</span>
+                </div>
+              ) : (
+                t('common.load_more')
+              )}
+            </button>
           </div>
         )}
       </section>

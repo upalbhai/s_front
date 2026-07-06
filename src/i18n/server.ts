@@ -3,7 +3,7 @@ import type { Locale } from './index';
 // We import the default fallback explicitly
 import soundbuttonsEn from './locales/soundbuttons/en.json';
 
-export async function getTranslations(siteId: string, loc: Locale) {
+export async function getTranslationsRaw(siteId: string, loc: Locale): Promise<Record<string, string>> {
   let translations: Record<string, string> | null = null;
 
   try {
@@ -31,6 +31,12 @@ export async function getTranslations(siteId: string, loc: Locale) {
       translations = soundbuttonsEn as Record<string, string>;
     }
   }
+
+  return translations as Record<string, string>;
+}
+
+export async function getTranslations(siteId: string, loc: Locale) {
+  const translations = await getTranslationsRaw(siteId, loc);
 
   // Return a translation function `t`
   return function t(key: string, vars?: Record<string, string>): string {

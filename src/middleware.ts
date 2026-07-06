@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { resolveSiteId, getSiteConfig } from '@/config/sites';
 
-function applySiteHeaders(response: NextResponse, siteId: string): NextResponse {
+function applySiteHeaders(response: NextResponse, siteId: string, locale?: string): NextResponse {
   response.headers.set('x-site-id', siteId);
+  if (locale) {
+    response.headers.set('x-locale', locale);
+  }
   response.cookies.set('site-id', siteId, { path: '/', sameSite: 'lax' });
   return response;
 }
@@ -43,6 +46,7 @@ export async function middleware(request: NextRequest) {
     return applySiteHeaders(
       NextResponse.rewrite(new URL(newPathname, request.url)),
       siteId,
+      defaultLocale
     );
   }
 
@@ -52,6 +56,7 @@ export async function middleware(request: NextRequest) {
     return applySiteHeaders(
       NextResponse.redirect(new URL(newPathname || '/', request.url)),
       siteId,
+      defaultLocale
     );
   }
 
@@ -61,11 +66,12 @@ export async function middleware(request: NextRequest) {
     return applySiteHeaders(
       NextResponse.redirect(new URL(newPathname, request.url)),
       siteId,
+      defaultLocale
     );
   }
 
   // Allow other supported locales to continue naturally
-  return applySiteHeaders(NextResponse.next(), siteId);
+  return applySiteHeaders(NextResponse.next(), siteId, firstSegment);
 }
 
 export const config = {

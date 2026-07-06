@@ -45,7 +45,7 @@ export default function TrendingSoundsSection({
             <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">
               {t('home.trending.viral_hits') || 'Viral Hits'}
             </p>
-            <h2 className="text-2xl md:text-3xl font-black tracking-tight text-foreground transition-all duration-300">
+            <h2 className="text-2xl font-black tracking-tight text-foreground transition-all duration-300">
               {activeTabInfo.label} {t('home.tabs.title') || 'Sounds'}
             </h2>
           </div>
@@ -57,11 +57,10 @@ export default function TrendingSoundsSection({
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
-              className={`px-5 py-2.5 rounded-full font-extrabold text-xs uppercase tracking-wider transition-all duration-300 cursor-pointer ${
-                activeTab === tab.id
+              className={`px-5 py-2.5 rounded-full font-extrabold text-xs uppercase tracking-wider transition-all duration-300 cursor-pointer ${activeTab === tab.id
                   ? 'bg-slate-950 text-white dark:bg-white dark:text-slate-950 shadow-md border-2 border-yellow-400 dark:border-yellow-450 scale-[1.03] ring-2 ring-yellow-400/20'
                   : 'text-slate-500 hover:text-foreground dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/40'
-              }`}
+                }`}
             >
               {tab.label}
             </button>

@@ -57,7 +57,7 @@ const Header = ({ categories = [] }: { categories?: any[] }) => {
               </button>
               <div className="absolute top-full left-0 mt-1 w-56 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 p-2 z-50">
                 <div className="flex flex-col gap-1">
-                  {categories.map((cat) => (
+                  {categories.slice(0, 25).map((cat) => (
                     <Link
                       key={cat._id}
                       href={lp(`/categories/${cat.slug}`)}
@@ -66,13 +66,13 @@ const Header = ({ categories = [] }: { categories?: any[] }) => {
                       {cat.name}
                     </Link>
                   ))}
-                  <div className="border-t border-slate-100 dark:border-slate-800 my-1"></div>
+                  {/* <div className="border-t border-slate-100 dark:border-slate-800 my-1"></div>
                   <Link
                     href={lp('/categories')}
                     className="px-4 py-2 text-center text-xs font-bold text-primary hover:bg-primary/5 hover:text-black dark:hover:bg-primary/10 rounded-xl transition-colors block"
                   >
                     View All
-                  </Link>
+                  </Link> */}
                 </div>
               </div>
             </div>
@@ -132,7 +132,7 @@ const Header = ({ categories = [] }: { categories?: any[] }) => {
               <div className="mt-4 pt-6 border-t border-slate-200 dark:border-slate-800">
                 <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-4">{t('common.categories')}</p>
                 <div className="grid grid-cols-2 gap-3">
-                  {categories.map((cat) => (
+                  {categories.slice(0, 25).map((cat) => (
                     <Link
                       key={cat._id}
                       href={lp(`/categories/${cat.slug}`)}
@@ -142,13 +142,13 @@ const Header = ({ categories = [] }: { categories?: any[] }) => {
                       {cat.name}
                     </Link>
                   ))}
-                  <Link
+                  {/* <Link
                     href={lp('/categories')}
                     className="text-sm font-bold p-3 rounded-2xl bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 text-center flex items-center justify-center transition-colors col-span-2 mt-2"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     View All
-                  </Link>
+                  </Link> */}
                 </div>
               </div>
             </nav>

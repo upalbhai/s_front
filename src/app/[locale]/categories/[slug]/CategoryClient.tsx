@@ -1,10 +1,9 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import api from '@/services/api';
 import SoundCard from '@/components/SoundCard';
 import { Search } from 'lucide-react';
-import useInfiniteScroll from '@/hooks/useInfiniteScroll';
 import useDebounce from '@/hooks/useDebounce';
 import HeroSection from '@/components/home/HeroSection';
 import { useTranslation } from '@/i18n';
@@ -42,7 +41,13 @@ export default function CategoryClient({ initialSounds, totalSounds, categoryId,
     setSearchTerm(debouncedSearch.trim());
   }, [debouncedSearch]);
 
+  const isFirstRender = useRef(true);
+
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     if (!searchTerm) {
       setSounds(initialSounds || []);
       setTotal(totalSounds || 0);
@@ -56,12 +61,6 @@ export default function CategoryClient({ initialSounds, totalSounds, categoryId,
     if (loading || !hasMore) return;
     fetchPage(page + 1, true);
   }, [fetchPage, hasMore, loading, page]);
-
-  const sentinelRef = useInfiniteScroll({
-    hasMore,
-    isLoading: loading,
-    onLoadMore: loadMore,
-  });
 
   return (
     <>
@@ -102,12 +101,23 @@ export default function CategoryClient({ initialSounds, totalSounds, categoryId,
         )
       )}
 
-      <div ref={sentinelRef} style={{ height: 1 }} />
-      {(loading || hasMore) && (
-        <div className="pagination" style={{ display: 'flex', justifyContent: 'center', gap: '2rem', marginTop: '2rem', alignItems: 'center' }}>
-          <span className="text-sm font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider animate-pulse">
-            {loading ? t('common.loading') : t('common.scroll_more')}
-          </span>
+      {/* Load More Button */}
+      {hasMore && (
+        <div className="flex justify-center mt-12">
+          <button
+            onClick={loadMore}
+            disabled={loading}
+            className="px-8 py-3 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors disabled:opacity-50 flex items-center justify-center min-w-[200px]"
+          >
+            {loading ? (
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 rounded-full border-2 border-slate-400 dark:border-slate-500 border-t-transparent dark:border-t-transparent animate-spin" />
+                <span>{t('common.loading')}</span>
+              </div>
+            ) : (
+              t('common.load_more')
+            )}
+          </button>
         </div>
       )}
     </>

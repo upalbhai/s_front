@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import api from '@/services/api';
 import SoundCard from '@/components/SoundCard';
 import { Search } from 'lucide-react';
@@ -44,13 +44,16 @@ export default function NewClient({ h1Title, shortDescription, initialSounds = [
     }
   }, []);
 
+  const isFirstRender = useRef(true);
+
   // When debounced query changes, refetch page 1
   useEffect(() => {
-    if (!debouncedQuery && initialSounds.length > 0 && sounds === initialSounds && page === 1) {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
       return;
     }
     fetchPage(1, false, debouncedQuery);
-  }, [debouncedQuery, fetchPage, initialSounds, sounds, page]);
+  }, [debouncedQuery, fetchPage]);
 
   const loadMore = useCallback(() => {
     if (loading || !hasMore) return;

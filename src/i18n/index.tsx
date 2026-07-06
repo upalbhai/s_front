@@ -62,13 +62,17 @@ const STORAGE_KEY = 'sbmax_locale';
 
 export function LanguageProvider({
   siteId,
+  initialLocale = 'en',
+  initialTranslations = {},
   children,
 }: {
   siteId: string;
+  initialLocale?: Locale;
+  initialTranslations?: Record<string, string>;
   children: React.ReactNode;
 }) {
-  const [locale, setLocaleState] = useState<Locale>('en');
-  const [translations, setTranslations] = useState<Record<string, string>>({});
+  const [locale, setLocaleState] = useState<Locale>(initialLocale);
+  const [translations, setTranslations] = useState<Record<string, string>>(initialTranslations);
 
   const loadTranslations = useCallback(
     async (loc: Locale) => {
@@ -79,24 +83,20 @@ export function LanguageProvider({
   );
 
   useEffect(() => {
-    let initial: Locale = 'en';
-
-    if (typeof window !== 'undefined') {
-      const pathSegments = window.location.pathname.split('/').filter(Boolean);
-      const firstSegment = pathSegments[0] as Locale;
-      if (SUPPORTED_LOCALES.some((l) => l.code === firstSegment)) {
-        initial = firstSegment;
-      }
+    // We already have initialLocale and initialTranslations from the server.
+    // However, if we need to sync localStorage:
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored && stored !== initialLocale && SUPPORTED_LOCALES.some((l) => l.code === stored)) {
+      // we might want to respect URL over local storage, so let's stick with initialLocale,
+      // but ensure it's in localStorage and document lang is correct.
     }
-
-    setLocaleState(initial);
-    loadTranslations(initial);
-    localStorage.setItem(STORAGE_KEY, initial);
-
+    
+    localStorage.setItem(STORAGE_KEY, initialLocale);
+    
     if (typeof window !== 'undefined') {
-      document.documentElement.lang = initial;
+      document.documentElement.lang = initialLocale;
     }
-  }, [loadTranslations]);
+  }, [initialLocale]);
 
   const setLocale = useCallback(
     (loc: Locale) => {

@@ -11,6 +11,9 @@ import { cn } from '@/lib/utils';
 import { getRequestSite } from '@/config/sites';
 import { buildSeoMetadata } from '@/lib/seo';
 import { Toaster } from 'react-hot-toast';
+import { headers } from 'next/headers';
+import { getTranslationsRaw } from '@/i18n/server';
+import type { Locale } from '@/i18n';
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -53,10 +56,14 @@ export default async function RootLayout({
     console.error('Failed to fetch categories:', err);
   }
 
+  const headersList = await headers();
+  const initialLocale = (headersList.get('x-locale') as Locale) || 'en';
+  const initialTranslations = await getTranslationsRaw(site.id, initialLocale);
+
 
   return (
     <html
-      lang="en"
+      lang={initialLocale}
       suppressHydrationWarning
       className={cn('font-sans', geist.variable)}
       data-site={site.id}
@@ -75,7 +82,7 @@ export default async function RootLayout({
           <QueryProvider>
             <AudioProvider>
               <SiteProvider siteId={site.id} config={site}>
-                <LanguageProvider siteId={site.id}>
+                <LanguageProvider siteId={site.id} initialLocale={initialLocale} initialTranslations={initialTranslations}>
                   <AppChrome categories={categories}>{children}</AppChrome>
                   <Toaster
                     position="bottom-right"
