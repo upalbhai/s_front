@@ -29,6 +29,7 @@ export default function BlogEditorPage() {
     seoTitle: '',
     seoDescription: '',
     author: user?.name || 'Sound Buttons Max Team',
+    isPublished: false,
   });
 
   const [featuredImage, setFeaturedImage] = useState<File | null>(null);
@@ -56,6 +57,7 @@ export default function BlogEditorPage() {
         seoTitle: blog.seoTitle || '',
         seoDescription: blog.seoDescription || '',
         author: blog.author || '',
+        isPublished: blog.isPublished ?? false,
       });
     }
   }, [blog]);
@@ -122,7 +124,7 @@ export default function BlogEditorPage() {
     try {
       const submitData = new FormData();
       Object.keys(formData).forEach(key => {
-        if (formData[key as keyof AdminBlogPost]) {
+        if (formData[key as keyof AdminBlogPost] !== undefined) {
           submitData.append(key, formData[key as keyof AdminBlogPost] as string);
         }
       });
@@ -250,7 +252,32 @@ export default function BlogEditorPage() {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <label className="block text-sm font-black text-foreground">
+                    Publish Status
+                  </label>
+                  <span className="text-xs text-slate-500 dark:text-slate-400">
+                    Make this post visible publicly
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, isPublished: !formData.isPublished })}
+                  className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                    formData.isPublished ? 'bg-indigo-600' : 'bg-slate-200 dark:bg-slate-700'
+                  }`}
+                >
+                  <span
+                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                      formData.isPublished ? 'translate-x-5' : 'translate-x-0'
+                    }`}
+                  />
+                </button>
+              </div>
+
               <div>
                 <label className="block text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1.5">
                   Slug *

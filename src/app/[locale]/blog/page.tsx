@@ -34,7 +34,7 @@ export default async function BlogPage({ params, searchParams }: { params: Promi
   let totalPages = 1;
 
   try {
-    const res = await api.get(`/blogs?page=${currentPage}&limit=12`);
+    const res = await api.get(`/blogs?page=${currentPage}&limit=12&isPublished=true`);
     blogs = res.data.blogs || res.data.items || [];
     totalPages = res.data.pages || 1;
   } catch (error) {

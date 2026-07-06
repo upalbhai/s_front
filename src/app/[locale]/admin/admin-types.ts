@@ -42,6 +42,7 @@ export interface AdminBlogPost {
   ogImage?: string;
   featuredImage?: string;
   author?: string;
+  isPublished?: boolean;
   publishedDate?: string;
   createdAt?: string;
   updatedAt?: string;

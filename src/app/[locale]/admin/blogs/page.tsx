@@ -27,6 +27,7 @@ export default function AdminBlogsPage() {
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
+  const [blogToDelete, setBlogToDelete] = useState<string | null>(null);
 
   // ── TanStack Query ────────────────────────────────────────────────────────
   const { data: blogsData, isLoading, refetch, isRefetching } = useQuery({
@@ -50,9 +51,15 @@ export default function AdminBlogsPage() {
     }
   });
 
-  const handleDelete = async (blogId: string) => {
-    if (!window.confirm('Delete this blog post? This cannot be undone.')) return;
-    deleteMutation.mutate(blogId);
+  const handleDelete = (blogId: string) => {
+    setBlogToDelete(blogId);
+  };
+
+  const confirmDelete = () => {
+    if (blogToDelete) {
+      deleteMutation.mutate(blogToDelete);
+      setBlogToDelete(null);
+    }
   };
 
   const columns: ColumnDef<AdminBlogPost>[] = [
@@ -77,6 +84,15 @@ export default function AdminBlogsPage() {
       render: (blog) => (
         <span className="text-sm font-medium text-slate-500 dark:text-slate-400 font-mono">
           {blog.slug || '—'}
+        </span>
+      )
+    },
+    {
+      header: 'Status',
+      id: 'status',
+      render: (blog) => (
+        <span className={`px-2.5 py-1 text-[10px] font-black uppercase tracking-widest rounded-md ${blog.isPublished ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-amber-500/10 text-amber-600 dark:text-amber-400'}`}>
+          {blog.isPublished ? 'Public' : 'Draft'}
         </span>
       )
     },
@@ -159,6 +175,31 @@ export default function AdminBlogsPage() {
           onRowClick={(blog: AdminBlogPost) => router.push(`/admin/blogs/${blog._id}`)}
         />
       </div>
+
+      {blogToDelete && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl max-w-sm w-full p-6 animate-in zoom-in-95 duration-200">
+            <h3 className="text-lg font-black text-foreground mb-2">Delete Blog Post</h3>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
+              Are you sure you want to delete this blog post? This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setBlogToDelete(null)}
+                className="px-4 py-2 rounded-xl text-sm font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="px-4 py-2 rounded-xl text-sm font-bold text-white bg-red-500 hover:bg-red-600 transition-colors shadow-sm hover:shadow-md hover:shadow-red-500/20 active:scale-95"
+              >
+                Delete Post
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
