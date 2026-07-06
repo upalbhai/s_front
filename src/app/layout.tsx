@@ -14,6 +14,7 @@ import { Toaster } from 'react-hot-toast';
 import { headers } from 'next/headers';
 import { getTranslationsRaw } from '@/i18n/server';
 import type { Locale } from '@/i18n';
+import Script from 'next/script';
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -76,6 +77,18 @@ export default async function RootLayout({
     >
       <head>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+        
+        {/* Google tag (gtag.js) */}
+        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-D32CCS2KQJ" strategy="afterInteractive" />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-D32CCS2KQJ');
+          `}
+        </Script>
       </head>
       <body className="antialiased transition-colors duration-300">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>

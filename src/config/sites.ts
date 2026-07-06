@@ -90,7 +90,7 @@ const SITES: Record<SiteId, SiteConfig> = {
     siteName: 'SoundboardMax',
     wordmark: { line1: 'SOUNDBOARD', accent: 'MAX' },
     siteUrl: 'https://soundboardmax.net',
-    logo: '/sites/soundboard/logo.svg',
+    logo: '/sites/soundbuttons/logo.jpeg',
     ogImage: '/sites/soundboard/og-home.svg',
     themeColor: '#e53935',
     primaryColor: '#e53935',

@@ -31,6 +31,22 @@ export interface AdminSound {
   siteIds?: string[];
 }
 
+export interface AdminBlogPost {
+  _id: string;
+  title: string;
+  slug: string;
+  content: string;
+  excerpt?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  ogImage?: string;
+  featuredImage?: string;
+  author?: string;
+  publishedDate?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export function getStoredAdminUser(): AdminUser | null {
   if (typeof window === 'undefined') {
     return null;
