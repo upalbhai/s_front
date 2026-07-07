@@ -5,16 +5,32 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Calendar, User, ArrowLeft } from 'lucide-react';
 import { notFound } from 'next/navigation';
+import { headers } from 'next/headers';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+
+const getImageUrl = (path: string) => {
+  if (!path) return '';
+  if (path.startsWith('http')) return path;
+  let url = '';
+  if (process.env.NODE_ENV === 'production') {
+    url = path;
+  } else {
+    url = API_URL.replace('/api/v1', '') + path;
+  }
+  console.log('getImageUrl log:', { path, url, env: process.env.NODE_ENV });
+  return url;
+};
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ locale: string; slug: string }>;
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const { locale, slug } = await params;
+  const { slug } = await params;
   const site = await getRequestSite();
+  const headersList = await headers();
+  const locale = headersList.get('x-locale') || 'en';
 
   try {
     const res = await api.get(`/blogs/${slug}`);
@@ -24,22 +40,22 @@ export async function generateMetadata({
       site,
       title: blog.seoTitle || `${blog.title} | ${site.siteName}`,
       description: blog.seoDescription || blog.excerpt || blog.title,
-      canonicalPath: `/blog/${slug}`,
+      canonicalPath: `/blogs/${slug}`,
       locale,
-      image: blog.ogImage ? API_URL.replace('/api/v1', '') + blog.ogImage : undefined,
+      image: blog.ogImage ? getImageUrl(blog.ogImage) : undefined,
     });
   } catch (error) {
     return buildSeoMetadata({
       site,
       title: `Blog | ${site.siteName}`,
       description: `Read our latest articles on ${site.siteName}`,
-      canonicalPath: `/blog/${slug}`,
+      canonicalPath: `/blogs/${slug}`,
       locale,
     });
   }
 }
 
-export default async function BlogPostPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
+export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
   let blog = null;
@@ -62,7 +78,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ local
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-500/10 via-slate-50/50 dark:via-slate-900 to-slate-50 dark:to-slate-950" />
 
         <div className="max-w-4xl mx-auto relative z-10">
-          <Link href="/blog" className="inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors mb-8 group">
+          <Link href="/blogs" className="inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors mb-8 group">
             <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
             Back to Articles
           </Link>
@@ -95,7 +111,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ local
         <div className="max-w-5xl mx-auto px-4 -mt-8 relative z-20">
           <div className="aspect-[21/9] bg-slate-200 dark:bg-slate-800 rounded-3xl overflow-hidden shadow-2xl shadow-indigo-500/10 border-4 border-white dark:border-slate-900">
             <img
-              src={API_URL.replace('/api/v1', '') + blog.featuredImage}
+              src={getImageUrl(blog.featuredImage)}
               alt={blog.title}
               className="w-full h-full object-cover"
             />

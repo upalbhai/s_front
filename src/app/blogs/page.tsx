@@ -4,28 +4,38 @@ import { buildSeoMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Calendar, User, ArrowRight } from 'lucide-react';
+import { headers } from 'next/headers';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}): Promise<Metadata> {
-  const { locale } = await params;
+export async function generateMetadata(): Promise<Metadata> {
   const site = await getRequestSite();
+  const headersList = await headers();
+  const locale = headersList.get('x-locale') || 'en';
 
   return buildSeoMetadata({
     site,
     title: `Blog | ${site.siteName}`,
     description: `Read the latest articles and updates from ${site.siteName}`,
-    canonicalPath: '/blog',
+    canonicalPath: '/blogs',
     locale,
   });
 }
 
-export default async function BlogPage({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<{ page?: string }> }) {
-  const { locale } = await params;
+const getImageUrl = (path: string) => {
+  if (!path) return '';
+  if (path.startsWith('http')) return path;
+  let url = '';
+  if (process.env.NODE_ENV === 'production') {
+    url = path;
+  } else {
+    url = API_URL.replace('/api/v1', '') + path;
+  }
+  console.log('getImageUrl log:', { path, url, env: process.env.NODE_ENV });
+  return url;
+};
+
+export default async function BlogPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
   const { page } = await searchParams;
   const currentPage = Math.max(Number(page) || 1, 1);
   const site = await getRequestSite();
@@ -36,6 +46,7 @@ export default async function BlogPage({ params, searchParams }: { params: Promi
   try {
     const res = await api.get(`/blogs?page=${currentPage}&limit=12&isPublished=true`);
     blogs = res.data.blogs || res.data.items || [];
+    console.log('Blogs fetched on server:', blogs);
     totalPages = res.data.pages || 1;
   } catch (error) {
     console.error('Error fetching blogs:', error);
@@ -69,11 +80,11 @@ export default async function BlogPage({ params, searchParams }: { params: Promi
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {blogs.map((blog: any) => (
-              <Link key={blog._id} href={`/blog/${blog.slug}`} className="group flex flex-col bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-300 hover:-translate-y-1">
+              <Link key={blog._id} href={`/blogs/${blog.slug}`} className="group flex flex-col bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl hover:shadow-indigo-500/10 transition-all duration-300 hover:-translate-y-1">
                 <div className="aspect-[16/10] bg-slate-100 dark:bg-slate-800 relative overflow-hidden">
                   {blog.featuredImage ? (
                     <img
-                      src={API_URL.replace('/api/v1', '') + blog.featuredImage}
+                      src={getImageUrl(blog.featuredImage)}
                       alt={blog.title}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
@@ -118,7 +129,7 @@ export default async function BlogPage({ params, searchParams }: { params: Promi
             {Array.from({ length: totalPages }).map((_, i) => (
               <Link
                 key={i}
-                href={`/blog?page=${i + 1}`}
+                href={`/blogs?page=${i + 1}`}
                 className={`w-10 h-10 rounded-xl flex items-center justify-center font-black transition-all ${currentPage === i + 1
                   ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
                   : 'bg-white dark:bg-slate-900 text-slate-500 border border-slate-200 dark:border-slate-800 hover:border-indigo-500/50 hover:text-indigo-500'

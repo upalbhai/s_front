@@ -12,7 +12,7 @@ export default function ArticleClient({ blog }: { blog: any }) {
       <nav className="flex items-center gap-2 text-sm font-medium text-slate-500 dark:text-slate-400 mb-8">
         <Link href={lp('/')} className="hover:text-foreground transition-colors">Home</Link>
         <ChevronRight size={14} />
-        <Link href={lp('/blog')} className="hover:text-foreground transition-colors">Blog</Link>
+        <Link href="/blogs" className="hover:text-foreground transition-colors">Blog</Link>
         <ChevronRight size={14} />
         <span className="text-primary font-bold">{blog.title}</span>
       </nav>

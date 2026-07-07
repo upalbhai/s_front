@@ -73,6 +73,11 @@ export default function LanguageSwitcher() {
     setLocale(newLocale);
     const pathWithoutLocale = getPathWithoutLocale(pathname);
 
+    if (pathWithoutLocale.startsWith('/blogs')) {
+      window.location.href = pathWithoutLocale;
+      return;
+    }
+
     // Use full navigation so the middleware processes the locale prefix correctly
     if (newLocale === 'en') {
       window.location.href = pathWithoutLocale;

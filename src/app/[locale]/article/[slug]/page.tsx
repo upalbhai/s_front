@@ -22,7 +22,7 @@ export async function generateMetadata({
     const postTitle = blog.title;
     const authorName = blog.author || site.siteName;
     const ogImageUrl =
-      blog.ogImage || blog.featuredImage || `${site.siteUrl}/blog/default-image.png`;
+      blog.ogImage || blog.featuredImage || `${site.siteUrl}/blogs/default-image.png`;
     const publishedTime = blog.publishedDate
       ? new Date(blog.publishedDate).toISOString()
       : new Date(blog.createdAt).toISOString();
@@ -37,7 +37,7 @@ export async function generateMetadata({
         blog.seoDescription ||
         blog.excerpt ||
         `Read the latest guides, tips, and meme culture articles from ${site.siteName}.`,
-      canonicalPath: `/blog/${slug}`,
+      canonicalPath: `/blogs/${slug}`,
       locale,
       image: ogImageUrl,
       type: 'article',

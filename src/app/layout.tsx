@@ -50,7 +50,7 @@ export default async function RootLayout({
   let categories = [];
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
-    const res = await fetch(`${apiUrl}/categories?limit=5`, { next: { revalidate: 3600 } });
+    const res = await fetch(`${apiUrl}/categories?limit=15`, { next: { revalidate: 3600 } });
     const data = await res.json();
     categories = Array.isArray(data?.categories) ? data.categories : [];
   } catch (err) {
@@ -77,7 +77,7 @@ export default async function RootLayout({
     >
       <head>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-        
+
         {/* Google tag (gtag.js) */}
         <Script async src="https://www.googletagmanager.com/gtag/js?id=G-D32CCS2KQJ" strategy="afterInteractive" />
         <Script id="google-analytics" strategy="afterInteractive">

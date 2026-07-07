@@ -24,7 +24,7 @@ const Footer = ({ categories = [] }: { categories?: any[] }) => {
     { key: 'footer.link_home', href: '/' },
     { key: 'footer.link_new', href: '/new' },
     { key: 'footer.link_trending', href: '/trending' },
-    { key: 'footer.link_blog', href: '/blog' },
+    { key: 'footer.link_blog', href: '/blogs' },
     { key: 'footer.link_about', href: '/about' },
     { key: 'footer.link_contact', href: '/contact' },
   ];
@@ -64,7 +64,7 @@ const Footer = ({ categories = [] }: { categories?: any[] }) => {
             <ul className={`space-y-4 font-bold transition-all duration-300 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
               {quickLinks.map((link) => (
                 <li key={link.key}>
-                  <Link href={lp(link.href)} className="hover:text-primary transition-colors">{t(link.key)}</Link>
+                  <Link href={link.href === '/blogs' ? '/blogs' : lp(link.href)} className="hover:text-primary transition-colors">{t(link.key)}</Link>
                 </li>
               ))}
             </ul>

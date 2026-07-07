@@ -12,6 +12,15 @@ import { Editor } from '@tinymce/tinymce-react';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
+const getImageUrl = (path?: string) => {
+  if (!path) return '';
+  if (path.startsWith('http')) return path;
+  if (process.env.NODE_ENV === 'production') {
+    return path;
+  }
+  return API_URL.replace('/api/v1', '') + path;
+};
+
 export default function BlogEditorPage() {
   const { ready, user } = useAdminSession();
   const router = useRouter();
@@ -334,7 +343,7 @@ export default function BlogEditorPage() {
                   {(featuredImage || blog?.featuredImage) && (
                     <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 overflow-hidden shrink-0">
                       <img 
-                        src={featuredImage ? URL.createObjectURL(featuredImage) : (API_URL.replace('/api/v1', '') + blog?.featuredImage)} 
+                        src={featuredImage ? URL.createObjectURL(featuredImage) : getImageUrl(blog?.featuredImage)} 
                         alt="Featured preview" 
                         className="w-full h-full object-cover" 
                       />
@@ -357,7 +366,7 @@ export default function BlogEditorPage() {
                   {(ogImage || blog?.ogImage) && (
                     <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 overflow-hidden shrink-0">
                       <img 
-                        src={ogImage ? URL.createObjectURL(ogImage) : (API_URL.replace('/api/v1', '') + blog?.ogImage)} 
+                        src={ogImage ? URL.createObjectURL(ogImage) : getImageUrl(blog?.ogImage)} 
                         alt="OG preview" 
                         className="w-full h-full object-cover" 
                       />

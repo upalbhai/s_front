@@ -102,6 +102,9 @@ export function LanguageProvider({
     (loc: Locale) => {
       setLocaleState(loc);
       localStorage.setItem(STORAGE_KEY, loc);
+      if (typeof document !== 'undefined') {
+        document.cookie = `sbmax_locale=${loc}; path=/; max-age=31536000; SameSite=Lax`;
+      }
       loadTranslations(loc);
       document.documentElement.lang = loc;
     },

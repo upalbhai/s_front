@@ -15,6 +15,7 @@ export async function middleware(request: NextRequest) {
   const host = request.headers.get('host') ?? '';
   const siteId = await resolveSiteId(host);
   const siteConfig = await getSiteConfig(siteId);
+  const defaultLocale = (siteConfig as any).defaultLocale || 'en';
 
   // Skip middleware for:
   // - Static files (public folder)
@@ -30,6 +31,14 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  if (pathname.startsWith('/blogs')) {
+    const localeCookie = request.cookies.get('sbmax_locale')?.value as import('@/i18n').Locale | undefined;
+    const currentLocale = localeCookie && ['en', 'es', 'fr', 'pt', 'ru', 'it', 'ja', 'ko', 'de'].includes(localeCookie)
+      ? localeCookie
+      : defaultLocale;
+    return applySiteHeaders(NextResponse.next(), siteId, currentLocale);
+  }
+
   // Check if pathname already has a locale prefix
   const pathArray = pathname.split('/').filter(Boolean);
   const firstSegment = pathArray[0] as import('@/i18n').Locale;
@@ -37,7 +46,6 @@ export async function middleware(request: NextRequest) {
   // Is it a valid locale prefix globally?
   const isGlobalLocale = ['en', 'es', 'fr', 'pt', 'ru', 'it', 'ja', 'ko', 'de'].includes(firstSegment);
   const supportedLocales = (siteConfig as any).supportedLocales || ['en', 'es', 'fr', 'pt', 'ru', 'it', 'ja', 'ko', 'de'];
-  const defaultLocale = (siteConfig as any).defaultLocale || 'en';
   const hasValidSiteLocale = supportedLocales.includes(firstSegment);
 
   // If there is no locale prefix, rewrite to default locale

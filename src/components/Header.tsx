@@ -78,7 +78,7 @@ const Header = ({ categories = [] }: { categories?: any[] }) => {
             </div>
             <Link href={lp('/new')} className="hover:text-foreground transition-colors">{t('nav.new')}</Link>
             <Link href={lp('/trending')} className="hover:text-foreground transition-colors">{t('nav.trending')}</Link>
-            <Link href={lp('/blog')} className="hover:text-foreground transition-colors">{t('nav.blog')}</Link>
+            <Link href="/blogs" className="hover:text-foreground transition-colors">{t('nav.blog')}</Link>
           </nav>
 
           {/* Search & Actions */}
@@ -130,7 +130,7 @@ const Header = ({ categories = [] }: { categories?: any[] }) => {
               <Link href={lp('/')} onClick={() => setIsMobileMenuOpen(false)}>{t('nav.home')}</Link>
               <Link href={lp('/new')} onClick={() => setIsMobileMenuOpen(false)}>{t('nav.new')}</Link>
               <Link href={lp('/trending')} onClick={() => setIsMobileMenuOpen(false)}>{t('nav.trending')}</Link>
-              <Link href={lp('/blog')} onClick={() => setIsMobileMenuOpen(false)}>{t('nav.blog')}</Link>
+              <Link href="/blogs" onClick={() => setIsMobileMenuOpen(false)}>{t('nav.blog')}</Link>
 
               <div className="mt-4 pt-6 border-t border-slate-200 dark:border-slate-800">
                 <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-4">{t('common.categories')}</p>
