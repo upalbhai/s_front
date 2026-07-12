@@ -112,26 +112,13 @@ export default function AdminSoundsPage() {
     setFormKey(prev => prev + 1);
   };
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (formData: FormData) => {
     setSaving(true);
     try {
-      const formData = new FormData();
-      Object.keys(data).forEach(key => {
-        if (key === 'category' && typeof data[key] === 'object') {
-          formData.append(key, data[key]._id);
-        } else if (data[key] !== undefined && data[key] !== null) {
-          formData.append(key, data[key]);
-        }
-      });
-
       if (editingSound) {
-        await api.put(`/sounds/${editingSound._id}`, formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
+        await api.put(`/sounds/${editingSound._id}`, formData);
       } else {
-        await api.post('/sounds', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
+        await api.post('/sounds', formData);
       }
       closeDrawer();
       queryClient.invalidateQueries({ queryKey: ['admin-sounds'] });

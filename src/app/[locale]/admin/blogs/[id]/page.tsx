@@ -98,9 +98,6 @@ export default function BlogEditorPage() {
         formData.append('image', blobInfo.blob(), blobInfo.filename());
 
         const res = await api.post('/blogs/upload-image', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
           onUploadProgress: (progressEvent) => {
             if (progressEvent.total) {
               progress(Math.round((progressEvent.loaded * 100) / progressEvent.total));
@@ -142,10 +139,10 @@ export default function BlogEditorPage() {
       if (ogImage) submitData.append('ogImage', ogImage);
 
       if (isNew) {
-        await api.post('/blogs', submitData, { headers: { 'Content-Type': 'multipart/form-data' } });
+        await api.post('/blogs', submitData);
         toast.success('Blog created successfully');
       } else {
-        await api.put(`/blogs/${blogId}`, submitData, { headers: { 'Content-Type': 'multipart/form-data' } });
+        await api.put(`/blogs/${blogId}`, submitData);
         toast.success('Blog updated successfully');
       }
       

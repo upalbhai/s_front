@@ -49,9 +49,7 @@ export default function AdminEditSoundPage() {
   const handleSubmit = async (formData: FormData) => {
     try {
       setSaving(true);
-      await api.put(`/sounds/${soundId}`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      await api.put(`/sounds/${soundId}`, formData);
       toast.success('Sound updated successfully');
       router.push('/admin/sounds');
     } catch {

@@ -36,9 +36,7 @@ export default function AdminNewSoundPage() {
   const handleSubmit = async (formData: FormData) => {
     try {
       setSaving(true);
-      await api.post('/sounds', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      await api.post('/sounds', formData);
       toast.success('Sound created successfully');
       router.push('/admin/sounds');
     } catch {
