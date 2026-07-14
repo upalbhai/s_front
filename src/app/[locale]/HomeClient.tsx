@@ -29,7 +29,7 @@ export default function HomeClient({
   const isSoundboardMax = siteId === 'soundboard' || siteId === 'soundboardmax' || config?.siteName?.toLowerCase() === 'soundboardmax';
 
   const displayTitle = isSoundboardMax
-    ? t('hero.title')
+    ? (t('meta.home.h1') !== 'meta.home.h1' ? t('meta.home.h1') : t('hero.title'))
     : h1Title;
 
   const displaySubtitle = isSoundboardMax
