@@ -106,6 +106,15 @@ export default function AdminBlogsPage() {
       )
     },
     {
+      header: 'Views',
+      id: 'views',
+      render: (blog) => (
+        <span className="text-sm font-medium text-slate-500 dark:text-slate-400">
+          {blog.views?.toLocaleString() || '0'}
+        </span>
+      )
+    },
+    {
       header: 'Actions',
       id: 'actions',
       render: (blog) => (

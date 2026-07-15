@@ -136,6 +136,7 @@ export default async function LocaleSoundDetailPage({
         slug={soundSlug}
         h1Title={(t('meta.soundDetail.h1Template') !== 'meta.soundDetail.h1Template' ? t('meta.soundDetail.h1Template') : site.meta.soundDetail.h1Template).replace('{sound name}', sound.title)}
         uiDescription={(t('meta.soundDetail.descriptionTemplate') !== 'meta.soundDetail.descriptionTemplate' ? t('meta.soundDetail.descriptionTemplate') : site.meta.soundDetail.descriptionTemplate).replace('{sound name}', sound.title)}
+        siteName={site.siteName.replace(/\s+/g, '')}
       />
     </>
   );

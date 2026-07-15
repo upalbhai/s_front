@@ -3,7 +3,7 @@ import { getRequestSite } from '@/config/sites';
 import { buildSeoMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Calendar, User, ArrowLeft } from 'lucide-react';
+import { Calendar, User, ArrowLeft, Eye } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import { headers } from 'next/headers';
 
@@ -91,6 +91,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             <div className="flex items-center gap-2">
               <User size={16} className="text-purple-500" />
               {blog.author}
+            </div>
+            <div className="flex items-center gap-2">
+              <Eye size={16} className="text-sky-500" />
+              {blog.views?.toLocaleString() || 0} Views
             </div>
           </div>
 

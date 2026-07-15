@@ -25,7 +25,7 @@ const getFullUrl = (url: string) => {
   return `${baseUrl}${url}`;
 };
 
-export default function SoundDetailClient({ sound, relatedSounds, h1Title, uiDescription }: any) {
+export default function SoundDetailClient({ sound, relatedSounds, h1Title, uiDescription, siteName = 'SoundButtonsMax' }: any) {
   const { currentSound, isPlaying, isLoading, playSound } = useAudio();
   const lp = useLocalePath();
   const isThisPlaying = currentSound?._id === sound._id && isPlaying;
@@ -245,7 +245,7 @@ export default function SoundDetailClient({ sound, relatedSounds, h1Title, uiDes
 
             {/* Uploaded By */}
             <div className="mt-3 text-xs md:text-sm font-bold text-slate-450 dark:text-slate-500">
-              Uploaded by <span className="text-sky-500 font-extrabold">SoundButtonsMax</span>
+              Uploaded by <span className="text-sky-500 font-extrabold">{siteName}</span>
             </div>
 
             {/* Action buttons (Copy link, Share, Download MP3) */}

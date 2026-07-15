@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import api from '@/services/api';
 import Link from 'next/link';
+import { Eye } from 'lucide-react';
 
 export default function BlogListClient({ initialBlogs }: { initialBlogs: any[] }) {
   const [blogs, setBlogs] = useState(initialBlogs || []);
@@ -40,7 +41,12 @@ export default function BlogListClient({ initialBlogs }: { initialBlogs: any[] }
             <h2 style={{ fontSize: '1.25rem', marginBottom: '0.75rem' }}>{blog.title}</h2>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>{blog.excerpt}</p>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{new Date(blog.publishedDate).toLocaleDateString()}</span>
+              <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{new Date(blog.publishedDate).toLocaleDateString()}</span>
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <Eye size={14} /> {blog.views?.toLocaleString() || 0}
+                </span>
+              </div>
               <span className="text-primary" style={{ fontWeight: '600' }}>Read More →</span>
             </div>
           </Link>

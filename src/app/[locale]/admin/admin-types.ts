@@ -43,6 +43,7 @@ export interface AdminBlogPost {
   featuredImage?: string;
   author?: string;
   isPublished?: boolean;
+  views?: number;
   publishedDate?: string;
   createdAt?: string;
   updatedAt?: string;
