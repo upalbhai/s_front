@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Edit3, Plus, Trash2, Volume2, Play, Pause } from 'lucide-react';
+import { Edit3, Plus, Trash2, Volume2, Play, Pause, Eye, BarChart3 } from 'lucide-react';
 import api from '@/services/api';
 import { AdminCategory, AdminSound, getSoundCategoryName } from '../admin-types';
 import { useAdminSession } from '../useAdminSession';
@@ -15,9 +15,10 @@ import { DataTable, ColumnDef } from '@/components/DataTable';
 
 const COOLDOWN_SECONDS = 15;
 
-async function fetchSounds(q: string, page: number, limit: number) {
+async function fetchSounds(q: string, page: number, limit: number, categoryId?: string) {
   const params = new URLSearchParams({ limit: limit.toString(), page: page.toString(), admin: 'true' });
   if (q.trim()) params.set('q', q.trim());
+  if (categoryId) params.set('category', categoryId);
   const res = await api.get(`/sounds?${params}`);
   return {
     sounds: Array.isArray(res.data.sounds) ? res.data.sounds as AdminSound[] : [],
@@ -36,6 +37,7 @@ export default function AdminSoundsPage() {
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [saving, setSaving] = useState(false);
 
   const { currentSound, isPlaying: globalIsPlaying, playSound } = useAudio();
@@ -72,8 +74,8 @@ export default function AdminSoundsPage() {
 
   // ── TanStack Query ────────────────────────────────────────────────────────
   const { data: soundsData, isLoading, refetch, isRefetching } = useQuery({
-    queryKey: ['admin-sounds', query, page, limit],
-    queryFn: () => fetchSounds(query, page, limit),
+    queryKey: ['admin-sounds', query, page, limit, selectedCategory],
+    queryFn: () => fetchSounds(query, page, limit, selectedCategory || undefined),
     enabled: ready,
   });
 
@@ -186,6 +188,26 @@ export default function AdminSoundsPage() {
       )
     },
     {
+      id: 'plays',
+      header: 'Plays',
+      render: (sound) => (
+        <div className="flex items-center gap-1.5 text-sm font-bold text-slate-500 dark:text-slate-400">
+          <BarChart3 size={14} className="text-sky-500" />
+          <span className="text-foreground font-black">{sound.playCount?.toLocaleString() || '0'}</span>
+        </div>
+      )
+    },
+    {
+      id: 'views',
+      header: 'Views',
+      render: (sound) => (
+        <div className="flex items-center gap-1.5 text-sm font-bold text-slate-500 dark:text-slate-400">
+          <Eye size={14} className="text-indigo-500" />
+          <span className="text-foreground font-black">{sound.viewCount?.toLocaleString() || '0'}</span>
+        </div>
+      )
+    },
+    {
       id: 'actions',
       header: 'Actions',
       render: (sound) => (
@@ -210,14 +232,26 @@ export default function AdminSoundsPage() {
     }
   ];
 
-  const newSoundButton = (
-    <button
-      onClick={openCreate}
-      className="flex items-center gap-2 px-5 py-2 rounded-full bg-sky-500 text-white font-black text-sm hover:bg-sky-600 transition-all active:scale-95 shadow-lg shadow-sky-500/20 whitespace-nowrap h-9"
-    >
-      <Plus size={16} />
-      <span>New sound</span>
-    </button>
+  const filtersNode = (
+    <>
+      <select
+        value={selectedCategory}
+        onChange={(e) => { setSelectedCategory(e.target.value); setPage(1); }}
+        className="h-9 px-3 pr-8 text-xs font-bold rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-foreground cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23999%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[position:right_0.5rem_center] bg-no-repeat"
+      >
+        <option value="">All Categories</option>
+        {categories.map((cat) => (
+          <option key={cat._id} value={cat._id}>{cat.name}</option>
+        ))}
+      </select>
+      <button
+        onClick={openCreate}
+        className="flex items-center gap-2 px-5 py-2 rounded-full bg-sky-500 text-white font-black text-sm hover:bg-sky-600 transition-all active:scale-95 shadow-lg shadow-sky-500/20 whitespace-nowrap h-9"
+      >
+        <Plus size={16} />
+        <span>New sound</span>
+      </button>
+    </>
   );
 
   if (!ready) {
@@ -254,9 +288,9 @@ export default function AdminSoundsPage() {
           placeholderText="Search sounds by title, slug or tags..."
           emptyStateText={query ? `No sounds found for "${query}"` : "No sounds found"}
           emptyStateIcon={<Volume2 size={40} className="text-slate-200 dark:text-slate-700" />}
-          filters={newSoundButton}
-          onClearFilters={() => setQuery('')}
-          hasActiveFilters={!!query}
+          filters={filtersNode}
+          onClearFilters={() => { setQuery(''); setSelectedCategory(''); }}
+          hasActiveFilters={!!query || !!selectedCategory}
         />
       </div>
 

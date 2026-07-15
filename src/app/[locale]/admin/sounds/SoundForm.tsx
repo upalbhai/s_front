@@ -59,13 +59,6 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  const { data: sites = [] } = useQuery({
-    queryKey: ['admin-sites-list'],
-    queryFn: async () => {
-      const res = await api.get('/sites/admin');
-      return res.data as { id: string; siteName: string }[];
-    }
-  });
 
   useEffect(() => {
     setMounted(true);
@@ -98,21 +91,18 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
     await onSubmit(formData);
   };
 
-  const inputClass = `w-full rounded-2xl border px-4 py-3.5 outline-none font-bold text-sm transition-all duration-300 ${
-    isDark
-      ? 'bg-zinc-950 border-zinc-800 text-white focus-within:ring-2 focus-within:ring-zinc-800 focus-within:border-zinc-700 placeholder:text-zinc-600'
-      : 'bg-zinc-50 border-zinc-200 text-zinc-900 focus-within:ring-2 focus-within:ring-zinc-200 focus-within:border-zinc-300 placeholder:text-zinc-400'
-  }`;
+  const inputClass = `w-full rounded-2xl border px-4 py-3.5 outline-none font-bold text-sm transition-all duration-300 ${isDark
+    ? 'bg-zinc-950 border-zinc-800 text-white focus-within:ring-2 focus-within:ring-zinc-800 focus-within:border-zinc-700 placeholder:text-zinc-600'
+    : 'bg-zinc-50 border-zinc-200 text-zinc-900 focus-within:ring-2 focus-within:ring-zinc-200 focus-within:border-zinc-300 placeholder:text-zinc-400'
+    }`;
 
-  const labelClass = `text-[10px] font-black uppercase tracking-widest mb-1.5 block ${
-    isDark ? 'text-zinc-500' : 'text-zinc-400'
-  }`;
+  const labelClass = `text-[10px] font-black uppercase tracking-widest mb-1.5 block ${isDark ? 'text-zinc-500' : 'text-zinc-400'
+    }`;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl mx-auto">
-      <div className={`p-6 rounded-3xl border transition-colors duration-300 space-y-5 ${
-        isDark ? 'border-zinc-800 bg-zinc-900/40 text-white' : 'border-zinc-200 bg-white text-zinc-900 shadow-sm'
-      }`}>
+      <div className={`p-6 rounded-3xl border transition-colors duration-300 space-y-5 ${isDark ? 'border-zinc-800 bg-zinc-900/40 text-white' : 'border-zinc-200 bg-white text-zinc-900 shadow-sm'
+        }`}>
         <div>
           <label className={labelClass}>Title <span className="text-red-500">*</span></label>
           <input
@@ -153,11 +143,9 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
               type="file"
               accept="audio/*"
               onChange={e => setSoundFile(e.target.files?.[0] ?? null)}
-              className={`w-full text-xs font-bold ${
-                isDark ? 'text-zinc-400' : 'text-zinc-600'
-              } file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:uppercase file:tracking-wider ${
-                isDark ? 'file:bg-zinc-800 file:text-white hover:file:bg-zinc-700' : 'file:bg-zinc-100 file:text-zinc-900 hover:file:bg-zinc-200'
-              } transition-all cursor-pointer`}
+              className={`w-full text-xs font-bold ${isDark ? 'text-zinc-400' : 'text-zinc-600'
+                } file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:uppercase file:tracking-wider ${isDark ? 'file:bg-zinc-800 file:text-white hover:file:bg-zinc-700' : 'file:bg-zinc-100 file:text-zinc-900 hover:file:bg-zinc-200'
+                } transition-all cursor-pointer`}
             />
           </div>
           {soundFile && (
@@ -186,9 +174,8 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
             rows={3}
           />
         </div>
-        <div className={`flex items-center gap-3 p-4 rounded-2xl border transition-colors duration-300 ${
-          isDark ? 'border-zinc-800 bg-zinc-950/40' : 'border-zinc-200 bg-zinc-50'
-        }`}>
+        <div className={`flex items-center gap-3 p-4 rounded-2xl border transition-colors duration-300 ${isDark ? 'border-zinc-800 bg-zinc-950/40' : 'border-zinc-200 bg-zinc-50'
+          }`}>
           <input
             type="checkbox"
             id="isPublished"
@@ -201,52 +188,28 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
             <p className={`text-[11px] mt-0.5 ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>Unpublished sounds are hidden from public pages.</p>
           </div>
         </div>
-        
-        <div className={`p-4 rounded-2xl border transition-colors duration-300 ${
-          isDark ? 'border-zinc-800 bg-zinc-950/40' : 'border-zinc-200 bg-zinc-50'
-        }`}>
+
+        <div className={`p-4 rounded-2xl border transition-colors duration-300 ${isDark ? 'border-zinc-800 bg-zinc-950/40' : 'border-zinc-200 bg-zinc-50'
+          }`}>
           <label className="font-black text-sm text-foreground block mb-2">Target Sites</label>
           <p className={`text-[11px] mb-4 ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>
             Select which sites this sound should appear on. If none are selected, it will appear on ALL sites.
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {sites.map(site => {
-              const isChecked = values.siteIds.includes(site.id);
-              return (
-                <label key={site.id} className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={isChecked}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        set('siteIds', [...values.siteIds, site.id] as any);
-                      } else {
-                        set('siteIds', values.siteIds.filter(id => id !== site.id) as any);
-                      }
-                    }}
-                    className="w-4 h-4 rounded border-zinc-300 dark:border-zinc-700 accent-sky-500 cursor-pointer"
-                  />
-                  <span className={`text-sm ${isDark ? 'text-zinc-300' : 'text-zinc-700'}`}>{site.siteName}</span>
-                </label>
-              );
-            })}
-          </div>
+
         </div>
       </div>
 
       {/* Actions */}
-      <div className={`flex justify-end gap-3 pt-6 border-t ${
-        isDark ? 'border-zinc-800' : 'border-zinc-100'
-      }`}>
+      <div className={`flex justify-end gap-3 pt-6 border-t ${isDark ? 'border-zinc-800' : 'border-zinc-100'
+        }`}>
         {onCancel && (
           <button
             type="button"
             onClick={onCancel}
-            className={`px-6 py-3.5 rounded-xl font-black text-xs uppercase tracking-widest border transition-all active:scale-95 ${
-              isDark 
-                ? 'border-zinc-800 bg-zinc-900 text-white hover:bg-zinc-800' 
-                : 'border-zinc-200 bg-white text-zinc-900 hover:bg-zinc-50'
-            }`}
+            className={`px-6 py-3.5 rounded-xl font-black text-xs uppercase tracking-widest border transition-all active:scale-95 ${isDark
+              ? 'border-zinc-800 bg-zinc-900 text-white hover:bg-zinc-800'
+              : 'border-zinc-200 bg-white text-zinc-900 hover:bg-zinc-50'
+              }`}
           >
             Cancel
           </button>
@@ -254,11 +217,10 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
         <button
           type="submit"
           disabled={saving}
-          className={`px-8 py-3.5 rounded-xl font-black text-xs uppercase tracking-widest transition-all active:scale-95 shadow-lg ${
-            isDark 
-              ? 'bg-white text-zinc-950 hover:bg-zinc-100 shadow-white/5' 
-              : 'bg-zinc-950 text-white hover:bg-zinc-900 shadow-zinc-950/10'
-          }`}
+          className={`px-8 py-3.5 rounded-xl font-black text-xs uppercase tracking-widest transition-all active:scale-95 shadow-lg ${isDark
+            ? 'bg-white text-zinc-950 hover:bg-zinc-100 shadow-white/5'
+            : 'bg-zinc-950 text-white hover:bg-zinc-900 shadow-zinc-950/10'
+            }`}
         >
           {saving ? 'Saving…' : submitLabel}
         </button>

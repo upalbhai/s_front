@@ -28,6 +28,7 @@ export interface AdminSound {
   isPublished?: boolean;
   playCount?: number;
   downloadCount?: number;
+  viewCount?: number;
   siteIds?: string[];
 }
 
