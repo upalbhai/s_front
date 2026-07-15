@@ -54,6 +54,9 @@ export function buildSeoMetadata({
     title,
     description,
     ...(keywords ? { keywords } : {}),
+    icons: {
+      icon: site.id === 'soundboard' ? '/favicon-soundboard.ico' : '/favicon-soundbuttons.ico',
+    },
     alternates: {
       canonical: canonicalUrl,
       languages,

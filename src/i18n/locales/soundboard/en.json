@@ -4,12 +4,10 @@
   "nav.trending": "Trending",
   "nav.blog": "Blog",
   "nav.search_placeholder": "Search sounds...",
-
   "hero.badge": "Unblocked Soundboard",
-  "hero.title": "SoundBoardMax.net: Play Viral Meme Soundboard and Sound Buttons Unblocked",
+  "hero.title": "Soundboard Max: Play Viral Meme Soundboard and Sound Buttons Unblocked",
   "hero.subtitle": "Explore thousands of funny sound buttons, meme soundboard and viral sound effects completely free. Create your own custom Soundboard buttons on any device including smartphone, desktop or tablet.",
   "hero.placeholder": "Search 100,000+ meme sounds...",
-
   "trending.badge": "Trending Worldwide",
   "trending.title": "Trending Sound Buttons",
   "trending.placeholder": "Search trending sound buttons...",
@@ -21,7 +19,6 @@
   "meta.trending.h1": "Trending Sound Buttons: Meme Soundboard",
   "meta.trending.shortDescription": "Check out the latest trending sound buttons and meme soundboard collection.",
   "meta.trending.keywords": "trending sounds, viral soundboard, popular sound effects, trending audio clips, viral meme sounds, popular meme soundboard, popular audio effects, viral sound effects, trending gaming sounds, viral tiktok sounds, trending notification sounds, viral streaming sounds, popular comedy sounds, viral entertainment sounds, trending viral effects, popular social media sounds",
-
   "new.badge": "Latest Sound Buttons",
   "new.title": "New Sound Buttons",
   "new.placeholder": "Search latest sound buttons...",
@@ -33,7 +30,6 @@
   "meta.new.h1": "New Sound Buttons: Meme Soundboard",
   "meta.new.shortDescription": "Explore newly added sound buttons and meme soundboard collection.",
   "meta.new.keywords": "new soundboard sounds, latest sound effects, fresh audio clips, new meme sounds, trending soundboard, latest sound buttons, new audio effects, fresh sound effects, new gaming sounds, new notification sounds, new viral sounds, new comedy sounds, new tiktok sounds, new discord sounds, new streaming sounds, new content creation sounds, new social media sounds",
-
   "category.badge": "Category Soundboard",
   "category.placeholder": "Search in {name}...",
   "category.title": "{name} Soundboard",
@@ -47,11 +43,9 @@
   "meta.search.titleTemplate": "{sound name} Soundboard | SoundboardMax",
   "meta.search.descriptionTemplate": "Play and download {search name} sound effect buttons for free! Instant play, high-quality MP3 downloads. Perfect for memes, TikTok, Discord, and content creation.",
   "meta.search.h1Template": "{sound name} Soundboard",
-
   "common.loading": "Loading more sounds...",
   "common.clear_search": "Clear Search",
   "common.scroll_more": "Scroll to load more",
-
   "footer.tagline": "World's largest free meme soundboard. Instant playback, no downloads required.",
   "footer.quick_links": "Quick Links",
   "footer.categories": "Categories",
@@ -70,20 +64,16 @@
   "footer.terms": "Terms & Conditions",
   "footer.dmca": "DMCA",
   "footer.disclaimer": "Disclaimer",
-
   "home.trending.viral_hits": "Viral hits",
   "home.trending.title": "Trending Sounds",
   "home.trending.see_all": "See All",
-
   "home.new_additions.badge": "Fresh sound clips",
   "home.new_additions.title": "New Additions",
   "home.new_additions.see_all": "See All",
-
   "home.categories.badge": "Curated boards",
   "home.categories.title": "Soundboard Categories",
   "home.categories.subtitle": "Browse our carefully organized collections spanning anime reactions, gaming loops, and viral trends.",
   "home.categories.fallback_desc": "Browse meme soundboards.",
-
   "home.faq.badge": "Got questions?",
   "home.faq.title": "Frequently Asked Questions",
   "home.faq.q1": "What are meme sound buttons?",
@@ -94,7 +84,6 @@
   "home.faq.a3": "Yes. Our web app is optimized to load lightning-fast and run flawlessly across restricted networks, making it the perfect unblocked soundboard for school classrooms, discord channels, or office laughs.",
   "home.faq.q4": "How do I use these sounds on Discord or OBS?",
   "home.faq.a4": "Simple! You can download the high-quality MP3 file from our platform and upload it directly into your Discord Soundboard or OBS Studio media source overlays.",
-
   "home.features.badge": "Uncompromised Design",
   "home.features.title": "Features Designed for Creators",
   "home.features.subtitle": "Stream, download, and share viral meme clips at peak performance without any platform limitations.",
@@ -104,12 +93,10 @@
   "home.features.f2_desc": "Every single button contains a high-fidelity download option. Seamless integration into Discord, OBS, or mobile devices.",
   "home.features.f3_title": "Completely Unblocked",
   "home.features.f3_desc": "Built to run seamlessly across educational, professional, or residential networks with strict local firewall policies.",
-
   "home.stats.s1_label": "Meme Sound Buttons Available",
   "home.stats.s2_label": "Monthly Active Sound Seekers",
   "home.stats.s3_value": "100% Free",
   "home.stats.s3_label": "Unblocked & School-Safe Delivery",
-
   "home.testimonials.badge": "Trusted globally",
   "home.testimonials.title": "What Meme Lovers Say",
   "home.testimonials.t1_quote": "Sound Buttons Max is my go-to overlay companion. The instant unblocked play means I don't suffer from streams lagging while triggering sound effects.",
@@ -118,20 +105,17 @@
   "home.testimonials.t2_role": "Video Editor",
   "home.testimonials.t3_quote": "Our server relies heavily on customized soundboards. This platform is a goldmine for meme reactions. Easy to browse and fully unblocked.",
   "home.testimonials.t3_role": "Discord Community Admin",
-
   "home.search.searching_for": "Searching for \"{query}\"...",
   "home.search.results_for": "Search Results for \"{query}\"",
   "home.search.searching_board": "Searching the board...",
   "home.search.no_results": "No sounds found matching your search.",
   "home.search.clear": "Clear search",
-
   "sound.plays": "{count} Plays",
   "sound.plays_simple": "Plays",
   "sound.fav_tooltip": "Favorite",
   "sound.copy_tooltip": "Copy Link",
   "sound.share_tooltip": "Share",
   "sound.link_copied": "Link copied!",
-
   "common.toggle_theme": "Toggle theme",
   "common.categories": "Categories",
   "category.name.meme": "Meme",
@@ -139,7 +123,6 @@
   "category.name.movies": "Movies",
   "category.name.reaction": "Reaction",
   "category.name.tiktok": "TikTok",
-
   "seo.home_title": "SoundboardMax: Play Meme Soundboard and Sound Buttons Online",
   "seo.welcome_text": "Welcome to SoundboardMax! This is the best place for viral audio, funny sounds, and the internet’s favourite meme soundboard. Instantly play thousands of sound buttons and trending sounds perfect for fun, reactions, streaming, and pranks.",
   "seo.q_meme_title": "What is a Meme Soundboard?",

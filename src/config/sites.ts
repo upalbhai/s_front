@@ -20,7 +20,7 @@ export type SiteConfig = {
     new: { title: string; description: string; h1?: string; shortDescription?: string; keywords?: string };
     categories: { title: string; description: string };
     categoryDetail: { titleTemplate: string; descriptionTemplate: string; h1Template: string; keywordsTemplate?: string };
-    soundDetail: { h1Template: string; descriptionTemplate: string; keywordsTemplate?: string };
+    soundDetail: { titleTemplate?: string; h1Template: string; descriptionTemplate: string; keywordsTemplate?: string };
     search: { titleTemplate: string; descriptionTemplate: string; h1Template: string };
   };
 };
@@ -28,39 +28,39 @@ export type SiteConfig = {
 const SITES: Record<SiteId, SiteConfig> = {
   soundbuttons: {
     id: 'soundbuttons',
-    domains: ['soundbuttonsmax.net', 'www.soundbuttonsmax.net', 'soundbuttonsmax.com', 'www.soundbuttonsmax.com'],
+    domains: ['soundbuttonsmax.net', 'www.soundbuttonsmax.net', 'soundbuttonsmax.net', 'www.soundbuttonsmax.net'],
     siteName: 'Sound Buttons Max',
     wordmark: { line1: 'SOUND BUTTONS', accent: 'MAX' },
     siteUrl: 'https://soundbuttonsmax.net',
-    logo: '/sites/soundbuttons/logo.jpeg',
+    logo: '/logo-soundbuttons.png',
     ogImage: '/sites/soundbuttons/og-home.svg',
     themeColor: '#2563eb',
     primaryColor: '#2563eb',
     primaryHoverColor: '#1d4ed8',
-    contactEmail: 'contact@soundbuttonsmax.com',
-    dmcaEmail: 'dmca@soundbuttonsmax.com',
+    contactEmail: 'contact@soundbuttonsmax.net',
+    dmcaEmail: 'dmca@soundbuttonsmax.net',
     twitterHandle: '@soundbuttonsmax',
     meta: {
       home: {
-        title: 'Sound Buttons Max: Free Meme Soundboard Unblocked',
+        title: 'Sound Buttons Max: Play Viral Meme Soundboard Unblocked',
         description:
-          'Play 100,000+ free meme sound buttons instantly. Vine Boom, Bruh, Goofy Ahh & more. No download, no login. Unblocked on school and work networks.',
+          'Explore thousands of sound buttons, meme soundboard, sound buttons unblocked, prank sounds and viral sound effects for play & download on SoundbuttonsMax.',
         keywords:
           'sound buttons, meme sound buttons, unblocked sound buttons, free soundboard, meme sounds, viral meme sounds, funny meme sounds, sound effects, online soundboard',
-        h1: 'Sound Buttons Max: Free Meme Soundboard Unblocked',
+        h1: 'Sound Buttons Max: Explore Free Meme Soundboard and Sound Buttons Unblocked',
       },
       trending: {
         title: 'Trending Sound Buttons: Popular Meme Soundboard',
-        description: 'Explore trending sound buttons and the most viral meme soundboard used in gaming, streaming and social media. Play or download your favorite meme buttons.',
-        h1: 'Trending Meme Soundboard: Sound Buttons',
-        shortDescription: 'Check out the latest trending meme soundboard and sound buttons collection.',
+        description: 'Explore trending sound buttons, popular meme soundboard clips, prank sounds, viral effects, sound buttons unblocked, free play & download.',
+        h1: 'Trending Sound Buttons: Meme Soundboard',
+        shortDescription: 'Daily-updated trending sound buttons and meme soundboard, viral prank sounds, soundboard unblocked and free for instant play.',
         keywords: 'trending sounds, viral soundboard, popular sound effects, trending audio clips, viral meme sounds, popular meme soundboard, popular audio effects, viral sound effects, trending gaming sounds, viral tiktok sounds, trending notification sounds, viral streaming sounds, popular comedy sounds, viral entertainment sounds, trending viral effects, popular social media sounds',
       },
       new: {
         title: 'New Sound Buttons: Latest Meme Soundboard',
-        description: 'Discover new meme soundboard buttons and sound effects. Play and download the newest sound buttons and meme soundboard free on Sound Buttons Max.',
-        h1: 'New Meme Soundboard: Sound Buttons',
-        shortDescription: 'Explore newly added meme soundboard and sound buttons collection.',
+        description: 'Discover the latest sound buttons, meme soundboard, prank sounds, viral sound effects and meme buttons free on soundbuttonsmax.',
+        h1: 'New Sound Buttons: Meme Soundboard',
+        shortDescription: 'Explore newly added sound buttons and meme soundboard collection.',
         keywords: 'new soundboard sounds, latest sound effects, fresh audio clips, new meme sounds, trending soundboard, latest sound buttons, new audio effects, fresh sound effects, new gaming sounds, new notification sounds, new viral sounds, new comedy sounds, new tiktok sounds, new discord sounds, new streaming sounds, new content creation sounds, new social media sounds',
       },
       categories: {
@@ -69,18 +69,19 @@ const SITES: Record<SiteId, SiteConfig> = {
       },
       categoryDetail: {
         titleTemplate: '{category name}: Sound Buttons Unblocked',
-        descriptionTemplate: 'Discover thousands of {category name} collections with the sound buttons and meme soundboard. Play instantly & download on Sound Buttons Max.',
+        descriptionTemplate: 'Explore {category name}, sound buttons, meme soundboard, prank sounds and viral sound effects. Play instantly & download on SoundbuttonsMax.',
         h1Template: '{category name}',
         keywordsTemplate: 'soundboard categories, meme sounds, gaming sound effects, comedy audio, viral sounds, free sound effects, unblocked sound buttons, audio categories, soundboard categories, sound effects library, meme audio, gaming audio, comedy sounds, viral audio, free audio, unblocked audio',
       },
       soundDetail: {
-        h1Template: '{sound name} Sound Buttons',
-        descriptionTemplate: 'Play and download the {sound name} sound effect button instantly! Ideal for memes, pranks, gaming, editing, and sharing fun moments with everyone.',
+        titleTemplate: '{sound name} - Sound Buttons | SoundbuttonsMax',
+        h1Template: '{sound name}',
+        descriptionTemplate: 'Play and download the {sound name} sound button instantly! Ideal for memes, pranks, gaming, editing, and sharing fun moments with everyone.',
       },
       search: {
-        titleTemplate: '{sound name} Soundboard | Sound Buttons Max',
+        titleTemplate: '{sound name} Soundboard | Sound Buttons Unblocked',
         descriptionTemplate: 'Play and download {search name} sound effect buttons for free! Instant play, high-quality MP3 downloads. Perfect for memes, TikTok, Discord, and content creation.',
-        h1Template: '{sound name} Soundboard',
+        h1Template: '{sound name} Sound Buttons',
       },
     },
   },
@@ -102,7 +103,7 @@ const SITES: Record<SiteId, SiteConfig> = {
       home: {
         title: 'SoundboardMax: 100K+ Meme Soundboard Unblocked and Sound Buttons',
         description:
-          'Explore thousands of funny sound buttons, meme soundboard and viral sound effects completely free. Create your own custom Soundboard buttons on any device including smartphone, desktop or tablet.',
+          'Soundboard Max offers instant access to trending sound buttons and meme soundboards. Play and download meme sound effects, prank sounds, and soundboard unblocked',
         keywords:
           'soundboard, meme soundboard, meme soundboard unblocked, unblocked soundboard, sound buttons, meme sounds, viral meme sounds, funny meme sounds, meme sound effects, free soundboard, free sound effects, viral sounds, unblocked sound buttons, audio effects, online soundboard, soundboard online, prank sounds, funny soundboard',
         h1: 'Play Viral Meme Soundboard and Sound Buttons Unblocked',
