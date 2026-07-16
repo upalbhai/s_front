@@ -34,6 +34,10 @@ export interface AdminSound {
   lastViewedAt?: string;
   sitePlays?: Record<string, number>;
   siteViews?: Record<string, number>;
+  dailyStats?: Record<string, {
+    sitePlays?: Record<string, number>;
+    siteViews?: Record<string, number>;
+  }>;
 }
 
 export interface AdminBlogPost {

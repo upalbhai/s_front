@@ -31,7 +31,6 @@ interface CategoryStats {
 export default function AdminHomePage() {
   const { ready } = useAdminSession();
   const [sounds, setSounds] = useState<AdminSound[]>([]);
-  const [categories, setCategories] = useState<AdminCategory[]>([]);
   const [totalSounds, setTotalSounds] = useState(0);
   const [totalCategories, setTotalCategories] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -56,6 +55,7 @@ export default function AdminHomePage() {
   const [totalViews, setTotalViews] = useState(0);
   
   // Site traffic
+  const [dateFilter, setDateFilter] = useState<'all' | 'today' | 'yesterday' | '7days'>('7days');
   const [siteTraffic, setSiteTraffic] = useState<{ siteId: string; plays: number; views: number }[]>([]);
 
   useEffect(() => {
@@ -66,111 +66,22 @@ export default function AdminHomePage() {
       try {
         setLoading(true);
 
-        const [soundsRes, categoriesRes, topPlayedRes, topViewedRes, recentPlayedRes, recentViewedRes, allSoundsRes] =
-          await Promise.all([
-            api.get('/sounds?limit=6&admin=true'),
-            api.get('/categories?limit=200&admin=true'),
-            api.get('/sounds?sort=trending&limit=10&admin=true'),
-            api.get('/sounds?sort=views&limit=10&admin=true'),
-            api.get('/sounds?sort=recent_plays&limit=10&admin=true'),
-            api.get('/sounds?sort=recent_views&limit=10&admin=true'),
-            api.get('/sounds?limit=10000&admin=true'),
-          ]);
+        const { data } = await api.get(`/sounds/dashboard-stats?filter=${dateFilter}`);
 
-        const allSounds: AdminSound[] = Array.isArray(allSoundsRes.data.sounds)
-          ? allSoundsRes.data.sounds
-          : [];
-        const cats: AdminCategory[] = Array.isArray(categoriesRes.data.categories)
-          ? categoriesRes.data.categories
-          : [];
+        setSounds(data.latestSounds || []);
+        setTotalSounds(data.totalSounds || 0);
+        setTotalCategories(data.totalCategories || 0);
 
-        setSounds(
-          Array.isArray(soundsRes.data.sounds) ? soundsRes.data.sounds : []
-        );
-        setTotalSounds(soundsRes.data.total || 0);
-        setCategories(cats);
-        setTotalCategories(categoriesRes.data.total || 0);
+        setTopPlayed(data.topPlayed || []);
+        setTopViewed(data.topViewed || []);
+        setRecentPlayed(data.recentPlayed || []);
+        setRecentViewed(data.recentViewed || []);
 
-        setTopPlayed(
-          Array.isArray(topPlayedRes.data.sounds)
-            ? topPlayedRes.data.sounds
-            : []
-        );
-        setTopViewed(
-          Array.isArray(topViewedRes.data.sounds)
-            ? topViewedRes.data.sounds
-            : []
-        );
-        setRecentPlayed(
-          Array.isArray(recentPlayedRes.data.sounds)
-            ? recentPlayedRes.data.sounds
-            : []
-        );
-        setRecentViewed(
-          Array.isArray(recentViewedRes.data.sounds)
-            ? recentViewedRes.data.sounds
-            : []
-        );
+        setTotalPlays(data.totalPlays || 0);
+        setTotalViews(data.totalViews || 0);
+        setCategoryStats(data.categoryStats || []);
+        setSiteTraffic(data.siteTraffic || []);
 
-        // Compute aggregates
-        let plays = 0;
-        let views = 0;
-        const catMap = new Map<string, CategoryStats>();
-        const trafficMap = new Map<string, { plays: number, views: number }>();
-
-        for (const cat of cats) {
-          catMap.set(cat._id, {
-            _id: cat._id,
-            name: cat.name,
-            soundCount: 0,
-            totalPlays: 0,
-            totalViews: 0,
-          });
-        }
-
-        for (const s of allSounds) {
-          plays += s.playCount || 0;
-          views += s.viewCount || 0;
-          const catId =
-            typeof s.category === 'object' && s.category
-              ? s.category._id
-              : typeof s.category === 'string'
-              ? s.category
-              : null;
-          if (catId && catMap.has(catId)) {
-            const stat = catMap.get(catId)!;
-            stat.soundCount += 1;
-            stat.totalPlays += s.playCount || 0;
-            stat.totalViews += s.viewCount || 0;
-          }
-          
-          if (s.sitePlays) {
-            for (const [siteId, count] of Object.entries(s.sitePlays)) {
-              const current = trafficMap.get(siteId) || { plays: 0, views: 0 };
-              current.plays += count as number;
-              trafficMap.set(siteId, current);
-            }
-          }
-          
-          if (s.siteViews) {
-            for (const [siteId, count] of Object.entries(s.siteViews)) {
-              const current = trafficMap.get(siteId) || { plays: 0, views: 0 };
-              current.views += count as number;
-              trafficMap.set(siteId, current);
-            }
-          }
-        }
-
-        const trafficArr = Array.from(trafficMap.entries()).map(([siteId, stats]) => ({
-          siteId,
-          plays: stats.plays,
-          views: stats.views
-        })).sort((a, b) => b.plays - a.plays);
-
-        setTotalPlays(plays);
-        setTotalViews(views);
-        setCategoryStats(Array.from(catMap.values()));
-        setSiteTraffic(trafficArr);
       } catch (error) {
         console.error('Failed to load admin overview', error);
       } finally {
@@ -179,7 +90,7 @@ export default function AdminHomePage() {
     };
 
     void loadOverview();
-  }, [ready]);
+  }, [ready, dateFilter]);
 
   const isDark = mounted && resolvedTheme === 'dark';
 
@@ -350,7 +261,33 @@ export default function AdminHomePage() {
       </section>
 
       {/* Site Traffic Metrics */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+      <div className="flex flex-col gap-4">
+        <div className="flex justify-between items-end px-2">
+          <div>
+            <p className="text-[10px] text-emerald-500 font-bold uppercase tracking-widest mb-1">
+              Live Network
+            </p>
+            <h3 className="text-xl font-black tracking-tight text-foreground">
+              Site Traffic
+            </h3>
+          </div>
+          <select
+            value={dateFilter}
+            onChange={(e) => setDateFilter(e.target.value as any)}
+            className={`px-3 py-2 text-xs font-bold rounded-xl border focus:outline-none transition-colors cursor-pointer ${
+              isDark
+                ? 'bg-zinc-900/50 border-zinc-800 text-zinc-300 hover:border-zinc-700'
+                : 'bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300 shadow-sm'
+            }`}
+          >
+            <option value="today">Today</option>
+            <option value="yesterday">Yesterday</option>
+            <option value="7days">Last 7 Days</option>
+            <option value="all">All Time (Legacy)</option>
+          </select>
+        </div>
+        
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
         {siteTraffic.map((site) => (
           <article
             key={site.siteId}
@@ -379,6 +316,7 @@ export default function AdminHomePage() {
           </article>
         ))}
       </section>
+      </div>
 
       {/* Category-wise Sound Counts */}
       <section
