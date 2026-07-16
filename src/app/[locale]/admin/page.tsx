@@ -41,6 +41,8 @@ export default function AdminHomePage() {
   // Top sounds
   const [topPlayed, setTopPlayed] = useState<AdminSound[]>([]);
   const [topViewed, setTopViewed] = useState<AdminSound[]>([]);
+  const [recentPlayed, setRecentPlayed] = useState<AdminSound[]>([]);
+  const [recentViewed, setRecentViewed] = useState<AdminSound[]>([]);
   const [playedOrder, setPlayedOrder] = useState<'desc' | 'asc'>('desc');
   const [viewedOrder, setViewedOrder] = useState<'desc' | 'asc'>('desc');
 
@@ -52,6 +54,9 @@ export default function AdminHomePage() {
   // Aggregate totals
   const [totalPlays, setTotalPlays] = useState(0);
   const [totalViews, setTotalViews] = useState(0);
+  
+  // Site traffic
+  const [siteTraffic, setSiteTraffic] = useState<{ siteId: string; plays: number; views: number }[]>([]);
 
   useEffect(() => {
     setMounted(true);
@@ -61,12 +66,14 @@ export default function AdminHomePage() {
       try {
         setLoading(true);
 
-        const [soundsRes, categoriesRes, topPlayedRes, topViewedRes, allSoundsRes] =
+        const [soundsRes, categoriesRes, topPlayedRes, topViewedRes, recentPlayedRes, recentViewedRes, allSoundsRes] =
           await Promise.all([
             api.get('/sounds?limit=6&admin=true'),
             api.get('/categories?limit=200&admin=true'),
             api.get('/sounds?sort=trending&limit=10&admin=true'),
             api.get('/sounds?sort=views&limit=10&admin=true'),
+            api.get('/sounds?sort=recent_plays&limit=10&admin=true'),
+            api.get('/sounds?sort=recent_views&limit=10&admin=true'),
             api.get('/sounds?limit=10000&admin=true'),
           ]);
 
@@ -94,11 +101,22 @@ export default function AdminHomePage() {
             ? topViewedRes.data.sounds
             : []
         );
+        setRecentPlayed(
+          Array.isArray(recentPlayedRes.data.sounds)
+            ? recentPlayedRes.data.sounds
+            : []
+        );
+        setRecentViewed(
+          Array.isArray(recentViewedRes.data.sounds)
+            ? recentViewedRes.data.sounds
+            : []
+        );
 
         // Compute aggregates
         let plays = 0;
         let views = 0;
         const catMap = new Map<string, CategoryStats>();
+        const trafficMap = new Map<string, { plays: number, views: number }>();
 
         for (const cat of cats) {
           catMap.set(cat._id, {
@@ -125,11 +143,34 @@ export default function AdminHomePage() {
             stat.totalPlays += s.playCount || 0;
             stat.totalViews += s.viewCount || 0;
           }
+          
+          if (s.sitePlays) {
+            for (const [siteId, count] of Object.entries(s.sitePlays)) {
+              const current = trafficMap.get(siteId) || { plays: 0, views: 0 };
+              current.plays += count as number;
+              trafficMap.set(siteId, current);
+            }
+          }
+          
+          if (s.siteViews) {
+            for (const [siteId, count] of Object.entries(s.siteViews)) {
+              const current = trafficMap.get(siteId) || { plays: 0, views: 0 };
+              current.views += count as number;
+              trafficMap.set(siteId, current);
+            }
+          }
         }
+
+        const trafficArr = Array.from(trafficMap.entries()).map(([siteId, stats]) => ({
+          siteId,
+          plays: stats.plays,
+          views: stats.views
+        })).sort((a, b) => b.plays - a.plays);
 
         setTotalPlays(plays);
         setTotalViews(views);
         setCategoryStats(Array.from(catMap.values()));
+        setSiteTraffic(trafficArr);
       } catch (error) {
         console.error('Failed to load admin overview', error);
       } finally {
@@ -308,6 +349,37 @@ export default function AdminHomePage() {
         ))}
       </section>
 
+      {/* Site Traffic Metrics */}
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+        {siteTraffic.map((site) => (
+          <article
+            key={site.siteId}
+            className={`p-5 md:p-6 rounded-3xl border transition-colors duration-300 flex justify-between items-center ${
+              isDark
+                ? 'border-zinc-800 bg-zinc-900/40'
+                : 'border-zinc-200 bg-white shadow-sm'
+            }`}
+          >
+            <div>
+              <p className={`text-[10px] font-black uppercase tracking-widest ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>
+                {site.siteId === 'soundbuttons' ? 'SoundButtonsMax.net' : 'SoundboardMax.net'}
+              </p>
+              <h3 className="text-xl font-black tracking-tight text-foreground mt-1">Traffic</h3>
+            </div>
+            <div className="flex gap-6">
+              <div className="text-right">
+                <p className={`text-[10px] font-black uppercase tracking-widest ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>Plays</p>
+                <strong className="text-2xl font-black text-emerald-500">{site.plays.toLocaleString()}</strong>
+              </div>
+              <div className="text-right">
+                <p className={`text-[10px] font-black uppercase tracking-widest ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>Views</p>
+                <strong className="text-2xl font-black text-amber-500">{site.views.toLocaleString()}</strong>
+              </div>
+            </div>
+          </article>
+        ))}
+      </section>
+
       {/* Category-wise Sound Counts */}
       <section
         className={`rounded-3xl border overflow-hidden transition-colors duration-300 ${
@@ -444,10 +516,10 @@ export default function AdminHomePage() {
       </section>
 
       {/* Top Sounds Leaderboards */}
-      <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+      <section className="grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-8">
         {/* Top Played */}
         <div
-          className={`rounded-3xl border overflow-hidden flex flex-col transition-colors duration-300 ${
+          className={`rounded-3xl border overflow-hidden flex flex-col transition-colors duration-300 lg:col-span-2 ${
             isDark
               ? 'border-zinc-800 bg-zinc-900/40'
               : 'border-zinc-200 bg-white shadow-sm'
@@ -539,7 +611,7 @@ export default function AdminHomePage() {
 
         {/* Top Viewed */}
         <div
-          className={`rounded-3xl border overflow-hidden flex flex-col transition-colors duration-300 ${
+          className={`rounded-3xl border overflow-hidden flex flex-col transition-colors duration-300 lg:col-span-2 ${
             isDark
               ? 'border-zinc-800 bg-zinc-900/40'
               : 'border-zinc-200 bg-white shadow-sm'
@@ -620,6 +692,135 @@ export default function AdminHomePage() {
                       <Eye size={14} className="text-amber-500" />
                       <span className="text-sm font-black text-foreground">
                         {(sound.viewCount || 0).toLocaleString()}
+                      </span>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Recent Activity Leaderboards */}
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+        {/* Recent Played */}
+        <div
+          className={`rounded-3xl border overflow-hidden flex flex-col transition-colors duration-300 ${
+            isDark
+              ? 'border-zinc-800 bg-zinc-900/40'
+              : 'border-zinc-200 bg-white shadow-sm'
+          }`}
+        >
+          <div className="p-6 md:p-8 pb-4 flex items-center justify-between">
+            <div>
+              <p className="text-[10px] text-purple-500 font-bold uppercase tracking-widest mb-1">
+                Recent Activity
+              </p>
+              <h3 className="text-xl font-black tracking-tight text-foreground">
+                Recently Played
+              </h3>
+            </div>
+          </div>
+
+          <div className="flex-1 overflow-y-auto px-4 md:px-6 pb-6">
+            <div className="space-y-2">
+              {loading ? (
+                <p className="text-center py-8 text-slate-400 font-bold animate-pulse">
+                  Loading...
+                </p>
+              ) : recentPlayed.length === 0 ? (
+                <p className="text-center py-8 text-slate-400 font-bold">
+                  No data
+                </p>
+              ) : (
+                recentPlayed.map((sound, i) => (
+                  <div
+                    key={sound._id}
+                    className={`flex items-center gap-4 p-3.5 rounded-2xl border transition-all ${
+                      isDark
+                        ? 'border-zinc-800/50 bg-zinc-950/40 hover:border-purple-500/20'
+                        : 'border-zinc-100 bg-zinc-50/50 hover:border-purple-500/20'
+                    }`}
+                  >
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-black text-foreground truncate">
+                        {sound.title}
+                      </p>
+                      <p
+                        className={`text-[11px] font-bold truncate ${
+                          isDark ? 'text-zinc-500' : 'text-zinc-400'
+                        }`}
+                      >
+                        {getSoundCategoryName(sound)}
+                      </p>
+                    </div>
+                    <div className="flex flex-col items-end shrink-0">
+                      <span className="text-[10px] font-bold text-slate-400">
+                        {sound.lastPlayedAt ? new Date(sound.lastPlayedAt).toLocaleTimeString() : '-'}
+                      </span>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Recent Viewed */}
+        <div
+          className={`rounded-3xl border overflow-hidden flex flex-col transition-colors duration-300 ${
+            isDark
+              ? 'border-zinc-800 bg-zinc-900/40'
+              : 'border-zinc-200 bg-white shadow-sm'
+          }`}
+        >
+          <div className="p-6 md:p-8 pb-4 flex items-center justify-between">
+            <div>
+              <p className="text-[10px] text-pink-500 font-bold uppercase tracking-widest mb-1">
+                Recent Activity
+              </p>
+              <h3 className="text-xl font-black tracking-tight text-foreground">
+                Recently Viewed
+              </h3>
+            </div>
+          </div>
+
+          <div className="flex-1 overflow-y-auto px-4 md:px-6 pb-6">
+            <div className="space-y-2">
+              {loading ? (
+                <p className="text-center py-8 text-slate-400 font-bold animate-pulse">
+                  Loading...
+                </p>
+              ) : recentViewed.length === 0 ? (
+                <p className="text-center py-8 text-slate-400 font-bold">
+                  No data
+                </p>
+              ) : (
+                recentViewed.map((sound, i) => (
+                  <div
+                    key={sound._id}
+                    className={`flex items-center gap-4 p-3.5 rounded-2xl border transition-all ${
+                      isDark
+                        ? 'border-zinc-800/50 bg-zinc-950/40 hover:border-pink-500/20'
+                        : 'border-zinc-100 bg-zinc-50/50 hover:border-pink-500/20'
+                    }`}
+                  >
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-black text-foreground truncate">
+                        {sound.title}
+                      </p>
+                      <p
+                        className={`text-[11px] font-bold truncate ${
+                          isDark ? 'text-zinc-500' : 'text-zinc-400'
+                        }`}
+                      >
+                        {getSoundCategoryName(sound)}
+                      </p>
+                    </div>
+                    <div className="flex flex-col items-end shrink-0">
+                      <span className="text-[10px] font-bold text-slate-400">
+                        {sound.lastViewedAt ? new Date(sound.lastViewedAt).toLocaleTimeString() : '-'}
                       </span>
                     </div>
                   </div>

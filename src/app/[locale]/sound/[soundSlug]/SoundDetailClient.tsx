@@ -8,6 +8,7 @@ import Link from 'next/link';
 import useAudio from '@/hooks/useAudio';
 import { toast } from 'react-hot-toast';
 import { useLocalePath } from '@/i18n';
+import { usePathname } from 'next/navigation';
 
 const BUTTON_COLORS = [
   { main: '#ff3b30', dark: '#a31a12', shadow: 'rgba(255, 59, 48, 0.3)' }, // Red
@@ -28,6 +29,7 @@ const getFullUrl = (url: string) => {
 export default function SoundDetailClient({ sound, relatedSounds, h1Title, uiDescription, siteName = 'SoundButtonsMax' }: any) {
   const { currentSound, isPlaying, isLoading, playSound } = useAudio();
   const lp = useLocalePath();
+  const pathname = usePathname();
   const isThisPlaying = currentSound?._id === sound._id && isPlaying;
   const isThisLoading = currentSound?._id === sound._id && isLoading;
 
@@ -87,7 +89,10 @@ export default function SoundDetailClient({ sound, relatedSounds, h1Title, uiDes
       document.body.removeChild(a);
     }
     // Track download stats
-    api.patch(`/sounds/${sound._id}/stats`, { type: 'download' }).catch(() => { });
+    if (!pathname?.includes('/admin')) {
+      const siteId = process.env.NEXT_PUBLIC_DEFAULT_SITE || 'soundbuttons';
+      api.patch(`/sounds/${sound._id}/stats`, { type: 'download', siteId }).catch(() => { });
+    }
   };
 
   // Pick a color based on the sound ID

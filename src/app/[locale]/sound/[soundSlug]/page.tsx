@@ -77,7 +77,7 @@ export default async function LocaleSoundDetailPage({
     sound = soundRes.data;
 
     if (sound && sound._id) {
-      api.patch(`/sounds/${sound._id}/stats`, { type: 'view' }).catch(() => { });
+      api.patch(`/sounds/${sound._id}/stats`, { type: 'view', siteId: site.id }).catch(() => { });
     }
 
     if (sound && sound.category?._id) {

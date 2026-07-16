@@ -30,6 +30,10 @@ export interface AdminSound {
   downloadCount?: number;
   viewCount?: number;
   siteIds?: string[];
+  lastPlayedAt?: string;
+  lastViewedAt?: string;
+  sitePlays?: Record<string, number>;
+  siteViews?: Record<string, number>;
 }
 
 export interface AdminBlogPost {

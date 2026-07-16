@@ -7,6 +7,7 @@ import api from '../services/api';
 import { toast } from 'react-hot-toast';
 import useAudio from '../hooks/useAudio';
 import { useTranslation, useLocalePath } from '@/i18n';
+import { usePathname } from 'next/navigation';
 
 interface SoundProps {
   sound: {
@@ -43,6 +44,7 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
   const [isFavorited, setIsFavorited] = useState(false);
   const { t } = useTranslation();
   const lp = useLocalePath();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -105,7 +107,10 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
       document.body.removeChild(a);
     }
     // Track stats
-    api.patch(`/sounds/${sound._id}/stats`, { type: 'download' }).catch(() => { });
+    if (!pathname?.includes('/admin')) {
+      const siteId = process.env.NEXT_PUBLIC_DEFAULT_SITE || 'soundbuttons';
+      api.patch(`/sounds/${sound._id}/stats`, { type: 'download', siteId }).catch(() => { });
+    }
   };
 
   const soundLink = lp(`/sound/${sound.slug}`);
