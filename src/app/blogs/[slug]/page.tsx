@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Calendar, User, ArrowLeft, Eye } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import { headers } from 'next/headers';
+import { cache } from 'react';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
 
@@ -22,6 +23,11 @@ const getImageUrl = (path: string) => {
   return url;
 };
 
+const getBlog = cache(async (slug: string, siteId: string) => {
+  const res = await api.get(`/blogs/${slug}?siteId=${siteId}`);
+  return res.data;
+});
+
 export async function generateMetadata({
   params,
 }: {
@@ -33,8 +39,7 @@ export async function generateMetadata({
   const locale = headersList.get('x-locale') || 'en';
 
   try {
-    const res = await api.get(`/blogs/${slug}`);
-    const blog = res.data;
+    const blog = await getBlog(slug, site.id);
 
     return buildSeoMetadata({
       site,
@@ -57,12 +62,12 @@ export async function generateMetadata({
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  const site = await getRequestSite();
 
   let blog = null;
 
   try {
-    const res = await api.get(`/blogs/${slug}`);
-    blog = res.data;
+    blog = await getBlog(slug, site.id);
   } catch (error: any) {
     if (error.response?.status === 404) {
       notFound();

@@ -44,7 +44,7 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
   let totalPages = 1;
 
   try {
-    const res = await api.get(`/blogs?page=${currentPage}&limit=12&isPublished=true`);
+    const res = await api.get(`/blogs?page=${currentPage}&limit=12&isPublished=true&siteId=${site.id}`);
     blogs = res.data.blogs || res.data.items || [];
     console.log('Blogs fetched on server:', blogs);
     totalPages = res.data.pages || 1;

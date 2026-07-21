@@ -39,6 +39,7 @@ export default function BlogEditorPage() {
     seoDescription: '',
     author: user?.name || 'Sound Buttons Max Team',
     isPublished: false,
+    targetSites: [],
   });
 
   const [featuredImage, setFeaturedImage] = useState<File | null>(null);
@@ -67,6 +68,7 @@ export default function BlogEditorPage() {
         seoDescription: blog.seoDescription || '',
         author: blog.author || '',
         isPublished: blog.isPublished ?? false,
+        targetSites: blog.targetSites || [],
       });
     }
   }, [blog]);
@@ -89,6 +91,17 @@ export default function BlogEditorPage() {
 
   const handleEditorChange = (content: string, editor: any) => {
     setFormData(prev => ({ ...prev, content }));
+  };
+
+  const handleSiteToggle = (siteId: string) => {
+    setFormData(prev => {
+      const currentSites = prev.targetSites || [];
+      if (currentSites.includes(siteId)) {
+        return { ...prev, targetSites: currentSites.filter(id => id !== siteId) };
+      } else {
+        return { ...prev, targetSites: [...currentSites, siteId] };
+      }
+    });
   };
 
   const handleImageUpload = async (blobInfo: any, progress: (percent: number) => void): Promise<string> => {
@@ -131,7 +144,11 @@ export default function BlogEditorPage() {
       const submitData = new FormData();
       Object.keys(formData).forEach(key => {
         if (formData[key as keyof AdminBlogPost] !== undefined) {
-          submitData.append(key, formData[key as keyof AdminBlogPost] as string);
+          if (key === 'targetSites') {
+            submitData.append(key, JSON.stringify(formData[key as keyof AdminBlogPost]));
+          } else {
+            submitData.append(key, formData[key as keyof AdminBlogPost] as string);
+          }
         }
       });
 
@@ -320,6 +337,43 @@ export default function BlogEditorPage() {
                   onChange={e => setFormData({ ...formData, author: e.target.value })}
                   className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 text-sm font-medium outline-none"
                 />
+              </div>
+            </div>
+
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+              <h3 className="text-sm font-black uppercase tracking-widest text-foreground">Target Sites</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Select where this blog should be published. Leave empty for all sites.</p>
+              
+              <div className="space-y-3">
+                <label className="flex items-center gap-3 cursor-pointer group">
+                  <div className="relative flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={(formData.targetSites || []).includes('soundboard')}
+                      onChange={() => handleSiteToggle('soundboard')}
+                      className="peer sr-only"
+                    />
+                    <div className="w-5 h-5 rounded border-2 border-slate-300 dark:border-slate-700 peer-checked:bg-indigo-600 peer-checked:border-indigo-600 transition-colors flex items-center justify-center">
+                      <svg className="w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                    </div>
+                  </div>
+                  <span className="text-sm font-medium text-slate-600 dark:text-slate-300 group-hover:text-foreground transition-colors">SoundboardMax</span>
+                </label>
+
+                <label className="flex items-center gap-3 cursor-pointer group">
+                  <div className="relative flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={(formData.targetSites || []).includes('soundbuttons')}
+                      onChange={() => handleSiteToggle('soundbuttons')}
+                      className="peer sr-only"
+                    />
+                    <div className="w-5 h-5 rounded border-2 border-slate-300 dark:border-slate-700 peer-checked:bg-indigo-600 peer-checked:border-indigo-600 transition-colors flex items-center justify-center">
+                      <svg className="w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                    </div>
+                  </div>
+                  <span className="text-sm font-medium text-slate-600 dark:text-slate-300 group-hover:text-foreground transition-colors">Sound Buttons Max</span>
+                </label>
               </div>
             </div>
 

@@ -54,6 +54,7 @@ export interface AdminBlogPost {
   isPublished?: boolean;
   views?: number;
   publishedDate?: string;
+  targetSites?: string[];
   createdAt?: string;
   updatedAt?: string;
 }
