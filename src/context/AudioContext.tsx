@@ -4,6 +4,7 @@ import React, { createContext, useState, useEffect, useRef } from 'react';
 import api from '@/services/api';
 import { useTheme } from 'next-themes';
 import { usePathname } from 'next/navigation';
+import { useSite } from '@/context/SiteProvider';
 
 
 export interface Sound {
@@ -60,6 +61,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [duration, setDuration] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const pathname = usePathname();
+  const { siteId } = useSite();
 
 
   const playSound = async (sound: Sound) => {
@@ -79,7 +81,6 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         await audioRef.current.play();
         if (sound._id && sound._id.match(/^[0-9a-fA-F]{24}$/)) {
           if (!pathname?.includes('/admin')) {
-            const siteId = process.env.NEXT_PUBLIC_DEFAULT_SITE || 'soundbuttons';
             api.patch(`/sounds/${sound._id}/stats`, { type: 'play', siteId }).catch(() => { });
           }
         }

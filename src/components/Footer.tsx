@@ -87,27 +87,17 @@ const Footer = ({ categories = [] }: { categories?: any[] }) => {
           {/* Newsletter */}
           <div className="space-y-6">
             <h3 className={`text-lg font-black tracking-tight mb-6 ${isDark ? 'text-white' : 'text-zinc-900'}`}>
-              {t('footer.stay_tuned')}
+              Contact
             </h3>
-            <p className={`text-sm font-medium transition-all duration-300 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
-              {t('footer.newsletter_desc')}
-            </p>
-            <form className="space-y-3">
-              <input
-                type="email"
-                placeholder={t('footer.email_placeholder')}
-                className={`w-full px-4 py-3 rounded-xl border outline-none focus:ring-2 focus:ring-primary/20 transition-all font-bold text-sm ${isDark
-                  ? 'bg-zinc-900 border-zinc-800 text-white'
-                  : 'bg-zinc-100 border-zinc-200 text-zinc-900'
-                  }`}
-              />
-              <button
-                type="submit"
-                className="w-full py-3 rounded-xl bg-primary text-background font-black hover:bg-primary-hover transition-all active:scale-95 shadow-lg shadow-primary/20"
-              >
-                {t('footer.join_newsletter')}
-              </button>
-            </form>
+            <div className={`space-y-3 font-bold transition-all duration-300 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
+              <p>1555 Doctors Drive, El Segundo, CA 90245</p>
+              <p>310-364-1511</p>
+              <p>
+                <a href={`mailto:${config.id === 'soundboard' ? 'soundboardmax.net@gmail.com' : 'soundbuttonsmax.net@gmail.com'}`} className="hover:text-primary transition-colors">
+                  {config.id === 'soundboard' ? 'soundboardmax.net@gmail.com' : 'soundbuttonsmax.net@gmail.com'}
+                </a>
+              </p>
+            </div>
           </div>
         </div>
 

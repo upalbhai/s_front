@@ -9,6 +9,7 @@ import useAudio from '@/hooks/useAudio';
 import { toast } from 'react-hot-toast';
 import { useLocalePath } from '@/i18n';
 import { usePathname } from 'next/navigation';
+import { useSite } from '@/context/SiteProvider';
 
 const BUTTON_COLORS = [
   { main: '#ff3b30', dark: '#a31a12', shadow: 'rgba(255, 59, 48, 0.3)' }, // Red
@@ -30,6 +31,7 @@ export default function SoundDetailClient({ sound, relatedSounds, h1Title, uiDes
   const { currentSound, isPlaying, isLoading, playSound } = useAudio();
   const lp = useLocalePath();
   const pathname = usePathname();
+  const { siteId } = useSite();
   const isThisPlaying = currentSound?._id === sound._id && isPlaying;
   const isThisLoading = currentSound?._id === sound._id && isLoading;
 
@@ -90,7 +92,6 @@ export default function SoundDetailClient({ sound, relatedSounds, h1Title, uiDes
     }
     // Track download stats
     if (!pathname?.includes('/admin')) {
-      const siteId = process.env.NEXT_PUBLIC_DEFAULT_SITE || 'soundbuttons';
       api.patch(`/sounds/${sound._id}/stats`, { type: 'download', siteId }).catch(() => { });
     }
   };

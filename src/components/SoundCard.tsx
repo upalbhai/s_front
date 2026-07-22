@@ -8,6 +8,7 @@ import { toast } from 'react-hot-toast';
 import useAudio from '../hooks/useAudio';
 import { useTranslation, useLocalePath } from '@/i18n';
 import { usePathname } from 'next/navigation';
+import { useSite } from '@/context/SiteProvider';
 
 interface SoundProps {
   sound: {
@@ -45,6 +46,7 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
   const { t } = useTranslation();
   const lp = useLocalePath();
   const pathname = usePathname();
+  const { siteId } = useSite();
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -108,7 +110,6 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
     }
     // Track stats
     if (!pathname?.includes('/admin')) {
-      const siteId = process.env.NEXT_PUBLIC_DEFAULT_SITE || 'soundbuttons';
       api.patch(`/sounds/${sound._id}/stats`, { type: 'download', siteId }).catch(() => { });
     }
   };

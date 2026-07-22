@@ -40,6 +40,13 @@ export async function generateMetadata({
 
   try {
     const blog = await getBlog(slug, site.id);
+    
+    const ogImagePath = blog.ogImage || blog.featuredImage;
+    let absoluteOgImage = undefined;
+    if (ogImagePath) {
+      const imgUrl = getImageUrl(ogImagePath);
+      absoluteOgImage = imgUrl.startsWith('http') ? imgUrl : `${site.siteUrl}${imgUrl}`;
+    }
 
     return buildSeoMetadata({
       site,
@@ -47,7 +54,7 @@ export async function generateMetadata({
       description: blog.seoDescription || blog.excerpt || blog.title,
       canonicalPath: `/blogs/${slug}`,
       locale,
-      image: blog.ogImage ? getImageUrl(blog.ogImage) : undefined,
+      image: absoluteOgImage,
     });
   } catch (error) {
     return buildSeoMetadata({

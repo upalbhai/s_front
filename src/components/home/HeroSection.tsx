@@ -1,10 +1,10 @@
 'use client';
 
-import React from 'react';
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Search, Sparkles, Loader2 } from 'lucide-react';
 import api from '@/services/api';
 import { useTranslation } from '@/i18n';
+import { useSite } from '@/context/SiteProvider';
 
 interface HeroSectionProps {
   searchQuery?: string;
@@ -35,6 +35,7 @@ export default function HeroSection({
   placeholder,
 }: HeroSectionProps) {
   const { t } = useTranslation();
+  const { siteId } = useSite();
   const resolvedTitle = title ?? t('hero.title');
   const resolvedBadge = badge ?? t('hero.badge');
   const resolvedPlaceholder = placeholder ?? t('hero.placeholder');
@@ -58,7 +59,7 @@ export default function HeroSection({
         .then(() => {
           setActivePlayingId(soundId);
           if (soundId.match(/^[0-9a-fA-F]{24}$/)) {
-            api.patch(`/sound/${soundId}/stats`, { type: 'play' }).catch(() => { });
+            api.patch(`/sounds/${soundId}/stats`, { type: 'play', siteId }).catch(() => { });
           }
         })
         .catch(err => {

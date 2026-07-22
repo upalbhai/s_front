@@ -97,8 +97,8 @@ export default async function RootLayout({
       <body className="antialiased transition-colors duration-300">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <QueryProvider>
-            <AudioProvider>
-              <SiteProvider siteId={site.id} config={site}>
+            <SiteProvider siteId={site.id} config={site}>
+              <AudioProvider>
                 <LanguageProvider siteId={site.id} initialLocale={initialLocale} initialTranslations={initialTranslations}>
                   <AppChrome categories={categories}>{children}</AppChrome>
                   <Toaster
@@ -112,8 +112,8 @@ export default async function RootLayout({
                     }}
                   />
                 </LanguageProvider>
-              </SiteProvider>
-            </AudioProvider>
+              </AudioProvider>
+            </SiteProvider>
           </QueryProvider>
         </ThemeProvider>
       </body>
