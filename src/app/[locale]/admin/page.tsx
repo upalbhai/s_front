@@ -16,6 +16,7 @@ import {
   ChevronUp,
   ChevronDown,
   RotateCcw,
+  Download,
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { AdminCategory, AdminSound, getSoundCategoryName } from './admin-types';
@@ -28,6 +29,7 @@ interface CategoryStats {
   soundCount: number;
   totalPlays: number;
   totalViews: number;
+  totalDownloads: number;
 }
 
 export default function AdminHomePage() {
@@ -51,16 +53,17 @@ export default function AdminHomePage() {
 
   // Category stats
   const [categoryStats, setCategoryStats] = useState<CategoryStats[]>([]);
-  const [catSortKey, setCatSortKey] = useState<'soundCount' | 'totalPlays' | 'totalViews'>('soundCount');
+  const [catSortKey, setCatSortKey] = useState<'soundCount' | 'totalPlays' | 'totalViews' | 'totalDownloads'>('soundCount');
   const [catSortDir, setCatSortDir] = useState<'desc' | 'asc'>('desc');
 
   // Aggregate totals
   const [totalPlays, setTotalPlays] = useState(0);
   const [totalViews, setTotalViews] = useState(0);
+  const [totalDownloads, setTotalDownloads] = useState(0);
 
   // Site traffic
   const [dateFilter, setDateFilter] = useState<'all' | 'today' | 'yesterday' | '7days'>('7days');
-  const [siteTraffic, setSiteTraffic] = useState<{ siteId: string; plays: number; views: number }[]>([]);
+  const [siteTraffic, setSiteTraffic] = useState<{ siteId: string; plays: number; views: number; downloads: number }[]>([]);
 
   useEffect(() => {
     setMounted(true);
@@ -83,6 +86,7 @@ export default function AdminHomePage() {
 
         setTotalPlays(data.totalPlays || 0);
         setTotalViews(data.totalViews || 0);
+        setTotalDownloads(data.totalDownloads || 0);
         setCategoryStats(data.categoryStats || []);
         setSiteTraffic(data.siteTraffic || []);
 
@@ -117,7 +121,7 @@ export default function AdminHomePage() {
       : a[catSortKey] - b[catSortKey]
   );
 
-  const handleCatSort = (key: 'soundCount' | 'totalPlays' | 'totalViews') => {
+  const handleCatSort = (key: 'soundCount' | 'totalPlays' | 'totalViews' | 'totalDownloads') => {
     if (catSortKey === key) {
       setCatSortDir((d) => (d === 'desc' ? 'asc' : 'desc'));
     } else {
@@ -236,7 +240,7 @@ export default function AdminHomePage() {
       </section>
 
       {/* Metrics Grid */}
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+      <section className="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-6">
         {[
           {
             icon: Music,
@@ -265,6 +269,13 @@ export default function AdminHomePage() {
             value: totalViews,
             color: 'text-amber-500',
             bg: 'bg-amber-500/10',
+          },
+          {
+            icon: Download,
+            label: 'Total Downloads',
+            value: totalDownloads,
+            color: 'text-purple-500',
+            bg: 'bg-purple-500/10',
           },
         ].map((metric) => (
           <article
@@ -344,6 +355,10 @@ export default function AdminHomePage() {
                   <p className={`text-[10px] font-black uppercase tracking-widest ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>Views</p>
                   <strong className="text-2xl font-black text-amber-500">{site.views.toLocaleString()}</strong>
                 </div>
+                <div className="text-right">
+                  <p className={`text-[10px] font-black uppercase tracking-widest ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>Downloads</p>
+                  <strong className="text-2xl font-black text-purple-500">{(site.downloads || 0).toLocaleString()}</strong>
+                </div>
               </div>
             </article>
           ))}
@@ -422,6 +437,18 @@ export default function AdminHomePage() {
                     />
                   </span>
                 </th>
+                <th
+                  className="text-right px-6 md:px-8 py-3 text-[10px] font-black uppercase tracking-widest text-slate-400 cursor-pointer select-none hover:text-sky-500 transition-colors"
+                  onClick={() => handleCatSort('totalDownloads')}
+                >
+                  <span className="inline-flex items-center gap-1">
+                    Downloads{' '}
+                    <SortIcon
+                      active={catSortKey === 'totalDownloads'}
+                      dir={catSortDir}
+                    />
+                  </span>
+                </th>
               </tr>
             </thead>
             <tbody
@@ -431,7 +458,7 @@ export default function AdminHomePage() {
               {loading ? (
                 <tr>
                   <td
-                    colSpan={4}
+                    colSpan={5}
                     className="text-center py-12 text-slate-400 font-bold"
                   >
                     Loading...
@@ -440,7 +467,7 @@ export default function AdminHomePage() {
               ) : sortedCategoryStats.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={4}
+                    colSpan={5}
                     className="text-center py-12 text-slate-400 font-bold"
                   >
                     No categories found
@@ -471,6 +498,11 @@ export default function AdminHomePage() {
                     <td className="px-6 md:px-8 py-3.5 text-right">
                       <span className="text-sm font-bold text-slate-500">
                         {cat.totalViews.toLocaleString()}
+                      </span>
+                    </td>
+                    <td className="px-6 md:px-8 py-3.5 text-right">
+                      <span className="text-sm font-black text-foreground">
+                        {cat.totalDownloads.toLocaleString()}
                       </span>
                     </td>
                   </tr>
