@@ -81,6 +81,7 @@ export default async function RootLayout({
         {/* Google tag (gtag.js) */}
         {headersList.get('host')?.includes('soundboardmax.net') && (
           <>
+            <meta name="google-adsense-account" content="ca-pub-1092009788490991" />
             <Script async src="https://www.googletagmanager.com/gtag/js?id=G-D32CCS2KQJ" strategy="afterInteractive" />
             <Script id="google-analytics" strategy="afterInteractive">
               {`
