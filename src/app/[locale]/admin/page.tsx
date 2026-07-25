@@ -43,13 +43,14 @@ export default function AdminHomePage() {
   const [isResetting, setIsResetting] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
-  // Top sounds
   const [topPlayed, setTopPlayed] = useState<AdminSound[]>([]);
   const [topViewed, setTopViewed] = useState<AdminSound[]>([]);
+  const [topDownloaded, setTopDownloaded] = useState<AdminSound[]>([]);
   const [recentPlayed, setRecentPlayed] = useState<AdminSound[]>([]);
   const [recentViewed, setRecentViewed] = useState<AdminSound[]>([]);
   const [playedOrder, setPlayedOrder] = useState<'desc' | 'asc'>('desc');
   const [viewedOrder, setViewedOrder] = useState<'desc' | 'asc'>('desc');
+  const [downloadedOrder, setDownloadedOrder] = useState<'desc' | 'asc'>('desc');
 
   // Category stats
   const [categoryStats, setCategoryStats] = useState<CategoryStats[]>([]);
@@ -81,6 +82,7 @@ export default function AdminHomePage() {
 
         setTopPlayed(data.topPlayed || []);
         setTopViewed(data.topViewed || []);
+        setTopDownloaded(data.topDownloaded || []);
         setRecentPlayed(data.recentPlayed || []);
         setRecentViewed(data.recentViewed || []);
 
@@ -113,6 +115,12 @@ export default function AdminHomePage() {
     viewedOrder === 'desc'
       ? (b.viewCount || 0) - (a.viewCount || 0)
       : (a.viewCount || 0) - (b.viewCount || 0)
+  );
+
+  const sortedTopDownloaded = [...topDownloaded].sort((a, b) =>
+    downloadedOrder === 'desc'
+      ? (b.downloadCount || 0) - (a.downloadCount || 0)
+      : (a.downloadCount || 0) - (b.downloadCount || 0)
   );
 
   const sortedCategoryStats = [...categoryStats].sort((a, b) =>
@@ -514,10 +522,10 @@ export default function AdminHomePage() {
       </section>
 
       {/* Top Sounds Leaderboards */}
-      <section className="grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-8">
+      <section className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
         {/* Top Played */}
         <div
-          className={`rounded-3xl border overflow-hidden flex flex-col transition-colors duration-300 lg:col-span-2 ${isDark
+          className={`rounded-3xl border overflow-hidden flex flex-col transition-colors duration-300 lg:col-span-1 ${isDark
             ? 'border-zinc-800 bg-zinc-900/40'
             : 'border-zinc-200 bg-white shadow-sm'
             }`}
@@ -604,7 +612,7 @@ export default function AdminHomePage() {
 
         {/* Top Viewed */}
         <div
-          className={`rounded-3xl border overflow-hidden flex flex-col transition-colors duration-300 lg:col-span-2 ${isDark
+          className={`rounded-3xl border overflow-hidden flex flex-col transition-colors duration-300 lg:col-span-1 ${isDark
             ? 'border-zinc-800 bg-zinc-900/40'
             : 'border-zinc-200 bg-white shadow-sm'
             }`}
@@ -680,6 +688,93 @@ export default function AdminHomePage() {
                       <Eye size={14} className="text-amber-500" />
                       <span className="text-sm font-black text-foreground">
                         {(sound.viewCount || 0).toLocaleString()}
+                      </span>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Top Downloaded */}
+        <div
+          className={`rounded-3xl border overflow-hidden flex flex-col transition-colors duration-300 lg:col-span-1 ${isDark
+            ? 'border-zinc-800 bg-zinc-900/40'
+            : 'border-zinc-200 bg-white shadow-sm'
+            }`}
+        >
+          <div className="p-6 md:p-8 pb-4 flex items-center justify-between">
+            <div>
+              <p className="text-[10px] text-purple-500 font-bold uppercase tracking-widest mb-1">
+                Leaderboard
+              </p>
+              <h3 className="text-xl font-black tracking-tight text-foreground">
+                Top Downloaded
+              </h3>
+            </div>
+            <button
+              onClick={() =>
+                setDownloadedOrder((o) => (o === 'desc' ? 'asc' : 'desc'))
+              }
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all active:scale-95 ${isDark
+                ? 'border-zinc-700 bg-zinc-800 text-zinc-300 hover:border-purple-500/50'
+                : 'border-zinc-200 bg-zinc-50 text-zinc-600 hover:border-purple-500/50'
+                }`}
+            >
+              {downloadedOrder === 'desc' ? (
+                <ChevronDown size={12} />
+              ) : (
+                <ChevronUp size={12} />
+              )}
+              {downloadedOrder === 'desc' ? 'Highest' : 'Lowest'}
+            </button>
+          </div>
+
+          <div className="flex-1 overflow-y-auto px-4 md:px-6 pb-6">
+            <div className="space-y-2">
+              {loading ? (
+                <p className="text-center py-8 text-slate-400 font-bold animate-pulse">
+                  Loading...
+                </p>
+              ) : sortedTopDownloaded.length === 0 ? (
+                <p className="text-center py-8 text-slate-400 font-bold">
+                  No data
+                </p>
+              ) : (
+                sortedTopDownloaded.map((sound, i) => (
+                  <div
+                    key={sound._id}
+                    className={`flex items-center gap-4 p-3.5 rounded-2xl border transition-all ${isDark
+                      ? 'border-zinc-800/50 bg-zinc-950/40 hover:border-purple-500/20'
+                      : 'border-zinc-100 bg-zinc-50/50 hover:border-purple-500/20'
+                      }`}
+                  >
+                    <span
+                      className={`w-7 h-7 rounded-lg flex items-center justify-center text-[11px] font-black shrink-0 ${i < 3
+                        ? 'bg-purple-500/10 text-purple-600 dark:text-purple-400'
+                        : isDark
+                          ? 'bg-zinc-800 text-zinc-500'
+                          : 'bg-zinc-100 text-zinc-400'
+                        }`}
+                    >
+                      {i + 1}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-black text-foreground truncate">
+                        {sound.title}
+                      </p>
+                      <p
+                        className={`text-[11px] font-bold truncate ${isDark ? 'text-zinc-500' : 'text-zinc-400'
+                          }`}
+                      >
+                        {getSoundCategoryName(sound)}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <Download size={14} className="text-purple-500" />
+                      <span className="text-sm font-black text-foreground">
+                        {(sound.downloadCount || 0).toLocaleString()}
                       </span>
                     </div>
                   </div>

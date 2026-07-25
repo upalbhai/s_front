@@ -15,6 +15,7 @@ import { headers } from 'next/headers';
 import { getTranslationsRaw } from '@/i18n/server';
 import type { Locale } from '@/i18n';
 import Script from 'next/script';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -101,7 +102,9 @@ export default async function RootLayout({
             <SiteProvider siteId={site.id} config={site}>
               <AudioProvider>
                 <LanguageProvider siteId={site.id} initialLocale={initialLocale} initialTranslations={initialTranslations}>
-                  <AppChrome categories={categories}>{children}</AppChrome>
+                  <TooltipProvider>
+                    <AppChrome categories={categories}>{children}</AppChrome>
+                  </TooltipProvider>
                   <Toaster
                     position="bottom-right"
                     toastOptions={{
