@@ -22,6 +22,7 @@ import { toast } from 'react-hot-toast';
 import { AdminCategory, AdminSound, getSoundCategoryName } from './admin-types';
 import { useAdminSession } from './useAdminSession';
 import { useTheme } from 'next-themes';
+import { getSiteConfig } from '@/config/sites';
 
 interface CategoryStats {
   _id: string;
@@ -350,7 +351,7 @@ export default function AdminHomePage() {
             >
               <div>
                 <p className={`text-[10px] font-black uppercase tracking-widest ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>
-                  {site.siteId === 'soundbuttons' ? 'SoundButtonsMax.net' : 'SoundboardMax.net'}
+                  {getSiteConfig(site.siteId).domains[0]}
                 </p>
                 <h3 className="text-xl font-black tracking-tight text-foreground mt-1">Traffic</h3>
               </div>

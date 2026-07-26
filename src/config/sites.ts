@@ -1,12 +1,14 @@
-export type SiteId = 'soundbuttons' | 'soundboard';
+// SiteId is derived automatically from the keys of SITES below.
+// To add a new site, just add a new entry to SITES — no other type changes needed.
 
 export type SiteConfig = {
-  id: SiteId;
+  id: string;
   domains: string[];
   siteName: string;
   wordmark: { line1: string; accent: string };
   siteUrl: string;
   logo: string;
+  favicon: string;
   ogImage: string;
   themeColor: string;
   primaryColor: string;
@@ -14,6 +16,8 @@ export type SiteConfig = {
   contactEmail: string;
   dmcaEmail: string;
   twitterHandle: string;
+  gaId?: string;
+  adsenseId?: string;
   meta: {
     home: { title: string; description: string; keywords: string; h1?: string };
     trending: { title: string; description: string; h1?: string; shortDescription?: string; keywords?: string };
@@ -25,7 +29,7 @@ export type SiteConfig = {
   };
 };
 
-const SITES: Record<SiteId, SiteConfig> = {
+const SITES: Record<string, SiteConfig> = {
   soundbuttons: {
     id: 'soundbuttons',
     domains: ['soundbuttonsmax.net', 'www.soundbuttonsmax.net', 'soundbuttonsmax.net', 'www.soundbuttonsmax.net'],
@@ -33,6 +37,7 @@ const SITES: Record<SiteId, SiteConfig> = {
     wordmark: { line1: 'SOUND BUTTONS', accent: 'MAX' },
     siteUrl: 'https://soundbuttonsmax.net',
     logo: '/logo-soundbuttons.png',
+    favicon: '/favicon-soundbuttons.ico',
     ogImage: '/sites/soundbuttons/og-home.svg',
     themeColor: '#2563eb',
     primaryColor: '#2563eb',
@@ -92,6 +97,7 @@ const SITES: Record<SiteId, SiteConfig> = {
     wordmark: { line1: 'SOUNDBOARD', accent: 'MAX' },
     siteUrl: 'https://soundboardmax.net',
     logo: '/sites/soundbuttons/logo.jpeg',
+    favicon: '/favicon-soundboard.ico',
     ogImage: '/sites/soundboard/og-home.svg',
     themeColor: '#e53935',
     primaryColor: '#e53935',
@@ -99,6 +105,8 @@ const SITES: Record<SiteId, SiteConfig> = {
     contactEmail: 'soundboardmax.net@gmail.com',
     dmcaEmail: 'dmca@soundboardmax.net',
     twitterHandle: '@soundboardmax',
+    gaId: 'G-D32CCS2KQJ',
+    adsenseId: 'ca-pub-1092009788490991',
     meta: {
       home: {
         title: 'SoundboardMax: 100K+ Meme Soundboard Unblocked and Sound Buttons',
@@ -143,16 +151,76 @@ const SITES: Record<SiteId, SiteConfig> = {
       },
     },
   },
+  soundbuttonsguys: {
+    id: 'soundbuttonsguys',
+    domains: ['soundbuttonsguys.com', 'www.soundbuttonsguys.com'],
+    siteName: 'Sound Buttons Guys',
+    wordmark: { line1: 'SOUND BUTTONS', accent: 'GUYS' },
+    siteUrl: 'https://soundbuttonsguys.com',
+    logo: '/logo-soundbuttons.png', // Temporary, re-using existing logo
+    favicon: '/favicon-soundbuttons.ico', // Temporary, re-using existing favicon
+    ogImage: '/sites/soundbuttons/og-home.svg', // Temporary, re-using existing og
+    themeColor: '#7c3aed', // Purple as default
+    primaryColor: '#7c3aed',
+    primaryHoverColor: '#6d28d9',
+    contactEmail: 'contact@soundbuttonsguys.com',
+    dmcaEmail: 'dmca@soundbuttonsguys.com',
+    twitterHandle: '@soundbuttonsguys',
+    meta: {
+      home: {
+        title: 'Sound Buttons Guys: Free Meme Soundboard & Sound Buttons',
+        description: 'Discover thousands of sound buttons and meme soundboards. Play, prank, and download the best sound effects free on Sound Buttons Guys.',
+        keywords: 'sound buttons, meme sound buttons, free soundboard, meme sounds, viral meme sounds, sound effects, online soundboard',
+        h1: 'Sound Buttons Guys: Explore Free Meme Soundboard',
+      },
+      trending: {
+        title: 'Trending Sound Buttons: Viral Meme Soundboard',
+        description: 'Explore trending sound buttons, popular meme soundboard clips, and viral sound effects. Free play & download on Sound Buttons Guys.',
+        h1: 'Trending Sound Buttons: Meme Soundboard',
+        shortDescription: 'Daily-updated trending sound buttons and meme soundboard for instant play.',
+        keywords: 'trending sounds, viral soundboard, popular sound effects, trending audio clips, viral meme sounds',
+      },
+      new: {
+        title: 'New Sound Buttons: Latest Meme Soundboard',
+        description: 'Discover the latest sound buttons and meme soundboard. Fresh sound effects added daily free on Sound Buttons Guys.',
+        h1: 'New Sound Buttons: Meme Soundboard',
+        shortDescription: 'Explore newly added sound buttons and meme soundboard collection.',
+        keywords: 'new soundboard sounds, latest sound effects, fresh audio clips, new meme sounds',
+      },
+      categories: {
+        title: 'Soundboard Categories - Sound Buttons Guys',
+        description: 'Browse meme soundboard categories. Anime, gaming, TikTok, pranks and more — all free and unblocked.',
+      },
+      categoryDetail: {
+        titleTemplate: '{category name} Sound Buttons',
+        descriptionTemplate: 'Explore {category name}, sound buttons, meme soundboard, and viral sound effects on Sound Buttons Guys.',
+        h1Template: '{category name}',
+        keywordsTemplate: 'soundboard categories, meme sounds, gaming sound effects, comedy audio, viral sounds',
+      },
+      soundDetail: {
+        titleTemplate: '{sound name} - Sound Buttons Guys',
+        h1Template: '{sound name}',
+        descriptionTemplate: 'Play and download the {sound name} sound button instantly! Ideal for memes, pranks, and gaming.',
+      },
+      search: {
+        titleTemplate: '{sound name} Soundboard | Sound Buttons Guys',
+        descriptionTemplate: 'Play and download {search name} sound effect buttons for free! Instant play, high-quality MP3 downloads.',
+        h1Template: '{sound name} Sound Buttons',
+      },
+    },
+  },
 };
+// Derive SiteId type automatically from the SITES keys
+export type SiteId = keyof typeof SITES;
 
-export const DEFAULT_SITE_ID: SiteId =
-  (process.env.NEXT_PUBLIC_DEFAULT_SITE as SiteId) || 'soundbuttons';
+export const DEFAULT_SITE_ID: string =
+  process.env.NEXT_PUBLIC_DEFAULT_SITE || 'soundbuttons';
 
 export function normalizeHost(host: string): string {
   return host.split(':')[0].toLowerCase().replace(/^www\./, '');
 }
 
-export function resolveSiteId(host: string): SiteId {
+export function resolveSiteId(host: string): string {
   const normalized = normalizeHost(host);
 
   for (const site of Object.values(SITES)) {
@@ -166,7 +234,7 @@ export function resolveSiteId(host: string): SiteId {
 
 export function getSiteConfig(siteId: string): SiteConfig {
   if (siteId in SITES) {
-    return SITES[siteId as SiteId];
+    return SITES[siteId];
   }
   return SITES[DEFAULT_SITE_ID];
 }

@@ -79,18 +79,20 @@ export default async function RootLayout({
       <head>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
-        {/* Google tag (gtag.js) */}
-        {headersList.get('host')?.includes('soundboardmax.net') && (
+        {/* Google tag (gtag.js) — driven by site config */}
+        {site.gaId && (
           <>
-            <meta name="google-adsense-account" content="ca-pub-1092009788490991" />
-            <Script async src="https://www.googletagmanager.com/gtag/js?id=G-D32CCS2KQJ" strategy="afterInteractive" />
+            {site.adsenseId && (
+              <meta name="google-adsense-account" content={site.adsenseId} />
+            )}
+            <Script async src={`https://www.googletagmanager.com/gtag/js?id=${site.gaId}`} strategy="afterInteractive" />
             <Script id="google-analytics" strategy="afterInteractive">
               {`
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
 
-                gtag('config', 'G-D32CCS2KQJ');
+                gtag('config', '${site.gaId}');
               `}
             </Script>
           </>

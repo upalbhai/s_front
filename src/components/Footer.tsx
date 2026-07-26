@@ -93,8 +93,8 @@ const Footer = ({ categories = [] }: { categories?: any[] }) => {
               <p>1555 Doctors Drive, El Segundo, CA 90245</p>
               <p>310-364-1511</p>
               <p>
-                <a href={`mailto:${config.id === 'soundboard' ? 'soundboardmax.net@gmail.com' : 'soundbuttonsmax.net@gmail.com'}`} className="hover:text-primary transition-colors">
-                  {config.id === 'soundboard' ? 'soundboardmax.net@gmail.com' : 'soundbuttonsmax.net@gmail.com'}
+                <a href={`mailto:${config.contactEmail}`} className="hover:text-primary transition-colors">
+                  {config.contactEmail}
                 </a>
               </p>
             </div>

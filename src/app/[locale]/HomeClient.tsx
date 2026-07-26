@@ -26,15 +26,12 @@ export default function HomeClient({
   const [query, setQuery] = useState(searchQuery || '');
   const debouncedQuery = useDebounce(query, 300);
 
-  const isSoundboardMax = siteId === 'soundboard' || siteId === 'soundboardmax' || config?.siteName?.toLowerCase() === 'soundboardmax';
+  // Use h1 from config if available, otherwise fall back to the passed h1Title or translated hero title
+  const displayTitle = config?.meta?.home?.h1
+    ? (t('meta.home.h1') !== 'meta.home.h1' ? t('meta.home.h1') : config.meta.home.h1)
+    : (h1Title || t('hero.title'));
 
-  const displayTitle = isSoundboardMax
-    ? (t('meta.home.h1') !== 'meta.home.h1' ? t('meta.home.h1') : t('hero.title'))
-    : h1Title;
-
-  const displaySubtitle = isSoundboardMax
-    ? t('hero.subtitle')
-    : undefined;
+  const displaySubtitle = t('hero.subtitle');
 
   // States for tabbed sound selection
   const [activeTab, setActiveTab] = useState('trending');

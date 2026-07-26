@@ -44,7 +44,7 @@ export async function generateMetadata({
 
 export default async function DisclaimerPage() {
   const site = await getRequestSite();
-  const domain = site.domains[0] || 'soundboardmax.net';
+  const domain = site.domains[0];
   return (
     <DisclaimerClient
       siteName={site.siteName}
