@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import {
-  Search,
   LayoutDashboard,
   Settings,
   LogOut,
@@ -48,10 +47,16 @@ export function AppSidebar({
     return pathname.startsWith(href) && href !== '/';
   };
 
-  const navGroups = [
+  type NavItem = {
+    title: string;
+    icon: React.ElementType;
+    url?: string;
+    onClick?: () => void;
+  };
+
+  const navGroups: { title?: string; items: NavItem[] }[] = [
     {
       items: [
-        { title: 'Search', icon: Search, onClick: () => { } },
         { title: 'Dashboard', icon: LayoutDashboard, url: '/admin' },
       ]
     },

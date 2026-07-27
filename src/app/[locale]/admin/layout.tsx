@@ -10,6 +10,7 @@ import { useTheme } from 'next-themes';
 import { useState, useEffect } from 'react';
 import api from '@/services/api';
 import { toast } from 'react-hot-toast';
+import { AdminSearch } from '@/components/AdminSearch';
 
 export default function AdminLayout({
   children,
@@ -105,11 +106,11 @@ export default function AdminLayout({
                 <h1 className="mt-1 text-2xl sm:text-3xl font-black tracking-tighter text-foreground uppercase truncate">{activeSection}</h1>
               </div>
             </div>
-            {/* <div className={`hidden sm:block px-5 py-2 rounded-full border text-[10px] font-black uppercase tracking-widest transition-colors duration-300 ${isDark ? 'border-zinc-800 bg-zinc-900/50 text-zinc-500' : 'border-zinc-200 bg-zinc-100 text-zinc-400'
-              }`}>
-              v1.0 Admin
-            </div> */}
-            <ThemeToggle />
+            
+            <div className="flex items-center gap-2 md:gap-4 ml-auto">
+              <AdminSearch />
+              <ThemeToggle />
+            </div>
           </header>
           <main className="p-4 sm:p-8 flex-1 overflow-y-auto w-full">
             {children}

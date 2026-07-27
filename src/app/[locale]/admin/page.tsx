@@ -23,6 +23,14 @@ import { AdminCategory, AdminSound, getSoundCategoryName } from './admin-types';
 import { useAdminSession } from './useAdminSession';
 import { useTheme } from 'next-themes';
 import { getSiteConfig } from '@/config/sites';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface CategoryStats {
   _id: string;
@@ -63,9 +71,12 @@ export default function AdminHomePage() {
   const [totalViews, setTotalViews] = useState(0);
   const [totalDownloads, setTotalDownloads] = useState(0);
 
-  // Site traffic
+  // Site traffic (Sound metrics)
   const [dateFilter, setDateFilter] = useState<'all' | 'today' | 'yesterday' | '7days'>('7days');
   const [siteTraffic, setSiteTraffic] = useState<{ siteId: string; plays: number; views: number; downloads: number }[]>([]);
+
+  // True Site Analytics
+  const [siteAnalytics, setSiteAnalytics] = useState<any[]>([]);
 
   useEffect(() => {
     setMounted(true);
@@ -92,6 +103,16 @@ export default function AdminHomePage() {
         setTotalDownloads(data.totalDownloads || 0);
         setCategoryStats(data.categoryStats || []);
         setSiteTraffic(data.siteTraffic || []);
+
+        // Fetch true site analytics
+        try {
+          const analyticsRes = await api.get('/analytics/stats?days=30');
+          if (analyticsRes.data?.success) {
+            setSiteAnalytics(analyticsRes.data.data || []);
+          }
+        } catch (err) {
+          console.error('Failed to load site analytics', err);
+        }
 
       } catch (error) {
         console.error('Failed to load admin overview', error);
@@ -325,19 +346,22 @@ export default function AdminHomePage() {
               Site Traffic
             </h3>
           </div>
-          <select
-            value={dateFilter}
-            onChange={(e) => setDateFilter(e.target.value as any)}
-            className={`px-3 py-2 text-xs font-bold rounded-xl border focus:outline-none transition-colors cursor-pointer ${isDark
-              ? 'bg-zinc-900/50 border-zinc-800 text-zinc-300 hover:border-zinc-700'
-              : 'bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300 shadow-sm'
-              }`}
-          >
-            <option value="today">Today</option>
-            <option value="yesterday">Yesterday</option>
-            <option value="7days">Last 7 Days</option>
-            <option value="all">All Time (Legacy)</option>
-          </select>
+          <Select value={dateFilter} onValueChange={(val: any) => setDateFilter(val)}>
+            <SelectTrigger
+              className={`w-[140px] px-3 py-2 text-xs font-bold rounded-xl border focus:outline-none transition-colors cursor-pointer ${isDark
+                  ? 'bg-zinc-900/50 border-zinc-800 text-zinc-300 hover:border-zinc-700'
+                  : 'bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300 shadow-sm'
+                }`}
+            >
+              <SelectValue placeholder="Select a range" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="today">Today</SelectItem>
+              <SelectItem value="yesterday">Yesterday</SelectItem>
+              <SelectItem value="7days">Last 7 Days</SelectItem>
+              <SelectItem value="all">All Time (Legacy)</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <section className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
@@ -372,6 +396,119 @@ export default function AdminHomePage() {
             </article>
           ))}
         </section>
+      </div>
+
+      {/* True Site Analytics (Google Analytics Style) */}
+      <div className="flex flex-col gap-4">
+        <div>
+          <p className="text-[10px] text-indigo-500 font-bold uppercase tracking-widest mb-1">
+            Real User Traffic
+          </p>
+          <h3 className="text-xl font-black tracking-tight text-foreground">
+            Site Analytics (Last 30 Days)
+          </h3>
+          <p className={`text-sm mt-1 ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
+            Genuine page views and unique visitors across your platform.
+          </p>
+        </div>
+
+        {siteAnalytics.length > 0 ? (
+          <section className={`p-5 md:p-6 rounded-3xl border transition-colors duration-300 ${isDark
+              ? 'border-zinc-800 bg-zinc-900/40'
+              : 'border-zinc-200 bg-white shadow-sm'
+            }`}
+          >
+            <div className="h-[300px] w-full mt-4">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={
+                  // Format data for Recharts (group by date)
+                  Object.values(siteAnalytics.reduce((acc, curr) => {
+                    const date = new Date(curr.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    if (!acc[date]) acc[date] = { date, pageViews: 0, uniqueVisitors: 0 };
+                    acc[date].pageViews += curr.pageViews;
+                    acc[date].uniqueVisitors += curr.uniqueVisitorsCount;
+                    return acc;
+                  }, {}))
+                }>
+                  <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#3f3f46' : '#e4e4e7'} vertical={false} />
+                  <XAxis 
+                    dataKey="date" 
+                    stroke={isDark ? '#71717a' : '#a1a1aa'} 
+                    fontSize={12} 
+                    tickLine={false} 
+                    axisLine={false}
+                    padding={{ left: 10, right: 10 }}
+                  />
+                  <YAxis 
+                    stroke={isDark ? '#71717a' : '#a1a1aa'} 
+                    fontSize={12} 
+                    tickLine={false} 
+                    axisLine={false}
+                    tickFormatter={(value) => value >= 1000 ? `${(value / 1000).toFixed(1)}k` : value}
+                  />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: isDark ? '#18181b' : '#ffffff',
+                      borderColor: isDark ? '#27272a' : '#e4e4e7',
+                      borderRadius: '12px',
+                      color: isDark ? '#ffffff' : '#000000'
+                    }}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="pageViews" 
+                    name="Page Views"
+                    stroke="#3b82f6" 
+                    strokeWidth={3}
+                    dot={false}
+                    activeDot={{ r: 6 }}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="uniqueVisitors" 
+                    name="Unique Visitors"
+                    stroke="#8b5cf6" 
+                    strokeWidth={3}
+                    dot={false}
+                    activeDot={{ r: 6 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+            
+            {/* Site breakdown */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+              {Object.entries(siteAnalytics.reduce((acc, curr) => {
+                if (!acc[curr.siteId]) acc[curr.siteId] = { views: 0, visitors: 0 };
+                acc[curr.siteId].views += curr.pageViews;
+                acc[curr.siteId].visitors += curr.uniqueVisitorsCount;
+                return acc;
+              }, {} as Record<string, {views: number, visitors: number}>)).map(([siteId, stats]: [string, any]) => (
+                <div key={siteId} className={`p-4 rounded-2xl border ${isDark ? 'border-zinc-800 bg-zinc-950' : 'border-zinc-100 bg-zinc-50'}`}>
+                   <p className={`text-[10px] font-black uppercase tracking-widest ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>
+                    {getSiteConfig(siteId).domains[0] || siteId}
+                  </p>
+                  <div className="flex justify-between mt-2">
+                    <div>
+                      <p className="text-xs text-slate-500">Page Views</p>
+                      <strong className="text-xl font-black text-blue-500">{stats.views.toLocaleString()}</strong>
+                    </div>
+                    <div>
+                      <p className="text-xs text-slate-500">Unique Users</p>
+                      <strong className="text-xl font-black text-purple-500">{stats.visitors.toLocaleString()}</strong>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        ) : (
+          <div className={`p-8 text-center rounded-3xl border ${isDark ? 'border-zinc-800 bg-zinc-900/40' : 'border-zinc-200 bg-white'}`}>
+             <p className={isDark ? 'text-zinc-400' : 'text-zinc-500'}>
+               No analytics data recorded yet. Traffic will appear here automatically.
+             </p>
+          </div>
+        )}
       </div>
 
       {/* Category-wise Sound Counts */}

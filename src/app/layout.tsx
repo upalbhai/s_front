@@ -16,6 +16,7 @@ import { getTranslationsRaw } from '@/i18n/server';
 import type { Locale } from '@/i18n';
 import Script from 'next/script';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import AnalyticsTracker from '@/components/AnalyticsTracker';
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -102,6 +103,7 @@ export default async function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <QueryProvider>
             <SiteProvider siteId={site.id} config={site}>
+              <AnalyticsTracker />
               <AudioProvider>
                 <LanguageProvider siteId={site.id} initialLocale={initialLocale} initialTranslations={initialTranslations}>
                   <TooltipProvider>
