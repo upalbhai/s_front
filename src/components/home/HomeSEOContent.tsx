@@ -142,6 +142,47 @@ export default function HomeSEOContent() {
         </div>
       </div>
 
+      {/* Extra SEO Paragraphs */}
+      {t('seo.extra.collection_title') !== 'seo.extra.collection_title' && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+          <div className="p-8 rounded-3xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/50 space-y-4">
+            <h3 className="text-xl font-black text-foreground">
+              {t('seo.extra.collection_title')}
+            </h3>
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-medium leading-relaxed whitespace-pre-line">
+              {t('seo.extra.collection_desc')}
+            </p>
+          </div>
+
+          <div className="p-8 rounded-3xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/50 space-y-4">
+            <h3 className="text-xl font-black text-foreground">
+              {t('seo.extra.stands_out_title')}
+            </h3>
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-medium leading-relaxed whitespace-pre-line">
+              {t('seo.extra.stands_out_desc')}
+            </p>
+          </div>
+          
+          <div className="p-8 rounded-3xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/50 space-y-4">
+            <h3 className="text-xl font-black text-foreground">
+              {t('seo.extra.unblocked_title')}
+            </h3>
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-medium leading-relaxed whitespace-pre-line">
+              {t('seo.extra.unblocked_desc')}
+            </p>
+          </div>
+          
+          <div className="p-8 rounded-3xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/50 space-y-4">
+            <h3 className="text-xl font-black text-foreground">
+              {t('seo.extra.popular_title')}
+            </h3>
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-medium leading-relaxed whitespace-pre-line">
+              {t('seo.extra.popular_desc')}
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Explore Categories */}
       <div className="space-y-8">
         <div className="space-y-2">

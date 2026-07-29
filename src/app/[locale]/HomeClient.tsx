@@ -13,6 +13,7 @@ import { useTranslation } from '@/i18n';
 
 import HomeSEOContent from '@/components/home/HomeSEOContent';
 
+
 export default function HomeClient({
   trendingSounds = [],
   newSounds = [],
@@ -188,7 +189,6 @@ export default function HomeClient({
       {/* <FeaturesSection /> */}
       {/* <TestimonialsSection /> */}
       {/* <FaqSection /> */}
-      {/* <EditorialSeoSection /> */}
       <HomeSEOContent />
     </div>
   );

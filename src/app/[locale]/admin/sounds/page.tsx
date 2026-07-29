@@ -12,6 +12,15 @@ import { useTheme } from 'next-themes';
 import { toast } from 'react-hot-toast';
 import useAudio from '@/hooks/useAudio';
 import { DataTable, ColumnDef } from '@/components/DataTable';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 
 const COOLDOWN_SECONDS = 15;
 
@@ -39,6 +48,7 @@ export default function AdminSoundsPage() {
   const [limit, setLimit] = useState(20);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [saving, setSaving] = useState(false);
+  const [soundToDelete, setSoundToDelete] = useState<string | null>(null);
 
   const { currentSound, isPlaying: globalIsPlaying, playSound } = useAudio();
 
@@ -101,8 +111,14 @@ export default function AdminSoundsPage() {
   });
 
   const handleDelete = async (soundId: string) => {
-    if (!window.confirm('Delete this sound? This cannot be undone.')) return;
-    deleteMutation.mutate(soundId);
+    setSoundToDelete(soundId);
+  };
+
+  const handleConfirmDelete = () => {
+    if (soundToDelete) {
+      deleteMutation.mutate(soundToDelete);
+      setSoundToDelete(null);
+    }
   };
 
   // ── Drawer CRUD ───────────────────────────────────────────────────────────
@@ -321,6 +337,25 @@ export default function AdminSoundsPage() {
           saving={saving}
         />
       </Drawer>
+
+      <Dialog open={!!soundToDelete} onOpenChange={(open) => !open && setSoundToDelete(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Sound</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this sound? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setSoundToDelete(null)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleConfirmDelete} disabled={deleteMutation.isPending}>
+              {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
