@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useTranslation } from '@/i18n';
+import { useSite } from '@/context/SiteProvider';
 import {
   HelpCircle,
   Sparkles,
@@ -13,6 +14,23 @@ import {
 
 export default function HomeSEOContent() {
   const { t } = useTranslation();
+  const { config } = useSite();
+  const siteName = config?.siteName || 'Sound Buttons Max';
+  const siteNameCompact = siteName.replace(/\s+/g, '');
+  const vars = { siteName, siteNameCompact };
+
+  const toc = [
+    { title: t('seo.q_meme_title'), id: "what-is-meme-soundboard" },
+    { title: t('seo.q_buttons_title'), id: "what-are-sound-buttons" },
+    { title: t('seo.built_for_title'), id: "who-uses" },
+    { title: t('seo.extra.collection_title'), id: "ultimate-collection" },
+    { title: t('seo.extra.stands_out_title'), id: "stands-out" },
+    { title: t('seo.extra.unblocked_title'), id: "unblocked" },
+    { title: t('seo.extra.popular_title'), id: "most-popular" },
+    { title: t('seo.explore_categories_title'), id: "explore-categories" },
+    { title: t('seo.different_title', vars), id: "why-best" },
+    { title: t('seo.faq_title'), id: "faq" }
+  ].filter(item => item.title && !item.title.startsWith('seo.extra.'));
 
   const useCases = [
     {
@@ -65,29 +83,51 @@ export default function HomeSEOContent() {
   ];
 
   const faqs = [
-    { q: t('seo.faq.q1'), a: t('seo.faq.a1') },
-    { q: t('seo.faq.q2'), a: t('seo.faq.a2') },
-    { q: t('seo.faq.q3'), a: t('seo.faq.a3') },
-    { q: t('seo.faq.q4'), a: t('seo.faq.a4') },
-    { q: t('seo.faq.q5'), a: t('seo.faq.a5') }
+    { q: t('seo.faq.q1', vars), a: t('seo.faq.a1', vars) },
+    { q: t('seo.faq.q2', vars), a: t('seo.faq.a2', vars) },
+    { q: t('seo.faq.q3', vars), a: t('seo.faq.a3', vars) },
+    { q: t('seo.faq.q4', vars), a: t('seo.faq.a4', vars) },
+    { q: t('seo.faq.q5', vars), a: t('seo.faq.a5', vars) }
   ];
 
   return (
     <section className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-16 md:py-24 border-t border-slate-200 dark:border-slate-800 space-y-16">
 
       {/* Welcome & Introduction */}
-      <div className="space-y-6 text-center">
+      <div id="intro" className="space-y-6 text-center">
         <h2 className="text-3xl md:text-4xl font-black tracking-tight text-foreground">
-          {t('seo.home_title')}
+          {t('seo.home_title', vars)}
         </h2>
-        <p className="text-base md:text-lg text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
-          {t('seo.welcome_text')}
+        <p className="text-base md:text-lg text-slate-600 dark:text-slate-400 font-medium leading-relaxed whitespace-pre-line">
+          {t('seo.welcome_text', vars)}
         </p>
       </div>
 
+      {/* Table of Contents */}
+      {toc.length > 0 && (
+        <div className="max-w-2xl mx-auto p-6 md:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/30">
+          <h3 className="text-xl font-black text-foreground mb-4">
+            Table of Contents
+          </h3>
+          <ul className="space-y-3">
+            {toc.map((item, idx) => (
+              <li key={idx}>
+                <a 
+                  href={`#${item.id}`}
+                  className="text-primary hover:underline text-sm md:text-base font-medium transition-all flex items-center gap-2"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary/50" />
+                  {item.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {/* Two Column: What is Meme Soundboard & What is Sound Buttons */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-        <div className="p-8 rounded-3xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/50 space-y-4">
+        <div id="what-is-meme-soundboard" className="p-8 rounded-3xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/50 space-y-4">
           <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
             <Info size={20} />
           </div>
@@ -100,7 +140,7 @@ export default function HomeSEOContent() {
           </div>
         </div>
 
-        <div className="p-8 rounded-3xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/50 space-y-4">
+        <div id="what-are-sound-buttons" className="p-8 rounded-3xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/50 space-y-4">
           <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
             <Sparkles size={20} />
           </div>
@@ -115,7 +155,7 @@ export default function HomeSEOContent() {
       </div>
 
       {/* Built For Use Cases */}
-      <div className="space-y-8">
+      <div id="who-uses" className="space-y-8">
         <div className="space-y-2">
           <h3 className="text-2xl md:text-3xl font-black tracking-tight text-foreground">
             {t('seo.built_for_title')}
@@ -145,7 +185,7 @@ export default function HomeSEOContent() {
       {/* Extra SEO Paragraphs */}
       {t('seo.extra.collection_title') !== 'seo.extra.collection_title' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-          <div className="p-8 rounded-3xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/50 space-y-4">
+          <div id="ultimate-collection" className="p-8 rounded-3xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/50 space-y-4">
             <h3 className="text-xl font-black text-foreground">
               {t('seo.extra.collection_title')}
             </h3>
@@ -154,7 +194,7 @@ export default function HomeSEOContent() {
             </p>
           </div>
 
-          <div className="p-8 rounded-3xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/50 space-y-4">
+          <div id="stands-out" className="p-8 rounded-3xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/50 space-y-4">
             <h3 className="text-xl font-black text-foreground">
               {t('seo.extra.stands_out_title')}
             </h3>
@@ -163,7 +203,7 @@ export default function HomeSEOContent() {
             </p>
           </div>
           
-          <div className="p-8 rounded-3xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/50 space-y-4">
+          <div id="unblocked" className="p-8 rounded-3xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/50 space-y-4">
             <h3 className="text-xl font-black text-foreground">
               {t('seo.extra.unblocked_title')}
             </h3>
@@ -172,7 +212,7 @@ export default function HomeSEOContent() {
             </p>
           </div>
           
-          <div className="p-8 rounded-3xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/50 space-y-4">
+          <div id="most-popular" className="p-8 rounded-3xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/50 space-y-4">
             <h3 className="text-xl font-black text-foreground">
               {t('seo.extra.popular_title')}
             </h3>
@@ -184,7 +224,7 @@ export default function HomeSEOContent() {
       )}
 
       {/* Explore Categories */}
-      <div className="space-y-8">
+      <div id="explore-categories" className="space-y-8">
         <div className="space-y-2">
           <h3 className="text-2xl md:text-3xl font-black tracking-tight text-foreground">
             {t('seo.explore_categories_title')}
@@ -220,13 +260,13 @@ export default function HomeSEOContent() {
       </div>
 
       {/* Different & Value Propositions */}
-      <div className="space-y-8">
+      <div id="why-best" className="space-y-8">
         <div className="space-y-2 text-center">
           <h3 className="text-2xl md:text-3xl font-black tracking-tight text-foreground">
-            {t('seo.different_title')}
+            {t('seo.different_title', vars)}
           </h3>
           <p className="text-sm text-slate-500 dark:text-slate-400 font-medium leading-relaxed whitespace-pre-line">
-            {t('seo.different_subtitle')}
+            {t('seo.different_subtitle', vars)}
           </p>
         </div>
 
@@ -244,7 +284,7 @@ export default function HomeSEOContent() {
       </div>
 
       {/* Frequently Asked Questions */}
-      <div className="space-y-8">
+      <div id="faq" className="space-y-8">
         <div className="flex flex-col items-center text-center space-y-4">
           <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
             <HelpCircle size={24} />
