@@ -40,6 +40,12 @@ export default function SoundDetailClient({ sound, relatedSounds, h1Title, uiDes
     playSound(sound);
   };
 
+  React.useEffect(() => {
+    if (sound && sound._id && !pathname?.includes('/admin')) {
+      api.patch(`/sounds/${sound._id}/stats`, { type: 'view', siteId }).catch(() => { });
+    }
+  }, [sound, pathname, siteId]);
+
   const handleCopyLink = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();

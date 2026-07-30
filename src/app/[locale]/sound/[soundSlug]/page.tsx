@@ -77,7 +77,8 @@ export default async function LocaleSoundDetailPage({
     sound = soundRes.data;
 
     if (sound && sound._id) {
-      api.patch(`/sounds/${sound._id}/stats`, { type: 'view', siteId: site.id }).catch(() => { });
+      // View tracking has been moved to the Client Component (SoundDetailClient) to prevent 
+      // Next.js Link prefetching from generating fake views.
     }
 
     if (sound && sound.category?._id) {
