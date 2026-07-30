@@ -5,6 +5,7 @@ import { Search, Sparkles, Loader2 } from 'lucide-react';
 import api from '@/services/api';
 import { useTranslation } from '@/i18n';
 import { useSite } from '@/context/SiteProvider';
+import { usePathname } from 'next/navigation';
 
 interface HeroSectionProps {
   searchQuery?: string;
@@ -34,6 +35,7 @@ export default function HeroSection({
   badge,
   placeholder,
 }: HeroSectionProps) {
+  const pathname = usePathname();
   const { t } = useTranslation();
   const { siteId } = useSite();
   const resolvedTitle = title ?? t('hero.title');
@@ -58,8 +60,10 @@ export default function HeroSection({
       audioRef.current.play()
         .then(() => {
           setActivePlayingId(soundId);
-          if (soundId.match(/^[0-9a-fA-F]{24}$/)) {
-            api.patch(`/sounds/${soundId}/stats`, { type: 'play', siteId }).catch(() => { });
+          if (!pathname?.includes('/admin')) {
+            if (soundId.match(/^[0-9a-fA-F]{24}$/)) {
+              api.patch(`/sounds/${soundId}/stats`, { type: 'play' }).catch(() => { });
+            }
           }
         })
         .catch(err => {

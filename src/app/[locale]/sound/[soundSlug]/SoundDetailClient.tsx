@@ -92,7 +92,7 @@ export default function SoundDetailClient({ sound, relatedSounds, h1Title, uiDes
     }
     // Track download stats
     if (!pathname?.includes('/admin')) {
-      api.patch(`/sounds/${sound._id}/stats`, { type: 'download', siteId }).catch(() => { });
+      api.patch(`/sounds/${sound._id}/stats`, { type: 'download' }).catch(() => { });
     }
   };
 

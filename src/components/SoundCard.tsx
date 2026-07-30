@@ -110,7 +110,7 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
     }
     // Track stats
     if (!pathname?.includes('/admin')) {
-      api.patch(`/sounds/${sound._id}/stats`, { type: 'download', siteId }).catch(() => { });
+      api.patch(`/sounds/${sound._id}/stats`, { type: 'download' }).catch(() => { });
     }
   };
 

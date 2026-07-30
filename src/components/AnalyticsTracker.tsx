@@ -34,9 +34,9 @@ export default function AnalyticsTracker() {
     const trackVisit = async () => {
       try {
         await api.post('/analytics/track', {
-          siteId,
+          url: pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : ''),
+          referrer: document.referrer || '',
           visitorId,
-          path: pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '')
         });
       } catch (err) {
         console.error('Failed to track analytics:', err);

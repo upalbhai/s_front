@@ -11,6 +11,10 @@ api.interceptors.request.use((config) => {
       const { token } = JSON.parse(userInfo);
       config.headers.Authorization = `Bearer ${token}`;
     }
+    const siteId = document.documentElement.dataset.site;
+    if (siteId) {
+      config.headers['x-site-id'] = siteId;
+    }
   }
   return config;
 });

@@ -81,7 +81,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         await audioRef.current.play();
         if (sound._id && sound._id.match(/^[0-9a-fA-F]{24}$/)) {
           if (!pathname?.includes('/admin')) {
-            api.patch(`/sounds/${sound._id}/stats`, { type: 'play', siteId }).catch(() => { });
+            api.patch(`/sounds/${sound._id}/stats`, { type: 'play' }).catch(() => { });
           }
         }
       } catch (err) {
