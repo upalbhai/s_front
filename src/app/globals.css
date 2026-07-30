@@ -39,9 +39,9 @@
 }
 
 :root {
-  /* Pure Minimal Black & White Theme - Light Mode */
-  --primary: oklch(0.205 0 0);
-  --primary-hover: #1F1F1F;
+  /* Default Site (soundbuttons) - Light Mode */
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
   --secondary: oklch(0.97 0 0);
   --accent: oklch(0.97 0 0);
   --border: oklch(0.922 0 0);
@@ -94,11 +94,11 @@
 }
 
 .dark {
-  /* Pure Minimal Black & White Theme - Dark Mode */
+  /* Default Site (soundbuttons) - Dark Mode */
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-hover: #E4E4E7;
+  --primary: #3b82f6;
+  --primary-hover: #60a5fa;
   --secondary: oklch(0.269 0 0);
   --accent: oklch(0.269 0 0);
   --border: oklch(1 0 0 / 10%);
@@ -221,4 +221,59 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* --- Site: soundboard (Dark & Edgy) --- */
+[data-site="soundboard"] {
+  --primary: #e53935;
+  --primary-hover: #c62828;
+  --background: #18181b;
+  --foreground: #fafafa;
+  --card: #27272a;
+  --card-foreground: #fafafa;
+  --card-bg: #27272a;
+  --card-border: #3f3f46;
+  --border: #3f3f46;
+  --popover: #27272a;
+  --popover-foreground: #fafafa;
+  --muted: #3f3f46;
+  --muted-foreground: #a1a1aa;
+  --glass-bg: rgba(39, 39, 42, 0.8);
+  --glass-border: rgba(63, 63, 70, 1);
+}
+[data-site="soundboard"].dark {
+  --background: #09090b;
+  --card-bg: #18181b;
+}
+
+/* --- Site: soundbuttonsguys (Fun & Playful) --- */
+[data-site="soundbuttonsguys"] {
+  --primary: #7c3aed;
+  --primary-hover: #6d28d9;
+  --background: #faf5ff;
+  --foreground: #4c1d95;
+  --card: #ffffff;
+  --card-foreground: #4c1d95;
+  --card-bg: #ffffff;
+  --card-border: #e9d5ff;
+  --border: #e9d5ff;
+  --muted: #f3e8ff;
+  --muted-foreground: #7e22ce;
+  --glass-bg: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(233, 213, 255, 1);
+}
+[data-site="soundbuttonsguys"].dark {
+  --background: #2e1065;
+  --foreground: #f5f3ff;
+  --primary: #8b5cf6;
+  --primary-hover: #a78bfa;
+  --card: #1e1b4b;
+  --card-foreground: #f5f3ff;
+  --card-bg: #1e1b4b;
+  --card-border: #4c1d95;
+  --border: #4c1d95;
+  --muted: #4c1d95;
+  --muted-foreground: #c4b5fd;
+  --glass-bg: rgba(30, 27, 75, 0.8);
+  --glass-border: rgba(76, 29, 149, 1);
 }
