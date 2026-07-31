@@ -6,7 +6,7 @@ import { useTheme } from 'next-themes';
 import { useTranslation } from '@/i18n';
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
   const { t } = useTranslation();
   const [mounted, setMounted] = React.useState(false);
 
@@ -17,17 +17,19 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />
+      <div className="w-10 h-10 rounded-xl bg-foreground/[0.05] animate-pulse" />
     );
   }
 
+  const currentTheme = resolvedTheme || theme;
+
   return (
     <button
-      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      className="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-foreground transition-all hover:border-primary/50 hover:bg-white dark:hover:bg-slate-900 shadow-sm active:scale-90"
+      onClick={() => setTheme(currentTheme === 'dark' ? 'light' : 'dark')}
+      className="w-10 h-10 flex items-center justify-center rounded-xl bg-foreground/[0.05] border border-border text-foreground transition-all hover:border-primary/50 hover:bg-foreground/[0.1] shadow-sm active:scale-90"
       aria-label={t('common.toggle_theme')}
     >
-      {theme === 'dark' ? (
+      {currentTheme === 'dark' ? (
         <Sun size={18} className="text-foreground animate-in zoom-in spin-in-90 duration-300" />
       ) : (
         <Moon size={18} className="text-foreground animate-in zoom-in spin-in-90 duration-300" />

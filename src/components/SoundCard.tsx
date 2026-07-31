@@ -23,14 +23,32 @@ interface SoundProps {
   isFavorite?: boolean;
 }
 
-const BUTTON_COLORS = [
-  { main: '#ff3b30', dark: '#a31a12', shadow: 'rgba(255, 59, 48, 0.3)' },
-  { main: '#ffcc00', dark: '#b28f00', shadow: 'rgba(255, 204, 0, 0.3)' },
-  { main: '#af52de', dark: '#7a399b', shadow: 'rgba(175, 82, 222, 0.3)' },
-  { main: '#ff9500', dark: '#b36800', shadow: 'rgba(255, 149, 0, 0.3)' }, // Orange
-  { main: '#007aff', dark: '#0055b3', shadow: 'rgba(0, 122, 255, 0.3)' },
-  { main: '#34c759', dark: '#248a3d', shadow: 'rgba(52, 199, 89, 0.3)' },
-];
+const SITE_BUTTON_COLORS: Record<string, Array<{main: string, dark: string, shadow: string}>> = {
+  soundboard: [
+    { main: '#3b82f6', dark: '#1d4ed8', shadow: 'rgba(59, 130, 246, 0.3)' }, // Blue
+    { main: '#10b981', dark: '#047857', shadow: 'rgba(16, 185, 129, 0.3)' }, // Emerald
+    { main: '#f43f5e', dark: '#be123c', shadow: 'rgba(244, 63, 94, 0.3)' }, // Rose
+    { main: '#8b5cf6', dark: '#5b21b6', shadow: 'rgba(139, 92, 246, 0.3)' }, // Violet
+    { main: '#f59e0b', dark: '#b45309', shadow: 'rgba(245, 158, 11, 0.3)' }, // Amber
+    { main: '#06b6d4', dark: '#0e7490', shadow: 'rgba(6, 182, 212, 0.3)' }, // Cyan
+  ],
+  soundbuttons: [
+    { main: '#14b8a6', dark: '#0f766e', shadow: 'rgba(20, 184, 166, 0.3)' }, // Teal
+    { main: '#84cc16', dark: '#4d7c0f', shadow: 'rgba(132, 204, 22, 0.3)' }, // Lime
+    { main: '#eab308', dark: '#a16207', shadow: 'rgba(234, 179, 8, 0.3)' }, // Yellow
+    { main: '#ef4444', dark: '#b91c1c', shadow: 'rgba(239, 68, 68, 0.3)' }, // Red
+    { main: '#6366f1', dark: '#3730a3', shadow: 'rgba(99, 102, 241, 0.3)' }, // Indigo
+    { main: '#d946ef', dark: '#86198f', shadow: 'rgba(217, 70, 239, 0.3)' }, // Fuchsia
+  ],
+  soundbuttonsguys: [
+    { main: '#f97316', dark: '#c2410c', shadow: 'rgba(249, 115, 22, 0.3)' }, // Orange
+    { main: '#ec4899', dark: '#be185d', shadow: 'rgba(236, 72, 153, 0.3)' }, // Pink
+    { main: '#a855f7', dark: '#7e22ce', shadow: 'rgba(168, 85, 247, 0.3)' }, // Purple
+    { main: '#0ea5e9', dark: '#0369a1', shadow: 'rgba(14, 165, 233, 0.3)' }, // Sky
+    { main: '#22c55e', dark: '#15803d', shadow: 'rgba(34, 197, 94, 0.3)' }, // Green
+    { main: '#facc15', dark: '#ca8a04', shadow: 'rgba(250, 204, 21, 0.3)' }, // Yellow (Bright)
+  ]
+};
 
 const getFullUrl = (url: string) => {
   if (!url) return '';
@@ -62,9 +80,10 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
     return () => window.removeEventListener('favoritesChanged', syncFav);
   }, [sound._id]);
 
+  const buttonColors = SITE_BUTTON_COLORS[siteId] || SITE_BUTTON_COLORS.soundbuttons;
   const colorIndex =
-    parseInt(sound._id.substring(sound._id.length - 2), 16) % BUTTON_COLORS.length;
-  const color = BUTTON_COLORS[colorIndex];
+    parseInt(sound._id.substring(sound._id.length - 2), 16) % buttonColors.length;
+  const color = buttonColors[colorIndex];
 
   const handlePlay = (e: React.MouseEvent) => {
     e.preventDefault();

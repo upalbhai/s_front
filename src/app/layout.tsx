@@ -122,3 +122,4 @@ export default async function RootLayout({
     </html>
   );
 }
+// Force HMR

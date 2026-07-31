@@ -223,57 +223,141 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* --- Site: soundboard (Dark & Edgy) --- */
+/* --- Site: soundboard --- */
+/* Force CSS Reload 2 */
 [data-site="soundboard"] {
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --card-bg: #ffffff;
+  --card-border: #e2e8f0;
+  --border: #e2e8f0;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --muted: #f1f5f9;
+  --muted-foreground: #475569;
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(226, 232, 240, 1);
+  --sidebar: #f1f5f9;
+  --sidebar-foreground: #0f172a;
+  --sidebar-border: #e2e8f0;
+  --sidebar-accent: #e2e8f0;
+  --sidebar-accent-foreground: #0f172a;
+}
+[data-site="soundboard"].dark {
   --primary: #e53935;
   --primary-hover: #c62828;
-  --background: #18181b;
+  --background: #09090b;
   --foreground: #fafafa;
   --card: #27272a;
   --card-foreground: #fafafa;
-  --card-bg: #27272a;
+  --card-bg: #18181b;
   --card-border: #3f3f46;
   --border: #3f3f46;
   --popover: #27272a;
   --popover-foreground: #fafafa;
   --muted: #3f3f46;
   --muted-foreground: #a1a1aa;
-  --glass-bg: rgba(39, 39, 42, 0.8);
+  --glass-bg: rgba(24, 24, 27, 0.8);
   --glass-border: rgba(63, 63, 70, 1);
-}
-[data-site="soundboard"].dark {
-  --background: #09090b;
-  --card-bg: #18181b;
+  --sidebar: #121214;
+  --sidebar-foreground: #fafafa;
+  --sidebar-border: #27272a;
+  --sidebar-accent: #27272a;
+  --sidebar-accent-foreground: #fafafa;
 }
 
-/* --- Site: soundbuttonsguys (Fun & Playful) --- */
+/* --- Site: soundbuttonsguys (Fun & Playful) - Orange Theme --- */
 [data-site="soundbuttonsguys"] {
-  --primary: #7c3aed;
-  --primary-hover: #6d28d9;
-  --background: #faf5ff;
-  --foreground: #4c1d95;
+  --primary: #ea580c;
+  --primary-hover: #c2410c;
+  --background: #fff7ed;
+  --foreground: #0f172a;
   --card: #ffffff;
-  --card-foreground: #4c1d95;
+  --card-foreground: #0f172a;
   --card-bg: #ffffff;
-  --card-border: #e9d5ff;
-  --border: #e9d5ff;
-  --muted: #f3e8ff;
-  --muted-foreground: #7e22ce;
-  --glass-bg: rgba(255, 255, 255, 0.9);
-  --glass-border: rgba(233, 213, 255, 1);
+  --card-border: #ffedd5;
+  --border: #ffedd5;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --muted: #ffedd5;
+  --muted-foreground: #9a3412;
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(255, 237, 213, 1);
+  --sidebar: #ffedd5;
+  --sidebar-foreground: #0f172a;
+  --sidebar-border: #fed7aa;
+  --sidebar-accent: #fed7aa;
+  --sidebar-accent-foreground: #0f172a;
 }
 [data-site="soundbuttonsguys"].dark {
-  --background: #2e1065;
-  --foreground: #f5f3ff;
-  --primary: #8b5cf6;
-  --primary-hover: #a78bfa;
-  --card: #1e1b4b;
-  --card-foreground: #f5f3ff;
-  --card-bg: #1e1b4b;
-  --card-border: #4c1d95;
-  --border: #4c1d95;
-  --muted: #4c1d95;
-  --muted-foreground: #c4b5fd;
-  --glass-bg: rgba(30, 27, 75, 0.8);
-  --glass-border: rgba(76, 29, 149, 1);
+  --primary: #f97316;
+  --primary-hover: #fb923c;
+  --background: #431407;
+  --foreground: #fff7ed;
+  --card: #7c2d12;
+  --card-foreground: #fff7ed;
+  --card-bg: #7c2d12;
+  --card-border: #9a3412;
+  --border: #9a3412;
+  --popover: #7c2d12;
+  --popover-foreground: #fff7ed;
+  --muted: #9a3412;
+  --muted-foreground: #fed7aa;
+  --glass-bg: rgba(67, 20, 7, 0.8);
+  --glass-border: rgba(154, 52, 18, 1);
+  --sidebar: #7c2d12;
+  --sidebar-foreground: #fff7ed;
+  --sidebar-border: #9a3412;
+  --sidebar-accent: #9a3412;
+  --sidebar-accent-foreground: #fff7ed;
+}
+
+/* --- Site: soundbuttons (Default) - Teal Theme --- */
+[data-site="soundbuttons"] {
+  --primary: #0d9488;
+  --primary-hover: #0f766e;
+  --background: #f0fdfa;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --card-bg: #ffffff;
+  --card-border: #e2e8f0;
+  --border: #e2e8f0;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --muted: #e2e8f0;
+  --muted-foreground: #115e59;
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(226, 232, 240, 1);
+  --sidebar: #ccfbf1;
+  --sidebar-foreground: #0f172a;
+  --sidebar-border: #99f6e4;
+  --sidebar-accent: #99f6e4;
+  --sidebar-accent-foreground: #0f172a;
+}
+[data-site="soundbuttons"].dark {
+  --primary: #14b8a6;
+  --primary-hover: #2dd4bf;
+  --background: #042f2e;
+  --foreground: #f0fdfa;
+  --card: #134e4a;
+  --card-foreground: #f0fdfa;
+  --card-bg: #134e4a;
+  --card-border: #115e59;
+  --border: #115e59;
+  --popover: #134e4a;
+  --popover-foreground: #f0fdfa;
+  --muted: #115e59;
+  --muted-foreground: #99f6e4;
+  --glass-bg: rgba(4, 47, 46, 0.8);
+  --glass-border: rgba(17, 94, 89, 1);
+  --sidebar: #134e4a;
+  --sidebar-foreground: #f0fdfa;
+  --sidebar-border: #115e59;
+  --sidebar-accent: #115e59;
+  --sidebar-accent-foreground: #f0fdfa;
 }

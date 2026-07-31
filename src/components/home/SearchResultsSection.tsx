@@ -41,11 +41,11 @@ export default function SearchResultsSection({
       {isLoading ? (
         <div className="flex flex-col items-center justify-center py-20 gap-3">
           <Loader2 className="w-10 h-10 text-primary animate-spin" />
-          <span className="text-sm font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest animate-pulse">{t('home.search.searching_board')}</span>
+          <span className="text-sm font-black text-foreground/70 uppercase tracking-widest animate-pulse">{t('home.search.searching_board')}</span>
         </div>
       ) : searchResults.length === 0 ? (
-        <div className="text-center py-20 bg-slate-100 dark:bg-slate-900/50 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-800">
-          <p className="text-slate-500 font-bold italic text-xl">{t('home.search.no_results')}</p>
+        <div className="text-center py-20 bg-foreground/[0.05] rounded-3xl border-2 border-dashed border-border">
+          <p className="text-foreground/70 font-bold italic text-xl">{t('home.search.no_results')}</p>
           <button onClick={handleClear} className="mt-4 text-primary font-bold hover:underline cursor-pointer">{t('home.search.clear')}</button>
         </div>
       ) : (
@@ -56,7 +56,7 @@ export default function SearchResultsSection({
         </div>
       )}
 
-      <div className="mt-16 border-t border-slate-200 dark:border-slate-800" />
+      <div className="mt-16 border-t border-border" />
     </section>
   );
 }

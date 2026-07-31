@@ -100,7 +100,7 @@ export default function HomeClient({
     },
     initialData: debouncedQuery === searchQuery ? searchResults : undefined,
     enabled: !!debouncedQuery,
-    staleTime: 30 * 1000,
+    staleTime: 60 * 1000,
   });
 
   // Function to fetch sounds for the active tab (paginated)
@@ -141,12 +141,28 @@ export default function HomeClient({
     fetchTabSounds(activeTab, 1, false);
   }, [activeTab, fetchTabSounds]);
 
-  const handleLoadMoreTabSounds = () => {
-    fetchTabSounds(activeTab, page + 1, true);
-  };
-
   const handleClearSearch = () => {
     setQuery('');
+  };
+
+  const handleLoadMoreTabSounds = async () => {
+    if (loading || !hasMore) return;
+    setLoading(true);
+    try {
+      const nextPage = page + 1;
+      const res = await api.get(`/sounds?sort=${activeTab}&page=${nextPage}&limit=${currentLimit}`);
+      const newSounds = res.data.sounds || [];
+      if (newSounds.length === 0) {
+        setHasMore(false);
+      } else {
+        setTabSounds((prev) => [...prev, ...newSounds]);
+        setPage(nextPage);
+      }
+    } catch (err) {
+      console.error('Failed to load more sounds', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -173,24 +189,30 @@ export default function HomeClient({
         />
       )}
 
-      {/* Unified Tabbed Sounds section */}
-      <TrendingSoundsSection
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        sounds={tabSounds}
-        loading={loading}
-        hasMore={hasMore}
-        onLoadMore={handleLoadMoreTabSounds}
-      />
+      {/* Unified Tabbed Sounds section - Subtle alternating background */}
+      <div className="w-full bg-foreground/[0.02] border-y border-foreground/[0.05]">
+        <TrendingSoundsSection
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          sounds={tabSounds}
+          loading={loading}
+          hasMore={hasMore}
+          onLoadMore={handleLoadMoreTabSounds}
+        />
+      </div>
 
-      <NewAdditionsSection newSounds={newSounds} />
+      <div className="w-full bg-background">
+        <NewAdditionsSection newSounds={newSounds} />
+      </div>
 
       {/* <CategoryGridSection categories={homeData.categories} /> */}
       {/* <FeaturesSection /> */}
       {/* <TestimonialsSection /> */}
       {/* <FaqSection /> */}
-      <HomeSEOContent />
+      
+      <div className="w-full bg-foreground/[0.02] border-y border-foreground/[0.05]">
+        <HomeSEOContent />
+      </div>
     </div>
   );
 }
-

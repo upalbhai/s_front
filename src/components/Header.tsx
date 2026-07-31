@@ -32,14 +32,14 @@ const Header = ({ categories = [] }: { categories?: any[] }) => {
 
   return (
     <>
-      <header className={`sticky top-0 z-50 w-full transition-all duration-300 border-b border-slate-200 dark:border-slate-800 ${isScrolled
-        ? 'py-3 bg-background/80 backdrop-blur-xl'
-        : 'py-5 bg-background/80 md:bg-transparent backdrop-blur-xl md:backdrop-blur-none'
+      <header className={`sticky top-0 z-50 w-full transition-all duration-300 border-b border-border ${isScrolled
+        ? 'py-3 bg-foreground/[0.04] backdrop-blur-xl shadow-sm'
+        : 'py-5 bg-foreground/[0.02] backdrop-blur-xl'
         }`}>
         <div className="container mx-auto px-4 flex items-center justify-between gap-4">
           {/* Logo */}
           <Link href={lp('/')} className="flex items-center gap-2 group shrink-0">
-            <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center transition-transform group-hover:scale-110 shadow-xs border border-slate-200/55 dark:border-slate-800/55">
+            <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center transition-transform group-hover:scale-110 shadow-xs border border-border/55">
               <img src={config.logo} alt={`${config.siteName} Logo`} className="w-full h-full object-cover" />
             </div>
             <span className="hidden lg:inline text-xl font-black tracking-tighter text-foreground whitespace-nowrap">
@@ -48,20 +48,20 @@ const Header = ({ categories = [] }: { categories?: any[] }) => {
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-8 font-bold text-sm text-slate-500 dark:text-slate-400">
+          <nav className="hidden lg:flex items-center gap-8 font-bold text-sm text-foreground/70">
             <Link href={lp('/')} className="hover:text-foreground transition-colors">{t('nav.home')}</Link>
             <div className="relative group py-2">
-              <button className="flex items-center gap-1 hover:text-foreground transition-colors font-bold text-sm text-slate-500 dark:text-slate-400 focus:outline-none">
+              <button className="flex items-center gap-1 hover:text-foreground transition-colors font-bold text-sm text-foreground/70 focus:outline-none">
                 {t('common.categories') || 'Categories'}
                 <ChevronDown size={14} className="transition-transform group-hover:rotate-180" />
               </button>
-              <div className="absolute top-full left-0 mt-1 w-56 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 p-2 z-50">
+              <div className="absolute top-full left-0 mt-1 w-56 rounded-2xl bg-card border border-border shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 p-2 z-50">
                 <div className="flex flex-col gap-1">
                   {categories.slice(0, 25).map((cat) => (
                     <Link
                       key={cat._id}
                       href={lp(`/categories/${cat.slug}`)}
-                      className="px-4 py-2.5 text-sm rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-700 hover:text-black dark:hover:text-white transition-colors"
+                      className="px-4 py-2.5 text-sm rounded-xl hover:bg-foreground/[0.05] text-foreground/80 hover:text-foreground transition-colors"
                     >
                       {cat.name}
                     </Link>
@@ -83,22 +83,22 @@ const Header = ({ categories = [] }: { categories?: any[] }) => {
 
           {/* Search & Actions */}
           <div className="flex items-center gap-3">
-            <form onSubmit={handleSearch} className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 w-full max-w-[220px] focus-within:ring-2 focus-within:ring-primary/20 transition-all">
-              <Search size={16} className="text-slate-400 shrink-0" />
+            <form onSubmit={handleSearch} className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-foreground/[0.05] border border-border w-full max-w-[220px] focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+              <Search size={16} className="text-foreground/50 shrink-0" />
               <input
                 type="text"
                 placeholder={t('nav.search_placeholder')}
-                className="bg-transparent border-none outline-none text-sm w-full text-foreground placeholder:text-slate-400"
+                className="bg-transparent border-none outline-none text-sm w-full text-foreground placeholder:text-foreground/50"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </form>
 
-            <div className="flex items-center gap-2 border-l border-slate-200 dark:border-slate-800 pl-3">
+            <div className="flex items-center gap-2 border-l border-border pl-3">
               <LanguageSwitcher />
               <ThemeToggle />
               <button
-                className="lg:hidden p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-foreground transition-colors"
+                className="lg:hidden p-2 rounded-full hover:bg-foreground/[0.05] text-foreground transition-colors"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               >
                 {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -114,7 +114,7 @@ const Header = ({ categories = [] }: { categories?: any[] }) => {
           <div className="p-6 flex flex-col h-full">
             <div className="flex items-center justify-between mb-8">
               <Link href={lp('/')} onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-2 group shrink-0">
-                <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center transition-transform group-hover:scale-110 shadow-xs border border-slate-200/55 dark:border-slate-800/55">
+                <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center transition-transform group-hover:scale-110 shadow-xs border border-border/55">
                   <img src={config.logo} alt={`${config.siteName} Logo`} className="w-full h-full object-cover" />
                 </div>
                 <span className="text-xl font-black tracking-tighter text-foreground whitespace-nowrap">
@@ -132,14 +132,14 @@ const Header = ({ categories = [] }: { categories?: any[] }) => {
               <Link href={lp('/trending')} onClick={() => setIsMobileMenuOpen(false)}>{t('nav.trending')}</Link>
               <Link href="/blogs" onClick={() => setIsMobileMenuOpen(false)}>{t('nav.blog')}</Link>
 
-              <div className="mt-4 pt-6 border-t border-slate-200 dark:border-slate-800">
-                <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-4">{t('common.categories')}</p>
+              <div className="mt-4 pt-6 border-t border-border">
+                <p className="text-[10px] uppercase tracking-widest text-foreground/70 font-bold mb-4">{t('common.categories')}</p>
                 <div className="grid grid-cols-2 gap-3">
                   {categories.slice(0, 25).map((cat) => (
                     <Link
                       key={cat._id}
                       href={lp(`/categories/${cat.slug}`)}
-                      className="text-sm font-bold p-3 rounded-2xl bg-slate-100 dark:bg-slate-800 text-center"
+                      className="text-sm font-bold p-3 rounded-2xl bg-foreground/[0.05] text-center hover:bg-foreground/[0.1] transition-colors"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       {cat.name}

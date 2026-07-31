@@ -39,7 +39,7 @@ export default function LanguageSwitcher() {
 
   if (!mounted) {
     return (
-      <div className="h-10 w-16 bg-slate-100 dark:bg-slate-800/40 animate-pulse rounded-full" />
+      <div className="h-10 w-16 bg-foreground/[0.05] animate-pulse rounded-full" />
     );
   }
 
@@ -47,7 +47,7 @@ export default function LanguageSwitcher() {
 
   if (!mounted || supportedLocales.length === 0) {
     return (
-      <div className="h-10 w-16 bg-slate-100 dark:bg-slate-800/40 animate-pulse rounded-full" />
+      <div className="h-10 w-16 bg-foreground/[0.05] animate-pulse rounded-full" />
     );
   }
 
@@ -92,20 +92,13 @@ export default function LanguageSwitcher() {
       <SelectTrigger
         className={`flex items-center gap-1.5 px-3 py-2.5 rounded-full text-sm font-black
           transition-all duration-200 select-none whitespace-nowrap border-2 cursor-pointer shadow-xs active:scale-95 h-10 w-fit
-          ${isDark
-            ? 'bg-slate-900 text-white border-white hover:bg-slate-800'
-            : 'bg-white text-slate-950 border-slate-950 hover:bg-slate-50'
-          }`}
+          bg-background text-foreground border-foreground hover:bg-foreground/[0.05]`}
       >
         <span className="text-base leading-none">{current.flag}</span>
         <span className="hidden sm:inline uppercase tracking-wider text-xs mr-1">{current.code}</span>
       </SelectTrigger>
       <SelectContent
-        className={`w-44 rounded-2xl overflow-hidden z-[200]
-          ${isDark
-            ? 'bg-slate-900 border-slate-800 text-white shadow-black/40'
-            : 'bg-white border-slate-200 text-slate-700 shadow-black/10'
-          }`}
+        className="w-44 rounded-2xl overflow-hidden z-[200] bg-card border-border shadow-xl"
       >
         {supportedLocales.map((lang) => (
           <SelectItem
@@ -113,8 +106,8 @@ export default function LanguageSwitcher() {
             value={lang.code}
             className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm font-bold transition-colors cursor-pointer
               ${lang.code === locale
-                ? (isDark ? 'bg-white/10 text-white' : 'bg-slate-950/10 text-slate-950')
-                : (isDark ? 'text-white hover:bg-slate-800' : 'text-slate-700 hover:bg-slate-100')
+                ? 'bg-foreground/10 text-foreground'
+                : 'text-foreground/80 hover:bg-foreground/[0.05]'
               }`}
           >
             <span className="text-base leading-none w-5 shrink-0">{lang.flag}</span>

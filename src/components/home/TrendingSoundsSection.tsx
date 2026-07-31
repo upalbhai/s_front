@@ -34,15 +34,16 @@ export default function TrendingSoundsSection({
   const ActiveIcon = activeTabInfo.icon;
 
   return (
-    <section className="max-w-7xl mx-auto px-4 py-8">
+    <section className="w-full bg-foreground/[0.03] border-t border-border py-12">
+      <div className="max-w-7xl mx-auto px-4">
       {/* Header and Tabs container */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800/50 flex items-center justify-center text-foreground transition-all duration-300">
+          <div className="w-12 h-12 rounded-2xl bg-foreground/[0.05] flex items-center justify-center text-foreground transition-all duration-300">
             <ActiveIcon size={24} />
           </div>
           <div>
-            <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">
+            <p className="text-[10px] font-black uppercase tracking-widest text-foreground/50 mb-1">
               {t('home.trending.viral_hits') || 'Viral Hits'}
             </p>
             <h2 className="text-2xl font-black tracking-tight text-foreground transition-all duration-300">
@@ -52,14 +53,14 @@ export default function TrendingSoundsSection({
         </div>
 
         {/* Tab switch group */}
-        <div className="flex items-center bg-slate-100 dark:bg-slate-900/80 p-1 rounded-full border border-slate-200/60 dark:border-slate-800/60 self-start md:self-auto shadow-xs">
+        <div className="flex items-center bg-foreground/[0.03] p-1 rounded-full border border-foreground/[0.05] self-start md:self-auto shadow-xs">
           {TABS.map((tab) => (
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
               className={`px-5 py-2.5 rounded-full font-extrabold text-xs uppercase tracking-wider transition-all duration-300 cursor-pointer ${activeTab === tab.id
-                  ? 'bg-slate-950 text-white dark:bg-white dark:text-slate-950 shadow-md border-2 border-yellow-400 dark:border-yellow-450 scale-[1.03] ring-2 ring-yellow-400/20'
-                  : 'text-slate-500 hover:text-foreground dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/40'
+                  ? 'bg-foreground text-background shadow-md shadow-foreground/10'
+                  : 'text-foreground/60 hover:text-foreground'
                 }`}
             >
               {tab.label}
@@ -105,6 +106,7 @@ export default function TrendingSoundsSection({
           </button>
         </div>
       )}
+      </div>
     </section>
   );
 }
