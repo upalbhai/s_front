@@ -136,7 +136,7 @@ export default function HomeSEOContent() {
           </h3>
           <div className="space-y-3 text-sm text-foreground/70 font-medium leading-relaxed">
             <p>{t('seo.q_meme_desc1')}</p>
-            <p>{t('seo.q_meme_desc2')}</p>
+            <p dangerouslySetInnerHTML={{ __html: t('seo.q_meme_desc2') }} />
           </div>
         </div>
 
@@ -189,9 +189,10 @@ export default function HomeSEOContent() {
             <h3 className="text-xl font-black text-foreground">
               {t('seo.extra.collection_title')}
             </h3>
-            <p className="text-sm text-foreground/70 font-medium leading-relaxed whitespace-pre-line">
-              {t('seo.extra.collection_desc')}
-            </p>
+            <p 
+              className="text-sm text-foreground/70 font-medium leading-relaxed whitespace-pre-line"
+              dangerouslySetInnerHTML={{ __html: t('seo.extra.collection_desc') }}
+            />
           </div>
 
           <div id="stands-out" className="p-8 rounded-3xl border border-border bg-card space-y-4">
