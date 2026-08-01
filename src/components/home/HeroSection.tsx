@@ -111,7 +111,7 @@ export default function HeroSection({
             </h1>
 
             {subtitle && (
-              <p className="text-base text-foreground/70 font-bold max-w-2xl mx-auto">
+              <p className="text-base text-foreground/70 font-bold max-w-4xl mx-auto">
                 {subtitle}
               </p>
             )}

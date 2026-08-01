@@ -45,10 +45,10 @@ export default function HomeClient({
   const getLimit = useCallback(() => {
     if (typeof window === 'undefined') return 24;
     const width = window.innerWidth;
-    if (width >= 1024) return 16; // lg: 8 cols (2 rows)
-    if (width >= 768) return 12; // md: 6 cols (2 rows)
-    if (width >= 640) return 12; // sm: 4 cols (3 rows)
-    return 12; // xs: 3 cols (4 rows)
+    if (width >= 1024) return 32; // lg: 8 cols (2 rows)
+    if (width >= 768) return 24; // md: 6 cols (2 rows)
+    if (width >= 640) return 24; // sm: 4 cols (3 rows)
+    return 24; // xs: 3 cols (4 rows)
   }, []);
 
   // Sync state if initial searchQuery changes (e.g. page mount)
@@ -209,7 +209,7 @@ export default function HomeClient({
       {/* <FeaturesSection /> */}
       {/* <TestimonialsSection /> */}
       {/* <FaqSection /> */}
-      
+
       <div className="w-full bg-foreground/[0.02] border-y border-foreground/[0.05]">
         <HomeSEOContent />
       </div>

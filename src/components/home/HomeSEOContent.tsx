@@ -61,16 +61,16 @@ export default function HomeSEOContent() {
   ];
 
   const categories = [
-    { text: t('seo.category.meme'), color: 'bg-red-500/10 border-red-500/20 text-red-500' },
-    { text: t('seo.category.effects'), color: 'bg-amber-500/10 border-amber-500/20 text-amber-500' },
-    { text: t('seo.category.reaction'), color: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500' },
-    { text: t('seo.category.tiktok'), color: 'bg-pink-500/10 border-pink-500/20 text-pink-500' },
-    { text: t('seo.category.games'), color: 'bg-blue-500/10 border-blue-500/20 text-blue-500' },
-    { text: t('seo.category.anime'), color: 'bg-purple-500/10 border-purple-500/20 text-purple-500' },
-    { text: t('seo.category.movies'), color: 'bg-indigo-500/10 border-indigo-500/20 text-indigo-500' },
-    { text: t('seo.category.pranks'), color: 'bg-orange-500/10 border-orange-500/20 text-orange-500' },
-    { text: t('seo.category.politics'), color: 'bg-cyan-500/10 border-cyan-500/20 text-cyan-500' },
-    { text: t('seo.category.creativity'), color: 'bg-teal-500/10 border-teal-500/20 text-teal-500' }
+    { text: t('seo.category.meme'), color: 'bg-red-500/10 border-red-500/20 text-red-500', href: '/categories/meme-soundboard' },
+    { text: t('seo.category.effects'), color: 'bg-amber-500/10 border-amber-500/20 text-amber-500', href: '/categories/sound-effects-soundboard' },
+    { text: t('seo.category.reaction'), color: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500', href: '/categories/reaction-soundboard' },
+    { text: t('seo.category.tiktok'), color: 'bg-pink-500/10 border-pink-500/20 text-pink-500', href: '/categories/tiktok-soundboard' },
+    { text: t('seo.category.games'), color: 'bg-blue-500/10 border-blue-500/20 text-blue-500', href: '/categories/games-soundboard' },
+    { text: t('seo.category.anime'), color: 'bg-purple-500/10 border-purple-500/20 text-purple-500', href: '/categories/anime-soundboard' },
+    { text: t('seo.category.movies'), color: 'bg-indigo-500/10 border-indigo-500/20 text-indigo-500', href: '/categories/movies-soundboard' },
+    { text: t('seo.category.pranks'), color: 'bg-orange-500/10 border-orange-500/20 text-orange-500', href: '/categories/prank-soundboard' },
+    { text: t('seo.category.politics'), color: 'bg-cyan-500/10 border-cyan-500/20 text-cyan-500', href: '/categories/politics-soundboard' },
+    { text: t('seo.category.creativity'), color: 'bg-teal-500/10 border-teal-500/20 text-teal-500', href: '/categories/creativity-soundboard' }
   ];
 
   const differences = [
@@ -105,7 +105,7 @@ export default function HomeSEOContent() {
 
       {/* Table of Contents */}
       {toc.length > 0 && (
-        <div className="max-w-2xl mx-auto p-6 md:p-8 rounded-3xl border border-border bg-foreground/[0.02]">
+        <div className="max-w-2xl mx-auto p-6 md:p-8 rounded-3xl border border-primary/20 bg-primary/5 dark:bg-primary/10">
           <h3 className="text-xl font-black text-foreground mb-4">
             Table of Contents
           </h3>
@@ -172,10 +172,12 @@ export default function HomeSEOContent() {
               className={`p-6 rounded-3xl border border-border bg-card space-y-4 transition-all duration-300 hover:shadow-lg ${i === 4 ? 'sm:col-span-2 lg:col-span-1' : ''
                 }`}
             >
-              <div className="w-12 h-12 rounded-2xl bg-foreground/[0.05] flex items-center justify-center text-2xl">
-                {uc.icon}
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 shrink-0 rounded-2xl bg-foreground/[0.05] flex items-center justify-center text-2xl">
+                  {uc.icon}
+                </div>
+                <h4 className="text-base font-black text-foreground leading-tight">{uc.title}</h4>
               </div>
-              <h4 className="text-base font-black text-foreground">{uc.title}</h4>
               <p className="text-sm text-foreground/70 font-medium leading-relaxed">{uc.desc}</p>
             </div>
           ))}
@@ -246,15 +248,16 @@ export default function HomeSEOContent() {
             const suffix = hasSeparator ? cat.text.substring(splitIndex) : '';
 
             return (
-              <div
+              <a
                 key={i}
-                className="p-5 rounded-2xl border border-border bg-card hover:border-slate-300 dark:hover:border-slate-700 transition-colors"
+                href={cat.href}
+                className="group block p-5 rounded-2xl border border-border bg-card hover:border-primary/30 hover:bg-foreground/[0.02] dark:hover:border-primary/30 transition-all cursor-pointer"
               >
                 <p className="text-sm text-foreground/80 font-medium leading-relaxed">
-                  <strong className="text-foreground font-black">{prefix}</strong>
+                  <strong className="text-foreground font-black group-hover:text-primary transition-colors">{prefix}</strong>
                   {suffix}
                 </p>
-              </div>
+              </a>
             );
           })}
         </div>
