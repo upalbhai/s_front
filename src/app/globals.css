@@ -296,23 +296,23 @@
 [data-site="soundbuttonsguys"].dark {
   --primary: #f97316;
   --primary-hover: #fb923c;
-  --background: #431407;
+  --background: #09090b;
   --foreground: #fff7ed;
-  --card: #7c2d12;
+  --card: #18181b;
   --card-foreground: #fff7ed;
-  --card-bg: #7c2d12;
-  --card-border: #9a3412;
-  --border: #9a3412;
-  --popover: #7c2d12;
+  --card-bg: #18181b;
+  --card-border: #27272a;
+  --border: #27272a;
+  --popover: #18181b;
   --popover-foreground: #fff7ed;
-  --muted: #9a3412;
-  --muted-foreground: #fed7aa;
-  --glass-bg: rgba(67, 20, 7, 0.8);
-  --glass-border: rgba(154, 52, 18, 1);
-  --sidebar: #7c2d12;
+  --muted: #27272a;
+  --muted-foreground: #a1a1aa;
+  --glass-bg: rgba(24, 24, 27, 0.8);
+  --glass-border: rgba(39, 39, 42, 1);
+  --sidebar: #121214;
   --sidebar-foreground: #fff7ed;
-  --sidebar-border: #9a3412;
-  --sidebar-accent: #9a3412;
+  --sidebar-border: #27272a;
+  --sidebar-accent: #27272a;
   --sidebar-accent-foreground: #fff7ed;
 }
 
@@ -342,22 +342,22 @@
 [data-site="soundbuttons"].dark {
   --primary: #14b8a6;
   --primary-hover: #2dd4bf;
-  --background: #042f2e;
+  --background: #09090b;
   --foreground: #f0fdfa;
-  --card: #134e4a;
+  --card: #18181b;
   --card-foreground: #f0fdfa;
-  --card-bg: #134e4a;
-  --card-border: #115e59;
-  --border: #115e59;
-  --popover: #134e4a;
+  --card-bg: #18181b;
+  --card-border: #27272a;
+  --border: #27272a;
+  --popover: #18181b;
   --popover-foreground: #f0fdfa;
-  --muted: #115e59;
-  --muted-foreground: #99f6e4;
-  --glass-bg: rgba(4, 47, 46, 0.8);
-  --glass-border: rgba(17, 94, 89, 1);
-  --sidebar: #134e4a;
+  --muted: #27272a;
+  --muted-foreground: #a1a1aa;
+  --glass-bg: rgba(24, 24, 27, 0.8);
+  --glass-border: rgba(39, 39, 42, 1);
+  --sidebar: #121214;
   --sidebar-foreground: #f0fdfa;
-  --sidebar-border: #115e59;
-  --sidebar-accent: #115e59;
+  --sidebar-border: #27272a;
+  --sidebar-accent: #27272a;
   --sidebar-accent-foreground: #f0fdfa;
 }
