@@ -224,20 +224,29 @@ export default function SoundDetailClient({ sound, relatedSounds, h1Title, uiDes
         </div>
 
         {/* SEO Content Sections */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="">
           <div className="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-            <h2 className="text-xl font-black text-foreground mb-4">About the {sound.title} Sound</h2>
-            <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
-              {sound.description || uiDescription || `The ${sound.title} sound button is one of the most popular clips in the ${sound.category?.name} category.`}
-            </p>
+            {sound.description && /<[a-z][\s\S]*>/i.test(sound.description) ? (
+              <div
+                className="prose prose-slate dark:prose-invert max-w-none prose-headings:font-black prose-p:font-medium prose-p:leading-relaxed prose-a:text-sky-500 hover:prose-a:text-sky-600 prose-li:font-medium"
+                dangerouslySetInnerHTML={{ __html: sound.description }}
+              />
+            ) : (
+              <>
+                <h2 className="text-xl font-black text-foreground mb-4">About the {sound.title} Sound</h2>
+                <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
+                  {sound.description || uiDescription || `The ${sound.title} sound button is one of the most popular clips in the ${sound.category?.name} category.`}
+                </p>
+              </>
+            )}
           </div>
 
-          <div className="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+          {/* <div className="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
             <h2 className="text-xl font-black text-foreground mb-4">How to Use {sound.title} Sound</h2>
             <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
               {sound.howToUse || `You can use the ${sound.title} sound in your OBS streams, Discord soundboards, or video editing projects.`}
             </p>
-          </div>
+          </div> */}
 
           {sound.transcript && (
             <div className="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 md:col-span-2">

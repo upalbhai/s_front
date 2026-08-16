@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import type { AdminCategory, AdminSound } from '../admin-types';
 import { getSoundCategoryId } from '../admin-types';
 import { useTheme } from 'next-themes';
+import { Editor } from '@tinymce/tinymce-react';
+import { CATEGORY_TEMPLATES } from '@/utils/descriptionTemplates';
 
 interface SoundFormValues {
   title: string;
@@ -73,6 +75,26 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
     set('title', title);
     if (!initialSound) {
       set('slug', title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''));
+    }
+  };
+
+  const handleFillTemplate = () => {
+    if (!values.category || !values.title) {
+      alert('Please select a category and enter a title first.');
+      return;
+    }
+    const cat = categories.find(c => c._id === values.category);
+    if (!cat) return;
+    
+    // Check for exact match or generic match
+    const catName = cat.name;
+    const template = CATEGORY_TEMPLATES[catName] || CATEGORY_TEMPLATES[Object.keys(CATEGORY_TEMPLATES).find(k => catName.toLowerCase().includes(k.toLowerCase())) || ''] || '';
+    
+    if (template) {
+      const filled = template.replace(/\{sound name\}/g, values.title).replace(/\{category name\}/g, catName);
+      set('description', filled);
+    } else {
+      alert(`No template found for category "${catName}".`);
     }
   };
 
@@ -165,14 +187,40 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
           />
         </div>
         <div>
-          <label className={labelClass}>Description</label>
-          <textarea
-            className={`${inputClass} resize-y`}
-            value={values.description}
-            onChange={e => set('description', e.target.value)}
-            placeholder="A short description of this sound."
-            rows={3}
-          />
+          <div className="flex justify-between items-center mb-1.5">
+            <label className={labelClass} style={{ marginBottom: 0 }}>Description</label>
+            <button
+              type="button"
+              onClick={handleFillTemplate}
+              className={`text-[10px] font-bold px-2 py-1 rounded transition-colors ${isDark ? 'bg-sky-500/20 text-sky-400 hover:bg-sky-500/30' : 'bg-sky-100 text-sky-600 hover:bg-sky-200'}`}
+            >
+              Auto-fill Template
+            </button>
+          </div>
+          <div className={`rounded-2xl overflow-hidden border transition-all duration-300 ${isDark ? 'border-zinc-800' : 'border-zinc-200 focus-within:ring-2 focus-within:ring-zinc-200'}`}>
+            <Editor
+              licenseKey="gpl"
+              tinymceScriptSrc="/tinymce/tinymce.min.js"
+              value={values.description}
+              onEditorChange={(content) => set('description', content)}
+              init={{
+                height: 300,
+                menubar: false,
+                skin: isDark ? 'oxide-dark' : 'oxide',
+                content_css: isDark ? 'dark' : 'default',
+                plugins: [
+                  'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
+                  'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                  'insertdatetime', 'media', 'table', 'preview', 'help', 'wordcount'
+                ],
+                toolbar: 'undo redo | blocks | ' +
+                  'bold italic forecolor | alignleft aligncenter ' +
+                  'alignright alignjustify | bullist numlist outdent indent | ' +
+                  'removeformat | help',
+                content_style: 'body { font-family:Inter,Helvetica,Arial,sans-serif; font-size:14px }',
+              }}
+            />
+          </div>
         </div>
         <div className={`flex items-center gap-3 p-4 rounded-2xl border transition-colors duration-300 ${isDark ? 'border-zinc-800 bg-zinc-950/40' : 'border-zinc-200 bg-zinc-50'
           }`}>
