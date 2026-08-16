@@ -10,6 +10,7 @@ import { toast } from 'react-hot-toast';
 import { useLocalePath } from '@/i18n';
 import { usePathname } from 'next/navigation';
 import { useSite } from '@/context/SiteProvider';
+import ButtonRenderer from '@/components/buttons/ButtonRenderer';
 
 const BUTTON_COLORS = [
   { main: '#ff3b30', dark: '#a31a12', shadow: 'rgba(255, 59, 48, 0.3)' }, // Red
@@ -136,81 +137,14 @@ export default function SoundDetailClient({ sound, relatedSounds, h1Title, uiDes
               }}
             />
 
-            <div
-              className="relative cursor-pointer select-none transition-transform hover:scale-[1.02] active:scale-[0.98]"
-              style={{ width: 325, height: 300 }}
+            <ButtonRenderer
+              siteId={siteId}
+              color={color}
+              isPlaying={isThisPlaying}
+              isLoading={isThisLoading}
               onClick={handlePlayClick}
-            >
-              {/* Platter bottom rim (darkest, for depth) */}
-              <div
-                className="absolute rounded-[50%]"
-                style={{
-                  width: 300,
-                  height: 225,
-                  bottom: 0,
-                  left: 12.5,
-                  background: '#7a7a7a',
-                  zIndex: 1,
-                }}
-              />
-
-              {/* Platter top surface (lighter grey) */}
-              <div
-                className="absolute rounded-[50%]"
-                style={{
-                  width: 300,
-                  height: 225,
-                  bottom: 30,
-                  left: 12.5,
-                  background: '#d0d0d0',
-                  zIndex: 2,
-                }}
-              />
-
-              {/* Button cylinder bottom curve (darker shade of button color) */}
-              <div
-                className="absolute rounded-[50%] transition-all duration-75 ease-out"
-                style={{
-                  width: 250,
-                  height: 188,
-                  bottom: isThisPlaying ? 30 : 50,
-                  left: 37.5,
-                  backgroundColor: color.dark,
-                  zIndex: 3,
-                }}
-              />
-
-              {/* Button cylinder vertical wall connecting bottom and top cap */}
-              <div
-                className="absolute transition-all duration-75 ease-out"
-                style={{
-                  width: 250,
-                  height: isThisPlaying ? 30 : 50,
-                  bottom: isThisPlaying ? 124 : 144,
-                  left: 37.5,
-                  backgroundColor: color.dark,
-                  zIndex: 3,
-                }}
-              />
-
-              {/* Button top cap (main color) — moves down when playing */}
-              <div
-                className="absolute rounded-[50%] transition-all duration-75 ease-out flex items-center justify-center text-white"
-                style={{
-                  width: 250,
-                  height: 188,
-                  bottom: isThisPlaying ? 60 : 100,
-                  left: 37.5,
-                  backgroundColor: color.main,
-                  zIndex: 4,
-                  boxShadow: isThisPlaying ? 'none' : `0 12px 24px ${color.shadow}`,
-                }}
-              >
-                {isThisLoading && (
-                  <div className="w-16 h-16 border-4 border-white/30 border-t-white rounded-full animate-spin" />
-                )}
-              </div>
-            </div>
+              size="large"
+            />
           </div>
 
           {/* Right: Sound Details */}

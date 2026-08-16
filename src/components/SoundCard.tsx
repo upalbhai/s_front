@@ -9,6 +9,7 @@ import useAudio from '../hooks/useAudio';
 import { useTranslation, useLocalePath } from '@/i18n';
 import { usePathname } from 'next/navigation';
 import { useSite } from '@/context/SiteProvider';
+import ButtonRenderer from './buttons/ButtonRenderer';
 
 interface SoundProps {
   sound: {
@@ -58,8 +59,9 @@ const getFullUrl = (url: string) => {
 };
 
 const SoundCard: React.FC<SoundProps> = ({ sound }) => {
-  const { currentSound, isPlaying, playSound } = useAudio();
+  const { currentSound, isPlaying, isLoading, playSound } = useAudio();
   const isThisPlaying = currentSound?._id === sound._id && isPlaying;
+  const isThisLoading = currentSound?._id === sound._id && isLoading;
   const [isFavorited, setIsFavorited] = useState(false);
   const { t } = useTranslation();
   const lp = useLocalePath();
@@ -139,79 +141,14 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
     <div className="flex flex-col items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-2xl sm:rounded-3xl transition-all duration-300 hover:bg-slate-100 dark:hover:bg-slate-800/50 group">
 
       {/* ── 3D Button ── */}
-      <div
-        className="relative cursor-pointer select-none active:scale-[0.97] transition-transform duration-75"
-        style={{ width: 92, height: 102 }}
+      <ButtonRenderer
+        siteId={siteId}
+        color={color}
+        isPlaying={isThisPlaying}
+        isLoading={isThisLoading}
         onClick={handlePlay}
-      >
-        {/* Platter bottom rim (darkest, for depth) */}
-        <div
-          className="absolute rounded-[50%]"
-          style={{
-            width: 84,
-            height: 63,
-            bottom: 0,
-            left: 4,
-            background: '#7a7a7a',
-            zIndex: 1,
-          }}
-        />
-
-        {/* Platter top surface (lighter grey) */}
-        <div
-          className="absolute rounded-[50%]"
-          style={{
-            width: 84,
-            height: 63,
-            bottom: 8,
-            left: 4,
-            background: '#d0d0d0',
-            zIndex: 2,
-          }}
-        />
-
-        {/* Button cylinder bottom curve (darker shade of button color) */}
-        <div
-          className="absolute rounded-[50%] transition-all duration-100 ease-out"
-          style={{
-            width: 70,
-            height: 52,
-            bottom: isThisPlaying ? 10 : 14,
-            left: 11,
-            backgroundColor: color.dark,
-            zIndex: 3,
-          }}
-        />
-
-        {/* Button cylinder vertical wall connecting bottom and top cap */}
-        <div
-          className="absolute transition-all duration-100 ease-out"
-          style={{
-            width: 70,
-            height: isThisPlaying ? 10 : 14,
-            bottom: isThisPlaying ? 36 : 40,
-            left: 11,
-            backgroundColor: color.dark,
-            zIndex: 3,
-          }}
-        />
-
-        {/* Button top cap (main color) — moves down when playing */}
-        <div
-          className="absolute rounded-[50%] transition-all duration-100 ease-out"
-          style={{
-            width: 70,
-            height: 52,
-            bottom: isThisPlaying ? 20 : 28,
-            left: 11,
-            backgroundColor: color.main,
-            boxShadow: isThisPlaying
-              ? 'inset 0 -2px 4px rgba(0,0,0,0.15)'
-              : 'inset 0 -4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.08)',
-            zIndex: 4,
-          }}
-        />
-      </div>
+        size="small"
+      />
 
       {/* ── Title ── */}
       <div className="text-center w-full min-w-0">
