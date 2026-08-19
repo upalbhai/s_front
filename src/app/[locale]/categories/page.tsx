@@ -21,7 +21,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   });
 }
 
+import SchemaScript from '@/components/SchemaScript';
+
 export default async function CategoriesPage() {
+  const site = await getRequestSite();
   let categories = [];
   try {
     const res = await api.get('/categories');
@@ -30,8 +33,42 @@ export default async function CategoriesPage() {
     console.error('Error fetching categories:', error);
   }
 
+  const collectionSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Soundboard Categories",
+    "url": `${site.siteUrl}/categories`,
+    "description": "Browse meme soundboard categories including Anime, Gaming, TikTok, Prank and more, all free and unblocked.",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": site.siteName,
+      "url": site.siteUrl
+    }
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": `${site.siteUrl}/`
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Categories",
+        "item": `${site.siteUrl}/categories`
+      }
+    ]
+  };
+
   return (
     <div className="py-16">
+      <SchemaScript schema={collectionSchema} />
+      <SchemaScript schema={breadcrumbSchema} />
       <CategoryGridSection categories={categories} />
     </div>
   );

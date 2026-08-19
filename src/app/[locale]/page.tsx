@@ -5,6 +5,7 @@ import { getTranslations } from '@/i18n/server';
 import { buildSeoMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
 import type { Locale } from '@/i18n';
+import SchemaScript from '@/components/SchemaScript';
 
 export async function generateMetadata({
   params,
@@ -59,14 +60,29 @@ export default async function HomePage({ params, searchParams }: { params: Promi
     ? t('meta.home.h1') 
     : (site.meta.home.h1 || site.meta.home.title);
 
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": site.siteName,
+    "url": site.siteUrl,
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": `${site.siteUrl}/search?q={search_term_string}`,
+      "query-input": "required name=search_term_string"
+    }
+  };
+
   return (
-    <HomeClient
-      trendingSounds={trendingSounds}
-      newSounds={newSounds}
-      categories={categories}
-      searchResults={searchResults}
-      searchQuery={q}
-      h1Title={h1Title}
-    />
+    <>
+      <SchemaScript schema={schema} />
+      <HomeClient
+        trendingSounds={trendingSounds}
+        newSounds={newSounds}
+        categories={categories}
+        searchResults={searchResults}
+        searchQuery={q}
+        h1Title={h1Title}
+      />
+    </>
   );
 }

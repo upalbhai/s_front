@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import SchemaScript from '@/components/SchemaScript';
 import { getRequestSite } from '@/config/sites';
 import { buildSeoMetadata } from '@/lib/seo';
 import TermsClient from './TermsClient';
@@ -44,5 +45,43 @@ export async function generateMetadata({
 
 export default async function TermsPage() {
   const site = await getRequestSite();
-  return <TermsClient siteName={site.siteName} email={site.contactEmail} />;
+  
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Terms",
+    "url": `${site.siteUrl}/terms`,
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": site.siteName,
+      "url": site.siteUrl
+    }
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": `${site.siteUrl}/`
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Terms",
+        "item": `${site.siteUrl}/terms`
+      }
+    ]
+  };
+
+  return (
+    <>
+      <SchemaScript schema={schema} />
+      <SchemaScript schema={breadcrumbSchema} />
+      <TermsClient siteName={site.siteName} email={site.contactEmail} />
+    </>
+  );
 }

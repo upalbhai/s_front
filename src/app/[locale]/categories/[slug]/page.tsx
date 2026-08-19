@@ -3,12 +3,14 @@ import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { Metadata } from 'next';
 import Script from 'next/script';
+import SchemaScript from '@/components/SchemaScript';
 import CategoryClient from './CategoryClient';
 import { getRequestSite } from '@/config/sites';
 import { buildSeoMetadata, buildNotFoundMetadata } from '@/lib/seo';
 
 import { getTranslations } from '@/i18n/server';
 import type { Locale } from '@/i18n';
+import { getCategoryDescriptionHTML, getCategoryFaqHTML } from '@/lib/categoryContent';
 
 export async function generateMetadata({
   params,
@@ -87,12 +89,17 @@ export default async function LocaleCategoryPage({
     );
   }
 
-  const jsonLd = {
+  const collectionSchema = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    name: category.name,
+    name: `${category.name} Soundboard`,
     description: category.seoDescription || category.description,
     url: `${site.siteUrl}/categories/${slug}`,
+    isPartOf: {
+      '@type': 'WebSite',
+      name: site.siteName,
+      url: site.siteUrl
+    },
     mainEntity: {
       '@type': 'ItemList',
       itemListElement: soundsData.sounds.slice(0, 10).map((sound: any, index: number) => ({
@@ -104,13 +111,35 @@ export default async function LocaleCategoryPage({
     },
   };
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": `${site.siteUrl}/`
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Categories",
+        "item": `${site.siteUrl}/categories`
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": `${category.name} Soundboard`,
+        "item": `${site.siteUrl}/categories/${slug}`
+      }
+    ]
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-16">
-      <Script
-        id={`jsonld-category-${category._id}`}
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <SchemaScript schema={collectionSchema} />
+      <SchemaScript schema={breadcrumbSchema} />
       <nav className="flex items-center gap-2 text-slate-500 dark:text-slate-400 mb-8 text-sm font-medium">
         <Link href="/" className="hover:text-foreground transition-colors">
           Home
@@ -132,11 +161,18 @@ export default async function LocaleCategoryPage({
       <section className="glass-card mt-24 p-8 md:p-12">
         <h2 className="text-2xl font-black text-foreground mb-6">About {category.name} Soundboard</h2>
         <div
-          className="prose prose-slate dark:prose-invert max-w-none text-slate-600 dark:text-slate-400 font-medium space-y-4"
+          className="prose prose-slate dark:prose-invert max-w-none prose-headings:font-black prose-p:font-medium prose-p:leading-relaxed prose-a:text-sky-500 hover:prose-a:text-sky-600 prose-li:font-medium text-slate-600 dark:text-slate-400"
           dangerouslySetInnerHTML={{
-            __html:
-              category.seoText ||
-              `<p>Our ${category.name} soundboard features a curated collection of high-quality audio clips. All sounds are free to download and unblocked for use anywhere.</p>`,
+            __html: getCategoryDescriptionHTML(category.name, category.seoText)
+          }}
+        />
+      </section>
+
+      <section className="glass-card mt-8 p-8 md:p-12">
+        <div
+          className="prose prose-slate dark:prose-invert max-w-none prose-headings:font-black prose-p:font-medium prose-p:leading-relaxed prose-a:text-sky-500 hover:prose-a:text-sky-600 prose-li:font-medium text-slate-600 dark:text-slate-400"
+          dangerouslySetInnerHTML={{
+            __html: getCategoryFaqHTML(category.name)
           }}
         />
       </section>

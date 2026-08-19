@@ -1,6 +1,7 @@
 import api from '@/services/api';
 import { Metadata } from 'next';
 import Script from 'next/script';
+import SchemaScript from '@/components/SchemaScript';
 import SoundDetailClient from './SoundDetailClient';
 import { getRequestSite } from '@/config/sites';
 import { buildSeoMetadata, buildNotFoundMetadata } from '@/lib/seo';
@@ -105,15 +106,13 @@ export default async function LocaleSoundDetailPage({
       : `${backendUrl}${sound.fileUrl}`
     : '';
 
-  const jsonLd = {
+  const audioSchema = {
     '@context': 'https://schema.org',
     '@type': 'AudioObject',
     name: sound.title,
     description: sound.seoDescription || sound.description,
     contentUrl,
-    encodingFormat: 'audio/mpeg',
-    duration: sound.audioDuration || 'PT0M2S',
-    uploadDate: sound.createdAt,
+    uploadDate: sound.createdAt ? new Date(sound.createdAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
     thumbnailUrl:
       sound.ogImage ||
       (sound.iconUrl
@@ -121,16 +120,45 @@ export default async function LocaleSoundDetailPage({
           ? sound.iconUrl
           : `${site.siteUrl}${sound.iconUrl}`
         : ''),
-    transcript: sound.transcript || '',
+    isPartOf: {
+      '@type': 'WebSite',
+      name: site.siteName,
+      url: site.siteUrl
+    }
+  };
+
+  const categoryName = sound.category?.name || 'Uncategorized';
+  const categorySlug = sound.category?.slug || 'uncategorized';
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": `${site.siteUrl}/`
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": `${categoryName} Soundboard`,
+        "item": `${site.siteUrl}/categories/${categorySlug}`
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": sound.title,
+        "item": `${site.siteUrl}/sound/${soundSlug}`
+      }
+    ]
   };
 
   return (
     <>
-      <Script
-        id={`jsonld-sound-${sound._id}`}
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <SchemaScript schema={audioSchema} />
+      <SchemaScript schema={breadcrumbSchema} />
       <SoundDetailClient
         sound={sound}
         relatedSounds={relatedSounds}

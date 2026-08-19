@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import SchemaScript from '@/components/SchemaScript';
 import { getRequestSite } from '@/config/sites';
 import { buildSeoMetadata } from '@/lib/seo';
 import DisclaimerClient from './DisclaimerClient';
@@ -45,11 +46,49 @@ export async function generateMetadata({
 export default async function DisclaimerPage() {
   const site = await getRequestSite();
   const domain = site.domains[0];
+  
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Disclaimer",
+    "url": `${site.siteUrl}/disclaimer`,
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": site.siteName,
+      "url": site.siteUrl
+    }
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": `${site.siteUrl}/`
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Disclaimer",
+        "item": `${site.siteUrl}/disclaimer`
+      }
+    ]
+  };
+
   return (
+    <>
+      <SchemaScript schema={schema} />
+      <SchemaScript schema={breadcrumbSchema} />
+      (
     <DisclaimerClient
       siteName={site.siteName}
       domain={domain}
       email={site.contactEmail}
     />
+  )
+    </>
   );
 }

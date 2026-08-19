@@ -23,6 +23,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   });
 }
 
+import SchemaScript from '@/components/SchemaScript';
+
 export default async function TrendingSoundsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const site = await getRequestSite();
@@ -46,5 +48,27 @@ export default async function TrendingSoundsPage({ params }: { params: Promise<{
     console.error('Error fetching initial trending sounds:', error);
   }
 
-  return <TrendingClient h1Title={h1Title} shortDescription={shortDesc} initialSounds={initialSounds} initialTotal={initialTotal} />;
+  const collectionSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Trending Sound Buttons",
+    "url": `${site.siteUrl}/trending`,
+    "description": site.meta.trending.description,
+    "mainEntity": {
+      "@type": "ItemList",
+      "itemListElement": initialSounds.slice(0, 10).map((sound: any, index: number) => ({
+        "@type": "ListItem",
+        "position": index + 1,
+        "url": `${site.siteUrl}/sound/${sound.slug}`,
+        "name": sound.title
+      }))
+    }
+  };
+
+  return (
+    <>
+      <SchemaScript schema={collectionSchema} />
+      <TrendingClient h1Title={h1Title} shortDescription={shortDesc} initialSounds={initialSounds} initialTotal={initialTotal} />
+    </>
+  );
 }

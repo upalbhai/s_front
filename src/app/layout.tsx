@@ -92,6 +92,23 @@ export default async function RootLayout({
             </Script>
           </>
         )}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": site.siteName,
+              "url": site.siteUrl,
+              "logo": `${site.siteUrl}${site.logo}`,
+              "contactPoint": {
+                "@type": "ContactPoint",
+                "email": site.contactEmail,
+                "contactType": "customer support"
+              }
+            })
+          }}
+        />
       </head>
       <body className="antialiased transition-colors duration-300">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>

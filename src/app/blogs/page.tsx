@@ -35,6 +35,8 @@ const getImageUrl = (path: string) => {
   return url;
 };
 
+import SchemaScript from '@/components/SchemaScript';
+
 export default async function BlogPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
   const { page } = await searchParams;
   const currentPage = Math.max(Number(page) || 1, 1);
@@ -52,8 +54,41 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
     console.error('Error fetching blogs:', error);
   }
 
+  const blogSchema = {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": `${site.siteName} Blog`,
+    "url": `${site.siteUrl}/blogs`,
+    "publisher": {
+      "@type": "Organization",
+      "name": site.siteName,
+      "url": site.siteUrl
+    }
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": `${site.siteUrl}/`
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Blog",
+        "item": `${site.siteUrl}/blogs`
+      }
+    ]
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pb-24">
+      <SchemaScript schema={blogSchema} />
+      <SchemaScript schema={breadcrumbSchema} />
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-transparent to-purple-500/5" />

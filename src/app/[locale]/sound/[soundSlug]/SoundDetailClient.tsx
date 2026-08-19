@@ -263,7 +263,7 @@ export default function SoundDetailClient({ sound, relatedSounds, h1Title, uiDes
           <h2 className="text-2xl md:text-3xl font-black text-center text-foreground mb-10">
             You may also like
           </h2>
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 sm:gap-6 justify-items-center">
+          <div className="grid grid-cols-2 min-[425px]:grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 sm:gap-6 justify-items-center">
             {relatedSounds.slice(0, 8).map((s: any) => (
               <SoundCard key={s._id} sound={s} />
             ))}

@@ -67,6 +67,8 @@ export async function generateMetadata({
   }
 }
 
+import SchemaScript from '@/components/SchemaScript';
+
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const site = await getRequestSite();
@@ -83,8 +85,68 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   if (!blog) return null;
 
+  const ogImagePath = blog.ogImage || blog.featuredImage;
+  let absoluteOgImage = undefined;
+  if (ogImagePath) {
+    const imgUrl = getImageUrl(ogImagePath);
+    absoluteOgImage = imgUrl.startsWith('http') ? imgUrl : `${site.siteUrl}${imgUrl}`;
+  }
+
+  const blogPostingSchema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": blog.title,
+    "description": blog.seoDescription || blog.excerpt || blog.title,
+    "datePublished": blog.publishedDate ? new Date(blog.publishedDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+    "dateModified": blog.updatedAt ? new Date(blog.updatedAt).toISOString().split('T')[0] : (blog.publishedDate ? new Date(blog.publishedDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]),
+    "author": {
+      "@type": "Organization",
+      "name": site.siteName
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": site.siteName,
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${site.siteUrl}${site.logo}`
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `${site.siteUrl}/blogs/${slug}`
+    },
+    "image": absoluteOgImage || `${site.siteUrl}${site.logo}`
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": `${site.siteUrl}/`
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Blog",
+        "item": `${site.siteUrl}/blogs`
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": blog.title,
+        "item": `${site.siteUrl}/blogs/${slug}`
+      }
+    ]
+  };
+
   return (
     <article className="min-h-screen bg-slate-50 dark:bg-slate-950 pb-24">
+      <SchemaScript schema={blogPostingSchema} />
+      <SchemaScript schema={breadcrumbSchema} />
       {/* Hero Header */}
       <div className="relative pt-10 px-4 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-500/10 via-slate-50/50 dark:via-slate-900 to-slate-50 dark:to-slate-950" />
