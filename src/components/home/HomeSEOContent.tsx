@@ -201,27 +201,30 @@ export default function HomeSEOContent() {
             <h3 className="text-xl font-black text-foreground">
               {t('seo.extra.stands_out_title')}
             </h3>
-            <p className="text-sm text-foreground/70 font-medium leading-relaxed whitespace-pre-line">
-              {t('seo.extra.stands_out_desc')}
-            </p>
+            <p 
+              className="text-sm text-foreground/70 font-medium leading-relaxed whitespace-pre-line"
+              dangerouslySetInnerHTML={{ __html: t('seo.extra.stands_out_desc') }}
+            />
           </div>
           
           <div id="unblocked" className="p-8 rounded-3xl border border-border bg-card space-y-4">
             <h3 className="text-xl font-black text-foreground">
               {t('seo.extra.unblocked_title')}
             </h3>
-            <p className="text-sm text-foreground/70 font-medium leading-relaxed whitespace-pre-line">
-              {t('seo.extra.unblocked_desc')}
-            </p>
+            <p 
+              className="text-sm text-foreground/70 font-medium leading-relaxed whitespace-pre-line"
+              dangerouslySetInnerHTML={{ __html: t('seo.extra.unblocked_desc') }}
+            />
           </div>
           
           <div id="most-popular" className="p-8 rounded-3xl border border-border bg-card space-y-4">
             <h3 className="text-xl font-black text-foreground">
               {t('seo.extra.popular_title')}
             </h3>
-            <p className="text-sm text-foreground/70 font-medium leading-relaxed whitespace-pre-line">
-              {t('seo.extra.popular_desc')}
-            </p>
+            <p 
+              className="text-sm text-foreground/70 font-medium leading-relaxed whitespace-pre-line"
+              dangerouslySetInnerHTML={{ __html: t('seo.extra.popular_desc') }}
+            />
           </div>
         </div>
       )}
