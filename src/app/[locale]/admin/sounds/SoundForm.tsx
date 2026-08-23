@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import type { AdminCategory, AdminSound } from '../admin-types';
 import { getSoundCategoryId } from '../admin-types';
 import { useTheme } from 'next-themes';
@@ -60,6 +60,7 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
   const [soundFile, setSoundFile] = useState<File | null>(null);
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const editorRef = useRef<any>(null);
 
 
   useEffect(() => {
@@ -70,6 +71,26 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
 
   const set = (field: keyof SoundFormValues, value: string | boolean) =>
     setValues(prev => ({ ...prev, [field]: value }));
+
+  const lastAutoFilledRef = useRef<string>('');
+
+  useEffect(() => {
+    if (values.title && values.category && (!values.description || values.description === lastAutoFilledRef.current)) {
+      const cat = categories.find(c => c._id === values.category);
+      if (cat) {
+        const catName = cat.name;
+        const template = CATEGORY_TEMPLATES[catName] || CATEGORY_TEMPLATES[Object.keys(CATEGORY_TEMPLATES).find(k => catName.toLowerCase().includes(k.toLowerCase())) || ''] || '';
+        if (template) {
+          const filled = template.replace(/\{sound name\}/g, values.title).replace(/\{category name\}/g, catName);
+          set('description', filled);
+          lastAutoFilledRef.current = filled;
+          if (editorRef.current) {
+            editorRef.current.setContent(filled);
+          }
+        }
+      }
+    }
+  }, [values.title, values.category, categories]);
 
   const handleTitleChange = (title: string) => {
     set('title', title);
@@ -93,6 +114,9 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
     if (template) {
       const filled = template.replace(/\{sound name\}/g, values.title).replace(/\{category name\}/g, catName);
       set('description', filled);
+      if (editorRef.current) {
+        editorRef.current.setContent(filled);
+      }
     } else {
       alert(`No template found for category "${catName}".`);
     }
@@ -201,6 +225,7 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
             <Editor
               licenseKey="gpl"
               tinymceScriptSrc="/tinymce/tinymce.min.js"
+              onInit={(evt, editor) => editorRef.current = editor}
               value={values.description}
               onEditorChange={(content) => set('description', content)}
               init={{

@@ -24,7 +24,7 @@ interface SoundProps {
   isFavorite?: boolean;
 }
 
-const SITE_BUTTON_COLORS: Record<string, Array<{main: string, dark: string, shadow: string}>> = {
+export const SITE_BUTTON_COLORS: Record<string, Array<{main: string, dark: string, shadow: string}>> = {
   soundboard: [
     { main: '#3b82f6', dark: '#1d4ed8', shadow: 'rgba(59, 130, 246, 0.3)' }, // Blue
     { main: '#10b981', dark: '#047857', shadow: 'rgba(16, 185, 129, 0.3)' }, // Emerald
@@ -151,16 +151,16 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
       />
 
       {/* ── Title ── */}
-      <div className="text-center w-full min-w-0">
-        <Link href={soundLink}>
-          <h3 className="text-[11px] sm:text-[12px] md:text-[13px] font-bold text-foreground truncate hover:text-primary transition-colors cursor-pointer underline underline-offset-4 decoration-current group-hover:decoration-primary px-1">
+      <div className="text-center w-full min-w-0 px-1">
+        <Link href={soundLink} className="block w-full">
+          <h3 className="text-[11px] sm:text-[12px] md:text-[13px] font-bold text-foreground truncate hover:text-primary transition-colors cursor-pointer underline underline-offset-4 decoration-current group-hover:decoration-primary">
             {sound.title}
           </h3>
         </Link>
       </div>
 
       {/* ── Action Icons ── */}
-      <div className="flex items-center gap-3 sm:gap-4 md:gap-5 pt-1">
+      <div className="flex justify-center items-center gap-3 sm:gap-4 md:gap-5 pt-1 w-full flex-wrap">
         <button
           onClick={handleFavoriteToggle}
           className={`${isFavorited

@@ -11,15 +11,7 @@ import { useLocalePath } from '@/i18n';
 import { usePathname } from 'next/navigation';
 import { useSite } from '@/context/SiteProvider';
 import ButtonRenderer from '@/components/buttons/ButtonRenderer';
-
-const BUTTON_COLORS = [
-  { main: '#ff3b30', dark: '#a31a12', shadow: 'rgba(255, 59, 48, 0.3)' }, // Red
-  { main: '#ffcc00', dark: '#b28f00', shadow: 'rgba(255, 204, 0, 0.3)' }, // Yellow
-  { main: '#af52de', dark: '#7a399b', shadow: 'rgba(175, 82, 222, 0.3)' }, // Purple
-  { main: '#ff9500', dark: '#b36800', shadow: 'rgba(255, 149, 0, 0.3)' }, // Orange
-  { main: '#007aff', dark: '#0055b3', shadow: 'rgba(0, 122, 255, 0.3)' }, // Blue
-  { main: '#34c759', dark: '#248a3d', shadow: 'rgba(52, 199, 89, 0.3)' }, // Green
-];
+import { SITE_BUTTON_COLORS } from '@/components/SoundCard';
 
 const getFullUrl = (url: string) => {
   if (!url) return '';
@@ -103,10 +95,11 @@ export default function SoundDetailClient({ sound, relatedSounds, h1Title, uiDes
     }
   };
 
-  // Pick a color based on the sound ID
+  // Pick a color based on the sound ID and site configuration
+  const buttonColors = SITE_BUTTON_COLORS[siteId] || SITE_BUTTON_COLORS.soundbuttons;
   const soundIdStr = sound?._id || '00';
-  const colorIndex = parseInt(soundIdStr.substring(Math.max(0, soundIdStr.length - 2)), 16) % BUTTON_COLORS.length || 0;
-  const color = BUTTON_COLORS[colorIndex] || BUTTON_COLORS[0];
+  const colorIndex = parseInt(soundIdStr.substring(Math.max(0, soundIdStr.length - 2)), 16) % buttonColors.length || 0;
+  const color = buttonColors[colorIndex] || buttonColors[0];
 
   return (
     <div className="container mx-auto px-4 py-16">
@@ -263,7 +256,7 @@ export default function SoundDetailClient({ sound, relatedSounds, h1Title, uiDes
           <h2 className="text-2xl md:text-3xl font-black text-center text-foreground mb-10">
             You may also like
           </h2>
-          <div className="grid grid-cols-2 min-[425px]:grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 sm:gap-6 justify-items-center">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 sm:gap-6 justify-items-center">
             {relatedSounds.slice(0, 8).map((s: any) => (
               <SoundCard key={s._id} sound={s} />
             ))}

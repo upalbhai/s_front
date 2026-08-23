@@ -111,7 +111,7 @@ export default async function RootLayout({
         />
       </head>
       <body className="antialiased transition-colors duration-300">
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
           <QueryProvider>
             <SiteProvider siteId={site.id} config={site}>
               <AnalyticsTracker />

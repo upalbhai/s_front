@@ -273,48 +273,48 @@
 
 /* --- Site: soundbuttonsguys (Fun & Playful) - Orange Theme --- */
 [data-site="soundbuttonsguys"] {
-  --primary: #ea580c;
-  --primary-hover: #c2410c;
-  --background: #fff7ed;
-  --foreground: #0f172a;
+  --primary: #000000;
+  --primary-hover: #1f2937;
+  --background: #ffffff;
+  --foreground: #000000;
   --card: #ffffff;
-  --card-foreground: #0f172a;
+  --card-foreground: #000000;
   --card-bg: #ffffff;
-  --card-border: #ffedd5;
-  --border: #ffedd5;
+  --card-border: #e5e7eb;
+  --border: #e5e7eb;
   --popover: #ffffff;
-  --popover-foreground: #0f172a;
-  --muted: #ffedd5;
-  --muted-foreground: #9a3412;
+  --popover-foreground: #000000;
+  --muted: #f3f4f6;
+  --muted-foreground: #4b5563;
   --glass-bg: rgba(255, 255, 255, 0.8);
-  --glass-border: rgba(255, 237, 213, 1);
-  --sidebar: #ffedd5;
-  --sidebar-foreground: #0f172a;
-  --sidebar-border: #fed7aa;
-  --sidebar-accent: #fed7aa;
-  --sidebar-accent-foreground: #0f172a;
+  --glass-border: rgba(229, 231, 235, 1);
+  --sidebar: #f9fafb;
+  --sidebar-foreground: #000000;
+  --sidebar-border: #e5e7eb;
+  --sidebar-accent: #e5e7eb;
+  --sidebar-accent-foreground: #000000;
 }
 [data-site="soundbuttonsguys"].dark {
-  --primary: #f97316;
-  --primary-hover: #fb923c;
+  --primary: #ffffff;
+  --primary-hover: #e5e7eb;
   --background: #09090b;
-  --foreground: #fff7ed;
+  --foreground: #ffffff;
   --card: #18181b;
-  --card-foreground: #fff7ed;
+  --card-foreground: #ffffff;
   --card-bg: #18181b;
   --card-border: #27272a;
   --border: #27272a;
   --popover: #18181b;
-  --popover-foreground: #fff7ed;
+  --popover-foreground: #ffffff;
   --muted: #27272a;
-  --muted-foreground: #a1a1aa;
+  --muted-foreground: #9ca3af;
   --glass-bg: rgba(24, 24, 27, 0.8);
   --glass-border: rgba(39, 39, 42, 1);
   --sidebar: #121214;
-  --sidebar-foreground: #fff7ed;
+  --sidebar-foreground: #ffffff;
   --sidebar-border: #27272a;
   --sidebar-accent: #27272a;
-  --sidebar-accent-foreground: #fff7ed;
+  --sidebar-accent-foreground: #ffffff;
 }
 
 /* --- Site: soundbuttons (Default) - Teal Theme --- */

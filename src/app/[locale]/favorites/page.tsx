@@ -73,7 +73,7 @@ export default function FavoritesPage() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 min-[425px]:grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 sm:gap-6">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 sm:gap-6">
             {favorites.map((sound: any) => (
               <SoundCard key={sound._id} sound={sound} />
             ))}

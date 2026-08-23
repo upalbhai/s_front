@@ -158,24 +158,37 @@ export default async function LocaleCategoryPage({
           : site.meta.categoryDetail.h1Template.replace('{category name}', category.name)}
       />
 
-      <section className="glass-card mt-24 p-8 md:p-12">
-        <h2 className="text-2xl font-black text-foreground mb-6">About {category.name} Soundboard</h2>
-        <div
-          className="prose prose-slate dark:prose-invert max-w-none prose-headings:font-black prose-p:font-medium prose-p:leading-relaxed prose-a:text-sky-500 hover:prose-a:text-sky-600 prose-li:font-medium text-slate-600 dark:text-slate-400"
-          dangerouslySetInnerHTML={{
-            __html: getCategoryDescriptionHTML(category.name, category.seoText)
-          }}
-        />
-      </section>
+      {category.description ? (
+        <section className="glass-card mt-24 p-8 md:p-12">
+          <div
+            className="prose prose-slate dark:prose-invert max-w-none prose-headings:font-black prose-p:font-medium prose-p:leading-relaxed prose-a:text-sky-500 hover:prose-a:text-sky-600 prose-li:font-medium text-slate-600 dark:text-slate-400"
+            dangerouslySetInnerHTML={{
+              __html: category.description
+            }}
+          />
+        </section>
+      ) : (
+        <>
+          <section className="glass-card mt-24 p-8 md:p-12">
+            <h2 className="text-2xl font-black text-foreground mb-6">About {category.name} Soundboard</h2>
+            <div
+              className="prose prose-slate dark:prose-invert max-w-none prose-headings:font-black prose-p:font-medium prose-p:leading-relaxed prose-a:text-sky-500 hover:prose-a:text-sky-600 prose-li:font-medium text-slate-600 dark:text-slate-400"
+              dangerouslySetInnerHTML={{
+                __html: getCategoryDescriptionHTML(category.name, category.seoText)
+              }}
+            />
+          </section>
 
-      <section className="glass-card mt-8 p-8 md:p-12">
-        <div
-          className="prose prose-slate dark:prose-invert max-w-none prose-headings:font-black prose-p:font-medium prose-p:leading-relaxed prose-a:text-sky-500 hover:prose-a:text-sky-600 prose-li:font-medium text-slate-600 dark:text-slate-400"
-          dangerouslySetInnerHTML={{
-            __html: getCategoryFaqHTML(category.name)
-          }}
-        />
-      </section>
+          <section className="glass-card mt-8 p-8 md:p-12">
+            <div
+              className="prose prose-slate dark:prose-invert max-w-none prose-headings:font-black prose-p:font-medium prose-p:leading-relaxed prose-a:text-sky-500 hover:prose-a:text-sky-600 prose-li:font-medium text-slate-600 dark:text-slate-400"
+              dangerouslySetInnerHTML={{
+                __html: getCategoryFaqHTML(category.name)
+              }}
+            />
+          </section>
+        </>
+      )}
     </div>
   );
 }

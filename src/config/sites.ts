@@ -45,6 +45,7 @@ const SITES: Record<string, SiteConfig> = {
     contactEmail: 'contact@soundbuttonsmax.net',
     dmcaEmail: 'dmca@soundbuttonsmax.net',
     twitterHandle: '@soundbuttonsmax',
+    gaId: 'G-GVPYK94R01',
     meta: {
       home: {
         title: 'Sound Buttons Max: Play Viral Meme Soundboard Unblocked',
@@ -114,7 +115,7 @@ const SITES: Record<string, SiteConfig> = {
           'Soundboard Max offers instant access to trending sound buttons and meme soundboards. Play and download meme sound effects, prank sounds, and soundboard unblocked',
         keywords:
           'soundboard, meme soundboard, meme soundboard unblocked, unblocked soundboard, sound buttons, meme sounds, viral meme sounds, funny meme sounds, meme sound effects, free soundboard, free sound effects, viral sounds, unblocked sound buttons, audio effects, online soundboard, soundboard online, prank sounds, funny soundboard',
-        h1: 'Play Viral Meme Soundboard and Sound Buttons Unblocked',
+        h1: 'Soundboard Max - Large Collection of Sound Buttons Unblocked',
       },
       trending: {
         title: 'Trending Meme Soundboard: Popular Sound Buttons',
@@ -157,15 +158,16 @@ const SITES: Record<string, SiteConfig> = {
     siteName: 'Sound Buttons Guys',
     wordmark: { line1: 'SOUND BUTTONS', accent: 'GUYS' },
     siteUrl: 'https://soundbuttonsguys.com',
-    logo: '/logo-soundbuttons.png', // Temporary, re-using existing logo
-    favicon: '/favicon-soundbuttons.ico', // Temporary, re-using existing favicon
+    logo: '/logo-soundbuttonsguys.jpg',
+    favicon: '/favicon-soundbuttonsguys.ico',
     ogImage: '/sites/soundbuttons/og-home.svg', // Temporary, re-using existing og
-    themeColor: '#7c3aed', // Purple as default
-    primaryColor: '#7c3aed',
-    primaryHoverColor: '#6d28d9',
+    themeColor: '#000000', // Black as default
+    primaryColor: '#000000',
+    primaryHoverColor: '#1f2937',
     contactEmail: 'contact@soundbuttonsguys.com',
     dmcaEmail: 'dmca@soundbuttonsguys.com',
     twitterHandle: '@soundbuttonsguys',
+    gaId: 'G-MPB47SD14D',
     meta: {
       home: {
         title: 'Sound Buttons Guys: Free Meme Soundboard & Sound Buttons',

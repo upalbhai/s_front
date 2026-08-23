@@ -1,8 +1,8 @@
-'use client';
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { AdminCategory } from '../admin-types';
+import { Editor } from '@tinymce/tinymce-react';
+import { useTheme } from 'next-themes';
 
 interface CategoryFormValues {
   name: string;
@@ -44,6 +44,14 @@ const labelClass = 'text-[11px] font-black uppercase tracking-widest text-slate-
 
 export default function CategoryForm({ initialCategory, submitLabel, onSubmit, onCancel, saving }: CategoryFormProps) {
   const [values, setValues] = useState<CategoryFormValues>(() => toValues(initialCategory));
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = mounted && resolvedTheme === 'dark';
 
   const set = (field: keyof CategoryFormValues, value: string | boolean) =>
     setValues(prev => ({ ...prev, [field]: value }));
@@ -180,13 +188,30 @@ export default function CategoryForm({ initialCategory, submitLabel, onSubmit, o
         </div>
         <div>
           <label className={labelClass}>Description</label>
-          <textarea
-            className={`${inputClass} resize-none`}
-            value={values.description}
-            onChange={e => set('description', e.target.value)}
-            placeholder="A short description shown on the category page."
-            rows={4}
-          />
+          <div className={`rounded-2xl overflow-hidden border transition-all duration-300 ${isDark ? 'border-zinc-800' : 'border-zinc-200 focus-within:ring-2 focus-within:ring-zinc-200'}`}>
+            <Editor
+              licenseKey="gpl"
+              tinymceScriptSrc="/tinymce/tinymce.min.js"
+              value={values.description}
+              onEditorChange={(content) => set('description', content)}
+              init={{
+                height: 300,
+                menubar: false,
+                skin: isDark ? 'oxide-dark' : 'oxide',
+                content_css: isDark ? 'dark' : 'default',
+                plugins: [
+                  'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
+                  'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                  'insertdatetime', 'media', 'table', 'preview', 'help', 'wordcount'
+                ],
+                toolbar: 'undo redo | blocks | ' +
+                  'bold italic forecolor | alignleft aligncenter ' +
+                  'alignright alignjustify | bullist numlist outdent indent | ' +
+                  'removeformat | help',
+                content_style: 'body { font-family:Inter,Helvetica,Arial,sans-serif; font-size:14px }',
+              }}
+            />
+          </div>
         </div>
         <div className="flex items-center gap-3 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">
           <input

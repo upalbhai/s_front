@@ -10,10 +10,10 @@ interface ButtonRendererProps extends BaseButtonProps {
 
 export default function ButtonRenderer({ siteId, ...props }: ButtonRendererProps) {
   switch (siteId) {
-    case 'soundbuttonsguys':
-      return <GlossyButton {...props} />;
     case 'soundbuttons':
       return <ClayButton {...props} />;
+    case 'soundboard':
+    case 'soundbuttonsguys':
     default:
       return <Classic3DButton {...props} />;
   }
