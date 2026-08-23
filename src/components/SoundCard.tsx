@@ -138,7 +138,7 @@ const SoundCard: React.FC<SoundProps> = ({ sound }) => {
   const soundLink = lp(`/sound/${sound.slug}`);
 
   return (
-    <div className="flex flex-col items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-2xl sm:rounded-3xl transition-all duration-300 hover:bg-slate-100 dark:hover:bg-slate-800/50 group">
+    <div className="flex flex-col items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-2xl sm:rounded-3xl transition-all duration-300 hover:bg-slate-100 dark:hover:bg-slate-800/50 group w-full min-w-0">
 
       {/* ── 3D Button ── */}
       <ButtonRenderer

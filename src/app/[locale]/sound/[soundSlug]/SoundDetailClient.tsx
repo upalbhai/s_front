@@ -54,7 +54,7 @@ export default function SoundDetailClient({ sound, relatedSounds, h1Title, uiDes
     if (navigator.share) {
       try {
         await navigator.share({
-          title: sound.title,
+          title: sound.title?.trim(),
           url: `${window.location.origin}${soundLink}`
         });
       } catch (_) { }
@@ -109,7 +109,7 @@ export default function SoundDetailClient({ sound, relatedSounds, h1Title, uiDes
         <ChevronRight size={14} />
         <Link href={lp(`/categories/${sound.category?.slug}`)} className="hover:text-foreground transition-colors font-bold">{sound.category?.name}</Link>
         <ChevronRight size={14} />
-        <span className="text-primary font-black">{sound.title}</span>
+        <span className="text-primary font-black">{sound.title?.trim()}</span>
       </nav>
 
       <div className="space-y-12">
@@ -117,7 +117,7 @@ export default function SoundDetailClient({ sound, relatedSounds, h1Title, uiDes
         <div className="p-8 md:p-12 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm grid grid-cols-1 md:grid-cols-[auto_1fr] gap-10 md:gap-16 items-center">
 
           {/* Left: Giant 3D Play Button */}
-          <div className="relative flex justify-center select-none w-full md:w-[325px] h-[300px]">
+          <div className="relative flex justify-center select-none w-full md:w-[325px] h-[350px]">
             {/* Pulse / Glow Effect behind the button base */}
             <div
               className="absolute rounded-full blur-3xl opacity-35 animate-pulse transition-all duration-300"
@@ -143,7 +143,7 @@ export default function SoundDetailClient({ sound, relatedSounds, h1Title, uiDes
           {/* Right: Sound Details */}
           <div className="flex flex-col items-center md:items-start text-center md:text-left">
             <h1 className="text-3xl md:text-5xl font-black text-foreground underline decoration-2 underline-offset-8 decoration-foreground/30 leading-tight">
-              {h1Title || sound.title}
+              {h1Title?.trim() || sound.title?.trim()}
             </h1>
 
             {/* Category and tag pills */}
@@ -226,9 +226,9 @@ export default function SoundDetailClient({ sound, relatedSounds, h1Title, uiDes
               />
             ) : (
               <>
-                <h2 className="text-xl font-black text-foreground mb-4">About the {sound.title} Sound</h2>
+                <h2 className="text-xl font-black text-foreground mb-4">About the {sound.title?.trim()} Sound</h2>
                 <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
-                  {sound.description || uiDescription || `The ${sound.title} sound button is one of the most popular clips in the ${sound.category?.name} category.`}
+                  {sound.description || uiDescription || `The ${sound.title?.trim()} sound button is one of the most popular clips in the ${sound.category?.name} category.`}
                 </p>
               </>
             )}
@@ -256,7 +256,7 @@ export default function SoundDetailClient({ sound, relatedSounds, h1Title, uiDes
           <h2 className="text-2xl md:text-3xl font-black text-center text-foreground mb-10">
             You may also like
           </h2>
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 sm:gap-6 justify-items-center">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 sm:gap-6">
             {relatedSounds.slice(0, 8).map((s: any) => (
               <SoundCard key={s._id} sound={s} />
             ))}
