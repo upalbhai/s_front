@@ -61,9 +61,16 @@ export const CATEGORY_DESCRIPTIONS: Record<string, string[]> = {
   ]
 };
 
-export function getCategoryDescriptionHTML(categoryName: string, fallbackDesc?: string): string {
+export const CATEGORY_DESCRIPTIONS_BY_SITE: Record<string, Record<string, string[]>> = {
+  soundbuttons: CATEGORY_DESCRIPTIONS,
+  soundboard: CATEGORY_DESCRIPTIONS,
+  soundbuttonsguys: CATEGORY_DESCRIPTIONS,
+};
+
+export function getCategoryDescriptionHTML(categoryName: string, fallbackDesc?: string, siteId?: string): string {
+  const table = (siteId && CATEGORY_DESCRIPTIONS_BY_SITE[siteId]) || CATEGORY_DESCRIPTIONS;
   const key = categoryName.toLowerCase().trim();
-  const paragraphs = CATEGORY_DESCRIPTIONS[key];
+  const paragraphs = table[key];
   
   if (paragraphs) {
     return paragraphs.map(p => `<p>${p}</p>`).join('\n');

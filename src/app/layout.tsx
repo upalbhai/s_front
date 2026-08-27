@@ -51,8 +51,13 @@ export default async function RootLayout({
 
   let categories = [];
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
-    const res = await fetch(`${apiUrl}/categories?limit=15`, { next: { revalidate: 3600 } });
+    const apiUrl = process.env.INTERNAL_API_URL
+      || (process.env.NEXT_PUBLIC_API_URL?.startsWith('http') ? process.env.NEXT_PUBLIC_API_URL : '')
+      || 'http://localhost:5000/api/v1';
+    const res = await fetch(`${apiUrl}/categories?limit=15`, {
+      next: { revalidate: 3600 },
+      headers: { 'x-site-id': site.id },
+    });
     const data = await res.json();
     categories = Array.isArray(data?.categories) ? data.categories : [];
   } catch (err) {

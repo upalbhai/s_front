@@ -389,3 +389,14 @@ export const CATEGORY_TEMPLATES: Record<string, string> = {
 <li>Viral audio clips</li>
 </ul>`
 };
+
+export const SITE_CATEGORY_TEMPLATES: Record<string, Record<string, string>> = {
+  soundbuttons: CATEGORY_TEMPLATES,
+  soundboard: CATEGORY_TEMPLATES,
+  soundbuttonsguys: CATEGORY_TEMPLATES,
+};
+
+export function getCategoryTemplates(siteId?: string): Record<string, string> {
+  if (siteId && SITE_CATEGORY_TEMPLATES[siteId]) return SITE_CATEGORY_TEMPLATES[siteId];
+  return CATEGORY_TEMPLATES;
+}

@@ -5,7 +5,12 @@ import type { AdminCategory, AdminSound } from '../admin-types';
 import { getSoundCategoryId } from '../admin-types';
 import { useTheme } from 'next-themes';
 import { Editor } from '@tinymce/tinymce-react';
-import { CATEGORY_TEMPLATES } from '@/utils/descriptionTemplates';
+import { getCategoryTemplates } from '@/utils/descriptionTemplates';
+
+interface CatalogSite {
+  siteId: string;
+  siteName: string;
+}
 
 interface SoundFormValues {
   title: string;
@@ -13,6 +18,7 @@ interface SoundFormValues {
   category: string;
   fileUrl: string;
   description: string;
+  siteDescriptions: Record<string, string>;
   tags: string;
   isPublished: boolean;
   siteIds: string[];
@@ -33,6 +39,7 @@ const defaultValues: SoundFormValues = {
   category: '',
   fileUrl: '',
   description: '',
+  siteDescriptions: {},
   tags: '',
   isPublished: true,
   siteIds: [],
@@ -40,12 +47,19 @@ const defaultValues: SoundFormValues = {
 
 function toValues(sound?: AdminSound | null): SoundFormValues {
   if (!sound) return defaultValues;
+  const siteDescriptions = { ...(sound.siteDescriptions || {}) };
+  if (sound.description && Object.keys(siteDescriptions).length === 0) {
+    siteDescriptions.soundbuttons = sound.description;
+    siteDescriptions.soundboard = sound.description;
+    siteDescriptions.soundbuttonsguys = sound.description;
+  }
   return {
     title: sound.title ?? '',
     slug: sound.slug ?? '',
     category: getSoundCategoryId(sound),
     fileUrl: sound.fileUrl ?? '',
     description: sound.description ?? '',
+    siteDescriptions,
     tags: Array.isArray(sound.tags) ? sound.tags.join(', ') : '',
     isPublished: sound.isPublished !== false,
     siteIds: Array.isArray(sound.siteIds) ? sound.siteIds : [],
@@ -61,7 +75,19 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const editorRef = useRef<any>(null);
+  const [descSite, setDescSite] = useState('soundbuttons');
 
+  const { data: catalogSites = [] } = useQuery({
+    queryKey: ['catalog-sites'],
+    queryFn: async () => {
+      const res = await api.get('/sites');
+      return (res.data.sites || []) as CatalogSite[];
+    },
+  });
+
+  useEffect(() => {
+    if (catalogSites[0]?.siteId) setDescSite((prev) => prev || catalogSites[0].siteId);
+  }, [catalogSites]);
 
   useEffect(() => {
     setMounted(true);
@@ -69,28 +95,38 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
 
   const isDark = mounted && resolvedTheme === 'dark';
 
-  const set = (field: keyof SoundFormValues, value: string | boolean) =>
+  const set = (field: keyof SoundFormValues, value: string | boolean | string[] | Record<string, string>) =>
     setValues(prev => ({ ...prev, [field]: value }));
 
-  const lastAutoFilledRef = useRef<string>('');
+  const lastAutoFilledRef = useRef<Record<string, string>>({});
+
+  const fillTemplateForSite = (siteId: string, apply: boolean) => {
+    const cat = categories.find(c => c._id === values.category);
+    if (!cat || !values.title) return '';
+    const templates = getCategoryTemplates(siteId);
+    const catName = cat.name;
+    const template = templates[catName] || templates[Object.keys(templates).find(k => catName.toLowerCase().includes(k.toLowerCase())) || ''] || '';
+    if (!template) return '';
+    const filled = template.replace(/\{sound name\}/g, values.title).replace(/\{category name\}/g, catName);
+    if (apply) {
+      setValues(prev => ({
+        ...prev,
+        siteDescriptions: { ...prev.siteDescriptions, [siteId]: filled },
+        description: prev.description || filled,
+      }));
+      lastAutoFilledRef.current[siteId] = filled;
+      if (editorRef.current && descSite === siteId) editorRef.current.setContent(filled);
+    }
+    return filled;
+  };
 
   useEffect(() => {
-    if (values.title && values.category && (!values.description || values.description === lastAutoFilledRef.current)) {
-      const cat = categories.find(c => c._id === values.category);
-      if (cat) {
-        const catName = cat.name;
-        const template = CATEGORY_TEMPLATES[catName] || CATEGORY_TEMPLATES[Object.keys(CATEGORY_TEMPLATES).find(k => catName.toLowerCase().includes(k.toLowerCase())) || ''] || '';
-        if (template) {
-          const filled = template.replace(/\{sound name\}/g, values.title).replace(/\{category name\}/g, catName);
-          set('description', filled);
-          lastAutoFilledRef.current = filled;
-          if (editorRef.current) {
-            editorRef.current.setContent(filled);
-          }
-        }
-      }
+    if (!values.title || !values.category) return;
+    const current = values.siteDescriptions[descSite] || '';
+    if (!current || current === lastAutoFilledRef.current[descSite]) {
+      fillTemplateForSite(descSite, true);
     }
-  }, [values.title, values.category, categories]);
+  }, [values.title, values.category, values.category, descSite]);
 
   const handleTitleChange = (title: string) => {
     set('title', title);
@@ -104,21 +140,10 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
       alert('Please select a category and enter a title first.');
       return;
     }
-    const cat = categories.find(c => c._id === values.category);
-    if (!cat) return;
-    
-    // Check for exact match or generic match
-    const catName = cat.name;
-    const template = CATEGORY_TEMPLATES[catName] || CATEGORY_TEMPLATES[Object.keys(CATEGORY_TEMPLATES).find(k => catName.toLowerCase().includes(k.toLowerCase())) || ''] || '';
-    
-    if (template) {
-      const filled = template.replace(/\{sound name\}/g, values.title).replace(/\{category name\}/g, catName);
-      set('description', filled);
-      if (editorRef.current) {
-        editorRef.current.setContent(filled);
-      }
-    } else {
-      alert(`No template found for category "${catName}".`);
+    const filled = fillTemplateForSite(descSite, true);
+    if (!filled) {
+      const cat = categories.find(c => c._id === values.category);
+      alert(`No template found for category "${cat?.name}".`);
     }
   };
 
@@ -129,7 +154,9 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
     formData.append('slug', values.slug.trim());
     formData.append('category', values.category);
     formData.append('fileUrl', values.fileUrl.trim());
-    formData.append('description', values.description.trim());
+    const fallbackDesc = values.siteDescriptions[descSite] || Object.values(values.siteDescriptions)[0] || values.description;
+    formData.append('description', (fallbackDesc || '').trim());
+    formData.append('siteDescriptions', JSON.stringify(values.siteDescriptions));
     formData.append('tags', values.tags.trim());
     formData.append('isPublished', values.isPublished ? 'true' : 'false');
     formData.append('siteIds', JSON.stringify(values.siteIds));
@@ -212,7 +239,7 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
         </div>
         <div>
           <div className="flex justify-between items-center mb-1.5">
-            <label className={labelClass} style={{ marginBottom: 0 }}>Description</label>
+            <label className={labelClass} style={{ marginBottom: 0 }}>Description (per site)</label>
             <button
               type="button"
               onClick={handleFillTemplate}
@@ -221,13 +248,35 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
               Auto-fill Template
             </button>
           </div>
+          <div className="flex flex-wrap gap-2 mb-3">
+            {catalogSites.map((site) => (
+              <button
+                key={site.siteId}
+                type="button"
+                onClick={() => setDescSite(site.siteId)}
+                className={`text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-lg border ${
+                  descSite === site.siteId
+                    ? 'bg-sky-500 text-white border-sky-500'
+                    : isDark ? 'border-zinc-800 text-zinc-400' : 'border-zinc-200 text-zinc-600'
+                }`}
+              >
+                {site.siteName}
+              </button>
+            ))}
+          </div>
           <div className={`rounded-2xl overflow-hidden border transition-all duration-300 ${isDark ? 'border-zinc-800' : 'border-zinc-200 focus-within:ring-2 focus-within:ring-zinc-200'}`}>
             <Editor
               licenseKey="gpl"
               tinymceScriptSrc="/tinymce/tinymce.min.js"
               onInit={(evt, editor) => editorRef.current = editor}
-              value={values.description}
-              onEditorChange={(content) => set('description', content)}
+              value={values.siteDescriptions[descSite] || ''}
+              onEditorChange={(content) => {
+                setValues(prev => ({
+                  ...prev,
+                  siteDescriptions: { ...prev.siteDescriptions, [descSite]: content },
+                  description: descSite === 'soundbuttons' ? content : prev.description,
+                }));
+              }}
               init={{
                 height: 300,
                 menubar: false,
@@ -262,13 +311,69 @@ export default function SoundForm({ categories, initialSound, submitLabel, onSub
           </div>
         </div>
 
+        {initialSound && (initialSound.sitePlays || initialSound.siteViews) && (
+          <div className={`p-4 rounded-2xl border ${isDark ? 'border-zinc-800 bg-zinc-950/40' : 'border-zinc-200 bg-zinc-50'}`}>
+            <label className="font-black text-sm text-foreground block mb-3">Stats by site</label>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className={isDark ? 'text-zinc-500' : 'text-zinc-400'}>
+                    <th className="text-left py-1">Site</th>
+                    <th className="text-right">Plays</th>
+                    <th className="text-right">Views</th>
+                    <th className="text-right">Downloads</th>
+                    <th className="text-right">Favorites</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {catalogSites.map((site) => (
+                    <tr key={site.siteId} className="font-bold">
+                      <td className="py-1">{site.siteName}</td>
+                      <td className="text-right">{(initialSound.sitePlays?.[site.siteId] || 0).toLocaleString()}</td>
+                      <td className="text-right">{(initialSound.siteViews?.[site.siteId] || 0).toLocaleString()}</td>
+                      <td className="text-right">{(initialSound.siteDownloads?.[site.siteId] || 0).toLocaleString()}</td>
+                      <td className="text-right">{(initialSound.siteFavorites?.[site.siteId] || 0).toLocaleString()}</td>
+                    </tr>
+                  ))}
+                  <tr className="border-t font-black">
+                    <td className="py-1">Total</td>
+                    <td className="text-right">{(initialSound.playCount || 0).toLocaleString()}</td>
+                    <td className="text-right">{(initialSound.viewCount || 0).toLocaleString()}</td>
+                    <td className="text-right">{(initialSound.downloadCount || 0).toLocaleString()}</td>
+                    <td className="text-right">—</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
         <div className={`p-4 rounded-2xl border transition-colors duration-300 ${isDark ? 'border-zinc-800 bg-zinc-950/40' : 'border-zinc-200 bg-zinc-50'
           }`}>
           <label className="font-black text-sm text-foreground block mb-2">Target Sites</label>
           <p className={`text-[11px] mb-4 ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>
             Select which sites this sound should appear on. If none are selected, it will appear on ALL sites.
           </p>
-
+          <div className="space-y-3">
+            {catalogSites.map((site) => (
+              <label key={site.siteId} className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={values.siteIds.includes(site.siteId)}
+                  onChange={() => {
+                    setValues(prev => ({
+                      ...prev,
+                      siteIds: prev.siteIds.includes(site.siteId)
+                        ? prev.siteIds.filter(id => id !== site.siteId)
+                        : [...prev.siteIds, site.siteId],
+                    }));
+                  }}
+                  className="w-4 h-4 rounded accent-sky-500"
+                />
+                <span className="text-sm font-medium">{site.siteName}</span>
+              </label>
+            ))}
+          </div>
         </div>
       </div>
 

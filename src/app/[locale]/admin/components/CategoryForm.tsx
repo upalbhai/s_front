@@ -1,13 +1,18 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { AdminCategory } from '../admin-types';
 import { Editor } from '@tinymce/tinymce-react';
 import { useTheme } from 'next-themes';
+import { useQuery } from '@tanstack/react-query';
+import api from '@/services/api';
 
 interface CategoryFormValues {
   name: string;
   slug: string;
   description: string;
+  siteDescriptions: Record<string, string>;
   icon: string;
   isIndexable: boolean;
 }
@@ -24,16 +29,24 @@ const defaultValues: CategoryFormValues = {
   name: '',
   slug: '',
   description: '',
+  siteDescriptions: {},
   icon: 'music_note',
   isIndexable: true,
 };
 
 function toValues(cat?: AdminCategory | null): CategoryFormValues {
   if (!cat) return defaultValues;
+  const siteDescriptions = { ...(cat.siteDescriptions || {}) };
+  if (cat.description && Object.keys(siteDescriptions).length === 0) {
+    siteDescriptions.soundbuttons = cat.description;
+    siteDescriptions.soundboard = cat.description;
+    siteDescriptions.soundbuttonsguys = cat.description;
+  }
   return {
     name: cat.name ?? '',
     slug: cat.slug ?? '',
     description: cat.description ?? '',
+    siteDescriptions,
     icon: cat.icon ?? 'music_note',
     isIndexable: cat.isIndexable !== false,
   };
@@ -46,6 +59,14 @@ export default function CategoryForm({ initialCategory, submitLabel, onSubmit, o
   const [values, setValues] = useState<CategoryFormValues>(() => toValues(initialCategory));
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [descSite, setDescSite] = useState('soundbuttons');
+  const { data: catalogSites = [] } = useQuery({
+    queryKey: ['catalog-sites'],
+    queryFn: async () => {
+      const res = await api.get('/sites');
+      return (res.data.sites || []) as { siteId: string; siteName: string }[];
+    },
+  });
 
   useEffect(() => {
     setMounted(true);
@@ -69,7 +90,8 @@ export default function CategoryForm({ initialCategory, submitLabel, onSubmit, o
     await onSubmit({
       name: values.name.trim(),
       slug: values.slug.trim(),
-      description: values.description.trim(),
+      description: (values.siteDescriptions[descSite] || values.description || '').trim(),
+      siteDescriptions: values.siteDescriptions,
       icon: values.icon.trim(),
       isIndexable: values.isIndexable,
     });
@@ -187,13 +209,33 @@ export default function CategoryForm({ initialCategory, submitLabel, onSubmit, o
           </Select>
         </div>
         <div>
-          <label className={labelClass}>Description</label>
+          <label className={labelClass}>Description (per site)</label>
+          <div className="flex flex-wrap gap-2 mb-3">
+            {catalogSites.map((site) => (
+              <button
+                key={site.siteId}
+                type="button"
+                onClick={() => setDescSite(site.siteId)}
+                className={`text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-lg border ${
+                  descSite === site.siteId
+                    ? 'bg-sky-500 text-white border-sky-500'
+                    : 'border-slate-200 dark:border-slate-700 text-slate-500'
+                }`}
+              >
+                {site.siteName}
+              </button>
+            ))}
+          </div>
           <div className={`rounded-2xl overflow-hidden border transition-all duration-300 ${isDark ? 'border-zinc-800' : 'border-zinc-200 focus-within:ring-2 focus-within:ring-zinc-200'}`}>
             <Editor
               licenseKey="gpl"
               tinymceScriptSrc="/tinymce/tinymce.min.js"
-              value={values.description}
-              onEditorChange={(content) => set('description', content)}
+              value={values.siteDescriptions[descSite] || ''}
+              onEditorChange={(content) => setValues(prev => ({
+                ...prev,
+                siteDescriptions: { ...prev.siteDescriptions, [descSite]: content },
+                description: descSite === 'soundbuttons' ? content : prev.description,
+              }))}
               init={{
                 height: 300,
                 menubar: false,

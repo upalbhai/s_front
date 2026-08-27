@@ -10,6 +10,7 @@ export interface AdminCategory {
   name: string;
   slug?: string;
   description?: string;
+  siteDescriptions?: Record<string, string>;
   icon?: string;
   isIndexable?: boolean;
 }
@@ -19,6 +20,7 @@ export interface AdminSound {
   title: string;
   slug?: string;
   description?: string;
+  siteDescriptions?: Record<string, string>;
   category?: AdminCategory | string | null;
   fileUrl?: string;
   howToUse?: string;
@@ -34,9 +36,13 @@ export interface AdminSound {
   lastViewedAt?: string;
   sitePlays?: Record<string, number>;
   siteViews?: Record<string, number>;
+  siteDownloads?: Record<string, number>;
+  siteFavorites?: Record<string, number>;
   dailyStats?: Record<string, {
     sitePlays?: Record<string, number>;
     siteViews?: Record<string, number>;
+    siteDownloads?: Record<string, number>;
+    siteFavorites?: Record<string, number>;
   }>;
 }
 
@@ -53,6 +59,7 @@ export interface AdminBlogPost {
   author?: string;
   isPublished?: boolean;
   views?: number;
+  siteViews?: Record<string, number>;
   publishedDate?: string;
   targetSites?: string[];
   createdAt?: string;

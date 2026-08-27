@@ -216,7 +216,7 @@ const SITES: Record<string, SiteConfig> = {
 export type SiteId = keyof typeof SITES;
 
 export const DEFAULT_SITE_ID: string =
-  process.env.NEXT_PUBLIC_DEFAULT_SITE || 'soundbuttons';
+  process.env.NEXT_PUBLIC_SITE_ID || process.env.NEXT_PUBLIC_DEFAULT_SITE || 'soundbuttons';
 
 export function normalizeHost(host: string): string {
   return host.split(':')[0].toLowerCase().replace(/^www\./, '');
@@ -246,6 +246,11 @@ export function getAllSites(): SiteConfig[] {
 }
 
 export async function getRequestSite(): Promise<SiteConfig> {
+  const lockedId = process.env.NEXT_PUBLIC_SITE_ID;
+  if (lockedId) {
+    return getSiteConfig(lockedId);
+  }
+
   const { cookies, headers } = await import('next/headers');
   const cookieStore = await cookies();
   const siteFromCookie = cookieStore.get('site-id')?.value;

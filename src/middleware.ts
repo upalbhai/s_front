@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { resolveSiteId, getSiteConfig } from '@/config/sites';
 
+const APP_MODE = process.env.NEXT_PUBLIC_APP_MODE || 'public';
+
 function applySiteHeaders(response: NextResponse, siteId: string, locale?: string): NextResponse {
   response.headers.set('x-site-id', siteId);
   if (locale) {
@@ -10,17 +12,25 @@ function applySiteHeaders(response: NextResponse, siteId: string, locale?: strin
   return response;
 }
 
+function isAdminPath(pathname: string) {
+  return (
+    pathname === '/admin' ||
+    pathname.startsWith('/admin/') ||
+    pathname === '/login' ||
+    pathname.startsWith('/login/') ||
+    /^\/[a-z]{2}\/admin(\/|$)/.test(pathname) ||
+    /^\/[a-z]{2}\/login(\/|$)/.test(pathname)
+  );
+}
+
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const host = request.headers.get('host') ?? '';
-  const siteId = await resolveSiteId(host);
-  const siteConfig = await getSiteConfig(siteId);
+  const lockedId = process.env.NEXT_PUBLIC_SITE_ID;
+  const siteId = lockedId || resolveSiteId(host);
+  const siteConfig = getSiteConfig(siteId);
   const defaultLocale = (siteConfig as any).defaultLocale || 'en';
 
-  // Skip middleware for:
-  // - Static files (public folder)
-  // - API routes
-  // - Next.js internals
   if (
     pathname.startsWith('/_next/') ||
     pathname.startsWith('/api/') ||
@@ -31,6 +41,18 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  if (APP_MODE === 'public' && isAdminPath(pathname)) {
+    return new NextResponse('Not Found', { status: 404, headers: { 'content-type': 'text/plain' } });
+  }
+
+  if (APP_MODE === 'admin' && !isAdminPath(pathname) && pathname !== '/robots.txt') {
+    return applySiteHeaders(
+      NextResponse.redirect(new URL('/admin', request.url)),
+      siteId,
+      defaultLocale
+    );
+  }
+
   if (pathname.startsWith('/blogs')) {
     const localeCookie = request.cookies.get('sbmax_locale')?.value as import('@/i18n').Locale | undefined;
     const currentLocale = localeCookie && ['en', 'es', 'fr', 'pt', 'ru', 'it', 'ja', 'ko', 'de'].includes(localeCookie)
@@ -39,16 +61,13 @@ export async function middleware(request: NextRequest) {
     return applySiteHeaders(NextResponse.next(), siteId, currentLocale);
   }
 
-  // Check if pathname already has a locale prefix
   const pathArray = pathname.split('/').filter(Boolean);
   const firstSegment = pathArray[0] as import('@/i18n').Locale;
-  
-  // Is it a valid locale prefix globally?
+
   const isGlobalLocale = ['en', 'es', 'fr', 'pt', 'ru', 'it', 'ja', 'ko', 'de'].includes(firstSegment);
   const supportedLocales = (siteConfig as any).supportedLocales || ['en', 'es', 'fr', 'pt', 'ru', 'it', 'ja', 'ko', 'de'];
   const hasValidSiteLocale = supportedLocales.includes(firstSegment);
 
-  // If there is no locale prefix, rewrite to default locale
   if (!isGlobalLocale) {
     const newPathname = `/${defaultLocale}${pathname}`;
     return applySiteHeaders(
@@ -58,7 +77,6 @@ export async function middleware(request: NextRequest) {
     );
   }
 
-  // If the user tries to visit a locale not supported by the site, redirect to default locale
   if (!hasValidSiteLocale) {
     const newPathname = pathname.replace(`/${firstSegment}`, '');
     return applySiteHeaders(
@@ -68,7 +86,6 @@ export async function middleware(request: NextRequest) {
     );
   }
 
-  // If default locale has a prefix in the URL, redirect to remove it
   if (firstSegment === defaultLocale) {
     const newPathname = pathname.slice(defaultLocale.length + 1) || '/';
     return applySiteHeaders(
@@ -78,13 +95,11 @@ export async function middleware(request: NextRequest) {
     );
   }
 
-  // Allow other supported locales to continue naturally
   return applySiteHeaders(NextResponse.next(), siteId, firstSegment);
 }
 
 export const config = {
   matcher: [
-    // Match all routes except static files and API
     '/((?!_next|api|.*\\.).*)',
   ],
 };

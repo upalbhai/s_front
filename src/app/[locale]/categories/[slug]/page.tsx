@@ -174,7 +174,7 @@ export default async function LocaleCategoryPage({
             <div
               className="prose prose-slate dark:prose-invert max-w-none prose-headings:font-black prose-p:font-medium prose-p:leading-relaxed prose-a:text-sky-500 hover:prose-a:text-sky-600 prose-li:font-medium text-slate-600 dark:text-slate-400"
               dangerouslySetInnerHTML={{
-                __html: getCategoryDescriptionHTML(category.name, category.seoText)
+                __html: getCategoryDescriptionHTML(category.name, category.seoText, site.id)
               }}
             />
           </section>

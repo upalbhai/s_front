@@ -210,6 +210,11 @@ export default function AdminSoundsPage() {
         <div className="flex items-center gap-1.5 text-sm font-bold text-slate-500 dark:text-slate-400">
           <BarChart3 size={14} className="text-sky-500" />
           <span className="text-foreground font-black">{sound.playCount?.toLocaleString() || '0'}</span>
+          {sound.sitePlays && (
+            <span className="text-[10px] font-medium text-slate-400 max-w-[140px] truncate" title={Object.entries(sound.sitePlays).map(([k, v]) => `${k}: ${v}`).join(', ')}>
+              {Object.entries(sound.sitePlays).map(([k, v]) => `${k.split('sound')[1] || k}:${v}`).join(' ')}
+            </span>
+          )}
         </div>
       )
     },

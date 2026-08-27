@@ -111,6 +111,11 @@ export default function AdminBlogsPage() {
       render: (blog) => (
         <span className="text-sm font-medium text-slate-500 dark:text-slate-400">
           {blog.views?.toLocaleString() || '0'}
+          {blog.siteViews && (
+            <span className="block text-[10px] text-slate-400">
+              {Object.entries(blog.siteViews).map(([k, v]) => `${k}:${v}`).join(' ')}
+            </span>
+          )}
         </span>
       )
     },
