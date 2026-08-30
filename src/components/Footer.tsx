@@ -6,6 +6,17 @@ import { useEffect, useState } from 'react';
 import { useTranslation, useLocalePath } from '@/i18n';
 import { useSite } from '@/context/SiteProvider';
 
+const FALLBACK_CATEGORIES = [
+  { _id: 'cat-memes', name: 'Memes', slug: 'memes' },
+  { _id: 'cat-gaming', name: 'Gaming', slug: 'gaming' },
+  { _id: 'cat-anime', name: 'Anime', slug: 'anime' },
+  { _id: 'cat-effects', name: 'Effects', slug: 'effects' },
+  { _id: 'cat-meme-sb', name: 'Meme Soundboard', slug: 'meme-soundboard' },
+  { _id: 'cat-reaction', name: 'Reaction', slug: 'reaction-soundboard' },
+  { _id: 'cat-tiktok', name: 'TikTok', slug: 'tiktok-soundboard' },
+  { _id: 'cat-prank', name: 'Pranks', slug: 'prank-soundboard' },
+];
+
 const Footer = ({ categories = [] }: { categories?: any[] }) => {
   const { resolvedTheme } = useTheme();
   const { t } = useTranslation();
@@ -13,9 +24,37 @@ const Footer = ({ categories = [] }: { categories?: any[] }) => {
   const { config } = useSite();
   const [mounted, setMounted] = useState(false);
 
+  const [cats, setCats] = useState<any[]>(categories);
+
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (categories && categories.length > 0) {
+      setCats(categories);
+    } else {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || '/api/v1';
+      fetch(`${apiUrl}/categories?limit=15`, {
+        headers: {
+          'x-api-secret': process.env.NEXT_PUBLIC_API_SECRET || 'CpS09Y3JCCfklsxR-sound-button-secret'
+        }
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (Array.isArray(data?.categories) && data.categories.length > 0) {
+            setCats(data.categories);
+          } else {
+            setCats(FALLBACK_CATEGORIES);
+          }
+        })
+        .catch(() => {
+          setCats(FALLBACK_CATEGORIES);
+        });
+    }
+  }, [categories]);
+
+  const displayCategories = cats.length > 0 ? cats : FALLBACK_CATEGORIES;
 
   const isDark = mounted && resolvedTheme === 'dark';
   const year = new Date().getFullYear().toString();
@@ -76,8 +115,8 @@ const Footer = ({ categories = [] }: { categories?: any[] }) => {
               {t('footer.categories')}
             </h3>
             <ul className={`space-y-4 font-bold transition-all duration-300 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
-              {categories.map(cat => (
-                <li key={cat._id}>
+              {displayCategories.map(cat => (
+                <li key={cat._id || cat.slug}>
                   <Link href={lp(`/categories/${cat.slug}`)} className="hover:text-primary transition-colors">{cat.name}</Link>
                 </li>
               ))}

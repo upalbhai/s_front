@@ -8,6 +8,17 @@ import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { useTranslation, useLocalePath } from '@/i18n';
 import { useSite } from '@/context/SiteProvider';
 
+const FALLBACK_CATEGORIES = [
+  { _id: 'cat-memes', name: 'Memes', slug: 'memes' },
+  { _id: 'cat-gaming', name: 'Gaming', slug: 'gaming' },
+  { _id: 'cat-anime', name: 'Anime', slug: 'anime' },
+  { _id: 'cat-effects', name: 'Effects', slug: 'effects' },
+  { _id: 'cat-meme-sb', name: 'Meme Soundboard', slug: 'meme-soundboard' },
+  { _id: 'cat-reaction', name: 'Reaction', slug: 'reaction-soundboard' },
+  { _id: 'cat-tiktok', name: 'TikTok', slug: 'tiktok-soundboard' },
+  { _id: 'cat-prank', name: 'Pranks', slug: 'prank-soundboard' },
+];
+
 const Header = ({ categories = [] }: { categories?: any[] }) => {
   const { t } = useTranslation();
   const lp = useLocalePath();
@@ -15,6 +26,34 @@ const Header = ({ categories = [] }: { categories?: any[] }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [cats, setCats] = useState<any[]>(categories);
+
+  useEffect(() => {
+    if (categories && categories.length > 0) {
+      setCats(categories);
+    } else {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || '/api/v1';
+      fetch(`${apiUrl}/categories?limit=25`, {
+        headers: {
+          'x-api-secret': process.env.NEXT_PUBLIC_API_SECRET || 'CpS09Y3JCCfklsxR-sound-button-secret'
+        }
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (Array.isArray(data?.categories) && data.categories.length > 0) {
+            setCats(data.categories);
+          } else {
+            setCats(FALLBACK_CATEGORIES);
+          }
+        })
+        .catch(() => {
+          setCats(FALLBACK_CATEGORIES);
+        });
+    }
+  }, [categories]);
+
+  const displayCategories = cats.length > 0 ? cats : FALLBACK_CATEGORIES;
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
@@ -57,7 +96,7 @@ const Header = ({ categories = [] }: { categories?: any[] }) => {
               </button>
               <div className="absolute top-full left-0 mt-1 w-56 rounded-2xl bg-card border border-border shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 p-2 z-50">
                 <div className="flex flex-col gap-1">
-                  {categories.slice(0, 25).map((cat) => (
+                  {displayCategories.slice(0, 25).map((cat) => (
                     <Link
                       key={cat._id}
                       href={lp(`/categories/${cat.slug}`)}
@@ -126,6 +165,17 @@ const Header = ({ categories = [] }: { categories?: any[] }) => {
               </button>
             </div>
 
+            <form onSubmit={(e) => { setIsMobileMenuOpen(false); handleSearch(e); }} className="flex sm:hidden items-center gap-3 px-4 py-3 mb-6 rounded-2xl bg-foreground/[0.05] border border-border focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+              <Search size={20} className="text-foreground/50 shrink-0" />
+              <input
+                type="text"
+                placeholder={t('nav.search_placeholder')}
+                className="bg-transparent border-none outline-none text-lg font-medium w-full text-foreground placeholder:text-foreground/50"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </form>
+
             <nav className="flex flex-col gap-6 text-2xl font-black tracking-tight">
               <Link href={lp('/')} onClick={() => setIsMobileMenuOpen(false)}>{t('nav.home')}</Link>
               <Link href={lp('/new')} onClick={() => setIsMobileMenuOpen(false)}>{t('nav.new')}</Link>
@@ -135,7 +185,7 @@ const Header = ({ categories = [] }: { categories?: any[] }) => {
               <div className="mt-4 pt-6 border-t border-border">
                 <p className="text-[10px] uppercase tracking-widest text-foreground/70 font-bold mb-4">{t('common.categories')}</p>
                 <div className="grid grid-cols-2 gap-3">
-                  {categories.slice(0, 25).map((cat) => (
+                  {displayCategories.slice(0, 25).map((cat) => (
                     <Link
                       key={cat._id}
                       href={lp(`/categories/${cat.slug}`)}
