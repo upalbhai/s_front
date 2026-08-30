@@ -23,7 +23,7 @@ function isAdminPath(pathname: string) {
   );
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const host = request.headers.get('host') ?? '';
   const lockedId = process.env.NEXT_PUBLIC_SITE_ID;
@@ -103,3 +103,5 @@ export const config = {
     '/((?!_next|api|.*\\.).*)',
   ],
 };
+
+export default proxy;

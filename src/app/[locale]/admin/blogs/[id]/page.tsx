@@ -10,7 +10,7 @@ import { useAdminSession } from '../../useAdminSession';
 import { toast } from 'react-hot-toast';
 import { Editor } from '@tinymce/tinymce-react';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
 
 const getImageUrl = (path?: string) => {
   if (!path) return '';

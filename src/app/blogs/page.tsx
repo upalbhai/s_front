@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Calendar, User, ArrowRight } from 'lucide-react';
 import { headers } from 'next/headers';
 
-const API_URL = process.env.INTERNAL_API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+const API_URL = process.env.INTERNAL_API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api/v1';
 
 export async function generateMetadata(): Promise<Metadata> {
   const site = await getRequestSite();

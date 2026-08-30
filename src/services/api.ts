@@ -5,7 +5,7 @@ function getBaseURL() {
     if (process.env.INTERNAL_API_URL) return process.env.INTERNAL_API_URL;
     const pub = process.env.NEXT_PUBLIC_API_URL;
     if (pub && pub.startsWith('http')) return pub;
-    return 'http://localhost:5000/api/v1';
+    return 'http://localhost:4000/api/v1';
   }
   return process.env.NEXT_PUBLIC_API_URL || '/api/v1';
 }
@@ -15,6 +15,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
+  config.headers['x-api-secret'] = process.env.NEXT_PUBLIC_API_SECRET || 'CpS09Y3JCCfklsxR-sound-button-secret';
   const appMode = process.env.NEXT_PUBLIC_APP_MODE || 'public';
 
   if (appMode === 'admin') {

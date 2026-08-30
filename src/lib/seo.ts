@@ -111,7 +111,6 @@ export function buildSeoMetadata({
     },
     other: {
       'msapplication-TileColor': site.themeColor,
-      'msapplication-config': '/browserconfig.xml',
       HandheldFriendly: 'true',
       MobileOptimized: 'width',
       'mobile-web-app-capable': 'yes',
