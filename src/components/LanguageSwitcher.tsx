@@ -73,17 +73,12 @@ export default function LanguageSwitcher() {
     setLocale(newLocale);
     const pathWithoutLocale = getPathWithoutLocale(pathname);
 
-    if (pathWithoutLocale.startsWith('/blogs')) {
-      window.location.href = pathWithoutLocale;
-      return;
-    }
-
-    // Use full navigation so the middleware processes the locale prefix correctly
+    // Use router.push for soft client-side navigation without full browser refresh
     if (newLocale === 'en') {
-      window.location.href = pathWithoutLocale;
+      router.push(pathWithoutLocale);
     } else {
       const suffix = pathWithoutLocale === '/' ? '' : pathWithoutLocale;
-      window.location.href = `/${newLocale}${suffix}`;
+      router.push(`/${newLocale}${suffix}`);
     }
   };
 

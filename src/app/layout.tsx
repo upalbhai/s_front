@@ -58,7 +58,7 @@ export default async function RootLayout({
       next: { revalidate: 3600 },
       headers: { 
         'x-site-id': site.id,
-        'x-api-secret': process.env.NEXT_PUBLIC_API_SECRET || 'CpS09Y3JCCfklsxR-sound-button-secret'
+        'x-api-secret': process.env.NEXT_PUBLIC_API_SECRET || 'sb-api-secret-key'
       },
     });
     const data = await res.json();

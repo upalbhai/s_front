@@ -147,7 +147,7 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
                   </h2>
 
                   <p className="text-sm text-slate-600 dark:text-slate-400 font-medium line-clamp-3 mb-6 flex-1">
-                    {blog.excerpt || blog.content.replace(/<[^>]+>/g, '').substring(0, 150) + '...'}
+                    {blog.excerpt || (blog.content ? blog.content.replace(/<[^>]+>/g, '').substring(0, 150) + '...' : '')}
                   </p>
 
                   <div className="flex items-center gap-2 text-sm font-bold text-indigo-500 mt-auto">

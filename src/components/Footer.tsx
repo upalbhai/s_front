@@ -37,7 +37,7 @@ const Footer = ({ categories = [] }: { categories?: any[] }) => {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || '/api/v1';
       fetch(`${apiUrl}/categories?limit=15`, {
         headers: {
-          'x-api-secret': process.env.NEXT_PUBLIC_API_SECRET || 'CpS09Y3JCCfklsxR-sound-button-secret'
+          'x-api-secret': process.env.NEXT_PUBLIC_API_SECRET || 'sb-api-secret-key'
         }
       })
         .then((res) => res.json())

@@ -15,7 +15,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  config.headers['x-api-secret'] = process.env.NEXT_PUBLIC_API_SECRET || 'CpS09Y3JCCfklsxR-sound-button-secret';
+  config.headers['x-api-secret'] = process.env.NEXT_PUBLIC_API_SECRET || 'sb-api-secret-key';
   const appMode = process.env.NEXT_PUBLIC_APP_MODE || 'public';
 
   if (appMode === 'admin') {
