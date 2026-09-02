@@ -89,11 +89,16 @@ export default async function LocaleCategoryPage({
     );
   }
 
+  const descTemplate = t('meta.categoryDetail.descriptionTemplate') !== 'meta.categoryDetail.descriptionTemplate'
+    ? t('meta.categoryDetail.descriptionTemplate')
+    : site.meta.categoryDetail.descriptionTemplate;
+  const metaDescription = category.seoDescription || descTemplate.replace('{category name}', category.name);
+
   const collectionSchema = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
     name: `${category.name} Soundboard`,
-    description: category.seoDescription || category.description,
+    description: metaDescription,
     url: `${site.siteUrl}/categories/${slug}`,
     isPartOf: {
       '@type': 'WebSite',
