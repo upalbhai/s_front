@@ -77,18 +77,25 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       setDuration(0);
       audioRef.current.src = getFullUrl(sound.fileUrl);
       audioRef.current.load();
-      try {
-        await audioRef.current.play();
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          setIsLoading(false);
+        }).catch(err => {
+          console.error('Audio playback failed:', err);
+          setIsPlaying(false);
+          setIsLoading(false);
+        });
+      }
+
+      // Run stats API in the background queue so it doesn't delay playback
+      setTimeout(() => {
         if (sound._id && sound._id.match(/^[0-9a-fA-F]{24}$/)) {
           if (!pathname?.includes('/admin')) {
             api.patch(`/sounds/${sound._id}/stats`, { type: 'play' }).catch(() => { });
           }
         }
-      } catch (err) {
-        console.error('Audio playback failed:', err);
-        setIsPlaying(false);
-        setIsLoading(false);
-      }
+      }, 0);
     }
   };
 

@@ -7,5 +7,5 @@ export interface BaseButtonProps {
   isPlaying: boolean;
   isLoading?: boolean;
   onClick?: (e: React.MouseEvent) => void;
-  size?: 'small' | 'large';
+  size?: 'small' | 'medium' | 'large';
 }

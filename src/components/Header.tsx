@@ -65,7 +65,9 @@ const Header = ({ categories = [] }: { categories?: any[] }) => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      window.location.href = lp(`/search/${encodeURIComponent(searchQuery)}`);
+      const q = searchQuery.trim();
+      const slugified = q.replace(/\s+/g, '-');
+      window.location.href = lp(`/search/${encodeURIComponent(slugified)}?q=${encodeURIComponent(q)}`);
     }
   };
 

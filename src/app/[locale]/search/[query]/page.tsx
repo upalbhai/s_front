@@ -8,11 +8,14 @@ import type { Locale } from '@/i18n';
 
 type Props = {
   params: Promise<{ query: string; locale: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { query, locale } = await params;
-  const decoded = decodeURIComponent(query);
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const { query, locale } = await props.params;
+  const searchParams = await props.searchParams;
+  const exactQuery = searchParams?.q ? String(searchParams.q) : decodeURIComponent(query);
+  const decoded = exactQuery;
   const site = await getRequestSite();
   const t = await getTranslations(site.id, locale as Locale);
 
@@ -37,9 +40,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 }
 
-export default async function SearchPage({ params }: Props) {
-  const { query, locale } = await params;
-  const decoded = decodeURIComponent(query);
+export default async function SearchPage(props: Props) {
+  const { query, locale } = await props.params;
+  const searchParams = await props.searchParams;
+  const exactQuery = searchParams?.q ? String(searchParams.q) : decodeURIComponent(query);
+  const decoded = exactQuery;
 
   let initialResults: any[] = [];
   let total = 0;
